@@ -1,0 +1,481 @@
+<!DOCTYPE HTML>
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>UEFA 2016</title>
+
+    <script type="text/javascript" src="activities.js"></script>
+
+    <style type="text/css" media="screen">
+      body {
+         padding: 50px 0;
+         font-size: 1.4rem;
+         font-family: "Courier New";
+         font-style: normal;
+         font-weight: 400;
+         line-height: 1.5;
+         background:#FBFBFB;
+      }
+
+      p.weight1 {
+         font-family: "Courier New";
+         font-weight: 400;
+         font-style: normal;
+         line-height: 30px;
+         color: #5D4037;
+      }
+
+      div.wrapper {
+         margin: 0 auto;
+         display: block;
+         white-space: nowrap;
+         text-align: center;
+         padding-bottom: 20px;
+         min-height: 100%;
+         width: auto;
+         max-width: none;
+      }
+
+      div {
+         text-align: left;
+         display: block;
+         white-space: normal;
+         vertical-align: top;
+         -webkit-box-sizing: border-box;
+         -moz-box-sizing: border-box;
+         box-sizing: border-box;
+         padding: 0 2%;
+         margin: auto;
+         max-width: 760px;
+      }
+
+      h1 {
+         margin-bottom: 25px;
+      }
+
+      textarea {
+        width: 100%;
+        margin: 6px;
+        height: 7em;
+        font-size: 1.4rem;
+        font-family: "Courier New";
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1.5;
+      }
+
+      p {
+         margin-bottom: 35px;
+      }
+
+      buttonLike {
+        border-radius: 3px;
+        padding: 3px;
+      }
+
+      p.weights {
+         letter-spacing: 2px;
+         color: rgba(173,173,173,1);
+         margin-bottom: 35px;
+         border-width: 0px 0px 1px 0px;
+         border-style: dotted;
+         margin-top: 45px;
+      }
+
+      p.pullquote {
+         margin-bottom: 35px;
+         padding-left: 15px;
+         border-width: 0px 0px 0px 3px;
+         border-style: solid;
+      }
+
+      p.map {
+         font-weight: 400;
+         font-style: normal;
+         margin-bottom: 0px;
+         text-align: justify;
+         margin-top: 0px;
+      }
+
+      p.heading {
+         letter-spacing: 2px;
+         margin-bottom: 35px;
+         border-width: 0px 0px 1px 0px;
+         border-style: dotted;
+         margin-top: 45px;
+         color: rgba(0,0,0,1);
+      }
+
+      p.intro {
+         margin-bottom: 35px;
+      }
+
+      p.inverse-big {
+         background-color: rgba(51,51,51,1);
+         color: rgba(255,255,255,1);
+         padding: 30px;
+         margin-bottom: 0px;
+      }
+
+      p.inverse-med {
+         background-color: rgba(51,51,51,1);
+         color: rgba(255,255,255,1);
+         padding: 30px;
+         margin-bottom: 0px;
+         padding-top: 0px;
+      }
+
+      p.inverse-small {
+         padding-top: 0px;
+         padding-left: 30px;
+         padding-right: 30px;
+         padding-bottom: 30px;
+         background-color: rgba(51,51,51,1);
+         color: rgba(255,255,255,1);
+      }
+
+      p.inverse-heading {
+         background-color: rgba(51,51,51,1);
+         color: rgba(255,255,255,1);
+         padding: 30px;
+         margin-bottom: 0px;
+         padding-bottom: 0px;
+         letter-spacing: 2px;
+         margin-top: 50px;
+      }
+
+
+      .activity {
+        background-color: rgba(240,240,240,1);
+        color: rgba(51,51,51,1);
+        border-radius: 7px;
+        padding : 2%;
+        margin-bottom: 2%;
+      }
+
+      .commentInput {
+        color: #515151;
+        margin-bottom: 10px;
+      }
+
+      .comment {
+        color: #515151;
+      }
+
+      .new-bet {
+        color: #00796B;
+      }
+
+      .blog {
+        color: #795548;
+      }
+
+      .author {
+        font-size: 0.6em;
+      }
+
+      .comment > p {
+        margin-bottom : 5px;
+      }
+      /* http://codepen.io/bennettfeely/pen/Ftczh */
+      .card {
+        padding:1.5rem;
+        box-shadow:0 1px 2px #aaa;
+        background:white;
+        margin:0 1rem 1rem;
+        border-radius:3px;
+        user-select:none;
+        animation:fly-in-from-left .5s 1s ease both;
+        transform-origin:top left;
+      }
+
+      .card:nth-child(even){
+        animation-name:fly-in-from-right;
+        animation-delay:1.1s;
+       transform-origin:top right;
+      }
+
+      .card:after {
+        position:absolute;
+        font-size:.9rem;
+        top:1.5rem;
+        right:1rem;
+        content:"i";
+        border:thin solid gray;
+        color:gray;
+        width:1rem;
+        line-height:1rem;
+        text-align:center;
+        border-radius:50%;
+        pointer-events:none;
+      }
+
+      .nav-buttons {
+        margin-top: 40px;
+      }
+
+      .inzenden {
+         margin: auto;
+         width: 100;
+         padding: 10px 0 0 0;
+         text-align: center;
+       }
+
+      h1 {
+        font-size:2rem;
+        font-weight:200;
+      }
+        strong {
+          font-weight:300;
+          color:#539D00;
+        }
+
+      h2 {
+        font-size:1.5rem;
+        line-height:2.5;
+        color:gray;
+        font-weight:400;
+      }
+
+      .map {
+        height:12rem;
+        background:whitesmoke;
+        margin:.5rem 0 0 -1.5rem;
+        width:28rem;
+
+      }
+
+      input {
+        font-size: large;
+        line-height:2;
+        color:gray;
+        font-family: "Courier New";
+        font-style: normal;
+        padding: 5px;
+        margin: 5px;
+        border: solid 1px #fff;
+        box-shadow: inset 1px 1px 2px 0 #707070;
+        transition: box-shadow 0.3s;
+        width: 50%;
+      }
+
+      input[type="text"]:focus,
+      input[type="text"].focus {
+        box-shadow: inset 1px 1px 2px 0 #c9c9c9;
+      }
+
+      section {
+        margin: 0;
+        padding: 0;
+      }
+
+      /* flexbox container styles */
+      .container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
+        margin: 20px 0px 20px 0px;
+      }
+
+      .row {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .left {
+        justify-content: flex-start;
+      }
+
+      .rightside {
+        justify-content: flex-end;
+      }
+
+      .centered {
+        justify-content: center;
+      }
+
+      .justified {
+        justify-content: space-between;
+      }
+
+      .spaced {
+        justify-content: space-around;
+      }
+
+      /* flexbox item style */
+      .cell {
+        flex-grow: 1;
+        flex: none;
+        align-self: flex-start;
+        padding: 10px;
+        margin: 10px
+      }
+
+      .cell2 {
+        flex-grow: 1;
+        flex: none;
+        align-self: flex-start;
+        padding: 5px 1px;
+        margin: 1px
+      }
+
+      .big {
+        font-size: 300%;
+      }
+
+      .button > .team {
+        width: 100%;
+        float: left;
+        text-align: center;
+        margin: auto
+      }
+
+
+      .score > .team {
+        width: 34%;
+        float: left;
+        text-align: center;
+        margin: auto
+      }
+
+      .score-input > .team {
+        width: 34%;
+        float: left;
+        text-align: center;
+        margin: auto
+      }
+
+      .score-input > .inp {
+        width: 14%;
+        float: left;
+        text-align: center;
+        margin: 5px;
+      }
+
+      .score-input > input {
+        width: 8%;
+        float: left;
+        text-align: center;
+        margin: auto
+      }
+
+      #home {
+        margin: auto;
+        margin-right: 2px;
+      }
+
+      #away {
+        margin: auto;
+        margin-left: 2px;
+      }
+
+      .cell > h2 {
+        margin: auto;
+        padding: 0;
+      }
+
+
+      .flag {
+        margin: auto;
+      }
+
+      .team-name {
+        font-weight: bolder;
+      }
+
+      .button {
+        border-radius: 5px;
+      }
+
+      .clickable {
+        cursor: pointer;
+      }
+
+      .clickable:hover {
+        opacity: 0.7;
+        font-weight: bolder;
+      }
+
+      .dash {
+        float: left;
+        width: 30%;
+        text-align: center;
+      }
+
+
+      .xxl {
+          height: 250px; width: 100%}
+      .xl {
+          height: 76px; width: 40%}
+      .l {
+          height: 76px; width: 30%}
+      .m {
+          height: 76px; width: 24%}
+      .s {
+          height: 150px; width: 16.66666%}
+      .xs {
+          height: 76px; width: 10%}
+
+      .xxs {
+          height: 40px; width: auto; line-height: 1.0;}
+
+      .xxxs {
+          height: 30px;
+          width: auto;
+          line-height: 1.0;
+          font-size: 0.750rem;
+          margin: 2px;
+          padding: 10px;
+        }
+
+      .scoreButton {
+          height: 28px; width: 48px; line-height: 1.0;}
+
+      .scoreButton > span {
+        display: block;
+        margin: auto;
+        text-align: center;
+      }
+
+      .teamButtonBracket {
+        flex-grow: 1;
+        flex: none;
+        align-self: flex-start;
+        padding: 5px 1px;
+        margin: 1px
+      }
+
+/* #00796B #5D4037 */
+      .potential {
+        background-color: #D7CCC8; color: #607D8B; }
+      .active {
+        background-color: #00796B; color: #fff; }
+      .inactive {
+        background-color: #795548; color: #fff; }
+      .wrong {
+        background-color: #E91E63; color: #fff; }
+      .right {
+        background-color: #E64A19; color: #fff; }
+      .perhaps {
+        background-color: #607D8B; color: #fff; }
+      .irrelevant { }
+      .selected {
+        background-color: #009688; color: #fff; }
+
+    </style>
+  </head>
+
+  <body>
+  </body>
+
+  <script type="text/javascript">
+    var elmApp = Elm.fullscreen(Elm.Main);
+  </script>
+
+</html>
