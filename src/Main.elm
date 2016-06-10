@@ -36,7 +36,7 @@ type Activity
   = ANewBet ActivityMeta Name UUID
   | AComment ActivityMeta Author Message
   | ABlog ActivityMeta Author Title Message
-  | ANewRanking ActivityMeta UUID
+  | ANewRanking ActivityMeta
 
 
 type Action
@@ -63,9 +63,11 @@ type alias Comment =
   , msg : String
   }
 
+newComment : Comment
 newComment =
   {author = "", msg = ""}
 
+newModel : Model
 newModel =
   { activities = []
   , comment = newComment
@@ -130,7 +132,7 @@ update action model =
     FetchError err ->
       let
         contents =
-          div [] [text (toString err)]
+          div [] [text (toString (Debug.log "err" err))]
       in
         ({ model | contents = contents}, Effects.none )
 
@@ -208,8 +210,8 @@ viewHeader =
 
     formlink =
       Html.p []
-        [ text "Schrijf je in middels het "
-        , Html.a [ href "/voetbalpool/formulier", class "button-like right"] [ text "inschrijfformulier"]
+        [ text "Bekijk de "
+        , Html.a [ href "/voetbalpool/stand", class "button-like right"] [ text "stand"]
         , text "."
         ]
 
@@ -262,7 +264,7 @@ viewCommentInput address model =
             , div []
               [ saveButton
               , Html.p [class "xxxs"]
-                [ Html.a [onClick address HideCommentInput, class "buttonLike right clickable"] [ text "Verberg"]
+                [ Html.a [onClick address HideCommentInput, class "button-like right clickable"] [ text "Verberg"]
                 , text " het prikbord."
                 ]
               ]
@@ -272,7 +274,7 @@ viewCommentInput address model =
         section []
           [ Html.p []
             [ text "Zet vooral ook iets op het  "
-            , Html.a [onClick address ShowCommentInput, class "buttonLike right clickable"] [ text "prikbord"]
+            , Html.a [onClick address ShowCommentInput, class "button-like right clickable"] [ text "prikbord"]
             , text "."
             ]
           ]
@@ -303,12 +305,12 @@ viewActivity address activity =
         , div [class "author"] [text author]
         ]
 
-    ANewRanking activityMeta uuid ->
+    ANewRanking activityMeta ->
       div
         [class "activity ranking"]
-        [text "De stand is geupdated."]
+        [text "De stand is bijgewerkt."]
 
-
+app : StartApp.App Model
 app =
   StartApp.start
     { init = fetchTask newModel uriString
@@ -361,10 +363,9 @@ encodeActivity activity =
         , ("meta", encodeActivityMeta am)
         ]
 
-    ANewRanking am rankingUuid->
+    ANewRanking am->
       Json.Encode.object
         [ ("type", Json.Encode.string "new-ranking")
-        , ("ranking-uuid", Json.Encode.string rankingUuid)
         , ("meta", encodeActivityMeta am)
         ]
 
@@ -426,9 +427,8 @@ decodeActivityDetails tp =
         ("bet-uuid" := Json.Decode.string)
 
     "new-ranking" ->
-      Json.Decode.object2 ANewRanking
+      Json.Decode.object1 ANewRanking
         ("meta" := decodeMeta)
-        ("ranking-uuid" := Json.Decode.string)
 
     _ ->
       Json.Decode.fail "WHOOPS"
