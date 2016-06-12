@@ -10,7 +10,7 @@ import Html.Attributes exposing (id, value, placeholder, class, href)
 
 import Task exposing (Task)
 import Http
-import Date
+import Date exposing (Month(..), Day(..))
 
 import Json.Encode
 import Json.Decode exposing (Decoder, (:=), object2, object4, andThen, maybe)
@@ -203,9 +203,7 @@ viewHeader =
   let
     paragraph =
       """Oranje was niet sterk genoeg om zich te plaatsen voor dit EK, maar
-         dat weerhoudt ons er niet van toch een Voetbalpool te beginnen.
-         Het maakt wedstrijden als Oostenrijk-Hongarije en Albanië-Zwitserland
-         nog interessanter dan ze al zijn.
+         dat weerhield ons er niet van toch een Voetbalpool te beginnen.
       """
 
     formlink =
@@ -288,13 +286,16 @@ viewActivity address activity =
     ANewBet activityMeta name uuid ->
       div
         [ class "activity new-bet"]
-        [ div [] [text (name ++ " doet mee.")] ]
+        [ div [] [text (name ++ " doet mee.")]
+        , timeView activityMeta.date
+        ]
 
     AComment activityMeta author msg ->
       div
         [ class "activity comment"]
         [ div [class "author"] [text (author ++ " zegt:")]
         , Markdown.toHtml msg
+        , timeView activityMeta.date
         ]
 
     ABlog activityMeta author blogTitle msg ->
@@ -303,12 +304,99 @@ viewActivity address activity =
         [ div [class "blog-title"] [text blogTitle]
         , Markdown.toHtml msg
         , div [class "author"] [text author]
+        , timeView activityMeta.date
         ]
 
     ANewRanking activityMeta ->
       div
-        [class "activity ranking"]
-        [text "De stand is bijgewerkt."]
+        [ class "activity ranking"]
+        [ div [] [text "De stand is bijgewerkt."]
+        , timeView activityMeta.date
+        ]
+
+
+
+
+timeView : Date.Date -> Html
+timeView dt =
+  let
+
+    m =
+      Date.month dt
+      |> toMonth
+
+    d =
+      Date.day dt
+
+    dd =
+      Date.dayOfWeek dt
+      |> toDay
+
+
+    h =
+      Date.hour dt
+
+    mn =
+      Date.minute dt
+
+    toMonth mon =
+      case mon of
+        Jan ->
+          "januari"
+        Feb ->
+          "februari"
+        Mar ->
+          "maart"
+        Apr ->
+          "april"
+        May ->
+          "mei"
+        Jun ->
+          "juni"
+        Jul ->
+          "juli"
+        Aug ->
+          "augustus"
+        Sep ->
+          "september"
+        Oct ->
+          "oktober"
+        Nov ->
+          "november"
+        Dec ->
+          "december"
+
+    toDay day =
+      case day of
+        Mon ->
+          "maandag"
+        Tue ->
+          "dinsdag"
+        Wed ->
+          "woensdag"
+        Thu ->
+          "donderdag"
+        Fri ->
+          "vrijdag"
+        Sat ->
+          "zaterdag"
+        Sun ->
+          "zondag"
+
+    twoDigitString n =
+      if n < 10
+        then
+          "0" ++ toString n
+        else
+          toString n
+
+    dateString =
+      dd ++ " " ++ (toString d) ++ " " ++ m ++ ", " ++ (toString h) ++ ":" ++ (twoDigitString mn)
+  in
+    div [class "date"] [text dateString]
+
+
+-- app stuff
 
 app : StartApp.App Model
 app =
