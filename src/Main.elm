@@ -192,33 +192,11 @@ update action model =
 
 view : Signal.Address Action -> Model -> Html
 view address model =
-  div []
-    [ viewHeader
+  section []
+    [ Html.h1 [] [text "De Voetbalpool"]
     , viewCommentInput address model
     , section [] (List.map (viewActivity address) model.activities)
     ]
-
-viewHeader : Html
-viewHeader =
-  let
-    paragraph =
-      """Oranje was niet sterk genoeg om zich te plaatsen voor dit EK, maar
-         dat weerhield ons er niet van toch een Voetbalpool te beginnen.
-      """
-
-    formlink =
-      Html.p []
-        [ text "Bekijk de "
-        , Html.a [ href "/voetbalpool/stand", class "button-like right"] [ text "stand"]
-        , text "."
-        ]
-
-  in
-    section []
-      [ Html.h1 [] [text "De Voetbalpool"]
-      , Html.p [] [text paragraph]
-      , formlink
-      ]
 
 viewCommentInput : Signal.Address Action -> Model -> Html
 viewCommentInput address model =
@@ -310,7 +288,11 @@ viewActivity address activity =
     ANewRanking activityMeta ->
       div
         [ class "activity ranking"]
-        [ div [] [text "De stand is bijgewerkt."]
+        [ div []
+          [ text "De "
+          , Html.a [ href "/voetbalpool/stand"] [ text "stand"]
+          , text " is bijgewerkt."
+          ]
         , timeView activityMeta.date
         ]
 
