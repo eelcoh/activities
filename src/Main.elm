@@ -45,8 +45,8 @@ type Msg
   | SetCommentMsg String
   | SetCommentAuthor String
   | SaveComment
-  | CommentSavedFailed Http.Error
-  | CommentSaved (List Activity)
+  | SaveCommentFail Http.Error
+  | SaveCommentSuccess (List Activity)
   | HideCommentInput
   | ShowCommentInput
 
@@ -158,14 +158,14 @@ update action model =
       let
         cmd =
           Task.perform
-            CommentSavedFailed
-            CommentSaved
+            SaveCommentFail
+            SaveCommentSuccess
             (saveComment model)
 
       in
         (model, cmd)
 
-    CommentSaved activities ->
+    SaveCommentSuccess activities ->
       let
 
         newModel =
@@ -178,7 +178,7 @@ update action model =
       in
         (newModel, Cmd.none)
 
-    CommentSavedFailed err ->
+    SaveCommentFail err ->
       (model, Cmd.none)
 
 view : Model -> Html Msg
