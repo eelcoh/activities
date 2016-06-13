@@ -1,14 +1,13 @@
-module Main (..) where
+module Main exposing (..)
 
-import Effects exposing (Effects, Never)
-import StartApp
+import Html.App as Html
 
 import Markdown
 import Html exposing (Html, div, button, text, textarea, input, section)
-import Html.Events exposing (onClick, on, targetValue)
+import Html.Events exposing (onClick, onInput, targetValue)
 import Html.Attributes exposing (id, value, placeholder, class, href)
 
-import Task exposing (Task)
+import Task
 import Http
 import Date exposing (Month(..), Day(..))
 
@@ -39,14 +38,15 @@ type Activity
   | ANewRanking ActivityMeta
 
 
-type Action
+type Msg
   = FetchActivities String
   | ReceiveActivities (List Activity)
   | FetchError Http.Error
   | SetCommentMsg String
   | SetCommentAuthor String
   | SaveComment
-  | CommentSaved (Result Http.Error (List Activity))
+  | CommentSavedFailed Http.Error
+  | CommentSaved (List Activity)
   | HideCommentInput
   | ShowCommentInput
 
@@ -54,7 +54,7 @@ type Action
 type alias Model =
   { activities : List Activity
   , comment : Comment
-  , contents : Html
+  , contents : Html Msg
   , showComment: Bool
   }
 
@@ -75,22 +75,19 @@ newModel =
   , showComment = False
   }
 
-fetchTask : Model -> String -> (Model, Effects Action)
-fetchTask model urlString =
+
+
+fetchData : Model -> String -> (Model, Cmd Msg)
+fetchData model url =
   let
-    request = Task.map
-      (\resp -> ReceiveActivities resp)
-      (Http.get decode urlString)
-
-    neverFailingRequest = Task.onError
-      request
-      (\err -> Task.succeed (FetchError err))
+    newCmd =
+      Task.perform FetchError ReceiveActivities (Http.get decode url)
   in
-    ( model, Effects.task neverFailingRequest )
+    (model, newCmd)
 
 
-saveComment : Model -> (Result Http.Error (List Activity) -> b) -> Effects.Effects b
-saveComment model action =
+saveComment : Model -> Task.Task Http.Error (List Activity)
+saveComment model  =
   let
 
     (vrb, url) =
@@ -110,31 +107,24 @@ saveComment model action =
           [ ("Content-Type", "application/json")
           ]
         }
-
-    decoded =
-      Http.fromJson decode response
   in
-    decoded
-      |> Task.toResult
-      |> Task.map action
-      |> Effects.task
+    Http.fromJson decode response -- -> Task Error (List Activity)
 
-
-update : Action -> Model -> (Model, Effects Action)
+update : Msg -> Model -> (Model, Cmd Msg)
 update action model =
   case action of
     FetchActivities urlString ->
-      fetchTask model urlString
+      fetchData model urlString
 
     ReceiveActivities activities ->
-      ({ model | activities = activities}, Effects.none )
+      ({ model | activities = activities}, Cmd.none )
 
     FetchError err ->
       let
         contents =
           div [] [text (toString (Debug.log "err" err))]
       in
-        ({ model | contents = contents}, Effects.none )
+        ({ model | contents = contents}, Cmd.none )
 
     SetCommentAuthor nwAuthor ->
       let
@@ -145,13 +135,13 @@ update action model =
           {oldComment | author = nwAuthor}
 
       in
-        ( {model | comment = nwComment }, Effects.none )
+        ( {model | comment = nwComment }, Cmd.none )
 
     ShowCommentInput ->
-      ({model | showComment = True }, Effects.none)
+      ({model | showComment = True }, Cmd.none)
 
     HideCommentInput ->
-      ({model | showComment = False }, Effects.none)
+      ({model | showComment = False }, Cmd.none)
 
     SetCommentMsg nwMsg ->
       let
@@ -162,54 +152,55 @@ update action model =
           {oldComment | msg = nwMsg}
 
       in
-        ( {model | comment = nwComment }, Effects.none )
+        ( {model | comment = nwComment }, Cmd.none )
 
     SaveComment ->
       let
-        fx =
-          saveComment model CommentSaved
+        cmd =
+          Task.perform
+            CommentSavedFailed
+            CommentSaved
+            (saveComment model)
+
       in
-        (model, fx)
+        (model, cmd)
 
-    CommentSaved rActivities ->
-      case (Debug.log "rActivities" rActivities) of
-        Ok activities ->
-          let
+    CommentSaved activities ->
+      let
 
-            newModel =
-              { model
-              | activities = activities
-              , comment = newComment
-              , showComment = False
-              }
+        newModel =
+          { model
+          | activities = activities
+          , comment = newComment
+          , showComment = False
+          }
 
-          in
-            (newModel, Effects.none)
+      in
+        (newModel, Cmd.none)
 
-        Err res ->
-            (model, Effects.none)
+    CommentSavedFailed err ->
+      (model, Cmd.none)
 
-
-view : Signal.Address Action -> Model -> Html
-view address model =
-  section []
-    [ Html.h1 [] [text "De Voetbalpool"]
-    , viewCommentInput address model
-    , section [] (List.map (viewActivity address) model.activities)
+view : Model -> Html Msg
+view model =
+  div []
+    [ section []
+      [ Html.h1 [] [text "De Voetbalpool"]
+      , viewCommentInput model
+      , section [] (List.map viewActivity model.activities)
+      ]
     ]
 
-viewCommentInput : Signal.Address Action -> Model -> Html
-viewCommentInput address model =
+viewCommentInput : Model -> Html Msg
+viewCommentInput model =
   let
     commentInput v =
       div [] [
         textarea
           [ value v
           , placeholder "Het prikbord is open, ga je gang!"
-          , on
-              "input"
-              targetValue
-              (\val -> Signal.message address (SetCommentMsg val))
+          , onInput
+              (\val -> SetCommentMsg val)
           ] []
       ]
     authorInput v =
@@ -217,10 +208,8 @@ viewCommentInput address model =
         input
           [ value v
           , placeholder "naam"
-          , on
-              "input"
-              targetValue
-              (\val -> Signal.message address (SetCommentAuthor val))
+          , onInput
+              (\val -> SetCommentAuthor val)
           ] []
       ]
 
@@ -229,7 +218,7 @@ viewCommentInput address model =
         then
           Html.p [class "xxxs"] [text "(Je moet beide velden invullen.)"]
         else
-          Html.span [onClick address SaveComment, class "button right clickable xxxs"] [text "Prik!"]
+          Html.span [onClick SaveComment, class "button right clickable xxxs"] [text "Prik!"]
   in
     if model.showComment
       then
@@ -240,7 +229,7 @@ viewCommentInput address model =
             , div []
               [ saveButton
               , Html.p [class "xxxs"]
-                [ Html.a [onClick address HideCommentInput, class "button-like right clickable"] [ text "Verberg"]
+                [ Html.a [onClick HideCommentInput, class "button-like right clickable"] [ text "Verberg"]
                 , text " het prikbord."
                 ]
               ]
@@ -250,7 +239,7 @@ viewCommentInput address model =
         section []
           [ Html.p []
             [ text "Zet vooral ook iets op het  "
-            , Html.a [onClick address ShowCommentInput, class "button-like right clickable"] [ text "prikbord"]
+            , Html.a [onClick ShowCommentInput, class "button-like right clickable"] [ text "prikbord"]
             , text "."
             ]
           ]
@@ -258,8 +247,8 @@ viewCommentInput address model =
 
 
 
-viewActivity : Signal.Address Action -> Activity -> Html
-viewActivity address activity =
+viewActivity : Activity -> Html Msg
+viewActivity activity =
   case activity of
     ANewBet activityMeta name uuid ->
       div
@@ -268,19 +257,19 @@ viewActivity address activity =
         , timeView activityMeta.date
         ]
 
-    AComment activityMeta author msg ->
+    AComment activityMeta author comment ->
       div
         [ class "activity comment"]
         [ div [class "author"] [text (author ++ " zegt:")]
-        , Markdown.toHtml msg
+        , Markdown.toHtml [] comment
         , timeView activityMeta.date
         ]
 
-    ABlog activityMeta author blogTitle msg ->
+    ABlog activityMeta author blogTitle blog ->
       div
         [class "activity blog"]
         [ div [class "blog-title"] [text blogTitle]
-        , Markdown.toHtml msg
+        , Markdown.toHtml [] blog
         , div [class "author"] [text author]
         , timeView activityMeta.date
         ]
@@ -299,7 +288,7 @@ viewActivity address activity =
 
 
 
-timeView : Date.Date -> Html
+timeView : Date.Date -> Html Msg
 timeView dt =
   let
 
@@ -379,25 +368,14 @@ timeView dt =
 
 
 -- app stuff
-
-app : StartApp.App Model
-app =
-  StartApp.start
-    { init = fetchTask newModel uriString
+main : Program Never
+main =
+  Html.program
+    { init = fetchData newModel uriString
     , update = update
     , view = view
-    , inputs = []
+    , subscriptions = \_ -> Sub.none
     }
-
-
-main: Signal Html.Html
-main =
-  app.html
-
-
-port tasks : Signal (Task.Task Never ())
-port tasks =
-  app.tasks
 
 
 -- Json
