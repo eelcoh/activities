@@ -1,494 +1,414 @@
 module Main exposing (..)
 
-import Html.App as Html
-
-import Markdown
+import Html exposing (Html)
 import Html exposing (Html, div, button, text, textarea, input, section)
-import Html.Events exposing (onClick, onInput, targetValue)
-import Html.Attributes exposing (id, value, placeholder, class, href)
+import Element exposing (column, row)
+import Element.Attributes exposing (px, percent, padding, paddingLeft, paddingTop, paddingBottom, paddingXY, spacing, alignLeft, verticalSpread, center, alignRight, width, height)
+import UI.Style
+import UI.Button
+import UI.Text
+import Navigation
+import Uuid.Barebones as Uuid
+import Types exposing (..)
+import Activities
+import Bets.Api exposing (retrieveBet)
+import Bets.View
+import RemoteData exposing (RemoteData(..), WebData)
+import Window
+import UI.Size as Size exposing (bodyWidth, classifyDevice)
 
-import Task
-import Http
-import Date exposing (Month(..), Day(..))
-
-import Json.Encode
-import Json.Decode exposing (Decoder, (:=), object2, object4, andThen, maybe)
-
-
-uriString : String
-uriString =
-  "/app/activities"
-
-type alias Name = String
-type alias Author = String
-type alias Title = String
-type alias Message = String
-type alias UUID = String
-
-type alias ActivityMeta =
-  { date : Date.Date
-  , active: Bool
-  , uuid: String
-  }
-
-type Activity
-  = ANewBet ActivityMeta Name UUID
-  | AComment ActivityMeta Author Message
-  | ABlog ActivityMeta Author Title Message
-  | ANewRanking ActivityMeta
-
-
-type Msg
-  = FetchActivities String
-  | ReceiveActivities (List Activity)
-  | FetchError Http.Error
-  | SetCommentMsg String
-  | SetCommentAuthor String
-  | SaveComment
-  | SaveCommentFail Http.Error
-  | SaveCommentSuccess (List Activity)
-  | HideCommentInput
-  | ShowCommentInput
-
-
-type alias Model =
-  { activities : List Activity
-  , comment : Comment
-  , contents : Html Msg
-  , showComment: Bool
-  }
-
-type alias Comment =
-  { author: String
-  , msg : String
-  }
 
 newComment : Comment
 newComment =
-  {author = "", msg = ""}
+    { author = "", msg = "" }
+
+
+newPost : Post
+newPost =
+    { author = "", title = "", msg = "", passphrase = "" }
+
 
 newModel : Model
 newModel =
-  { activities = []
-  , comment = newComment
-  , contents = (div [] [text "niks"])
-  , showComment = False
-  }
-
-
-
-fetchData : Model -> String -> (Model, Cmd Msg)
-fetchData model url =
-  let
-    newCmd =
-      Task.perform FetchError ReceiveActivities (Http.get decode url)
-  in
-    (model, newCmd)
-
-
-saveComment : Model -> Task.Task Http.Error (List Activity)
-saveComment model  =
-  let
-
-    (vrb, url) =
-      ("POST", "/app/comments")
-
-    body =
-      encodeComment model.comment
-      |> Json.Encode.encode 2
-      |> Http.string
-
-    response =
-      Http.send Http.defaultSettings
-        { verb = vrb
-        , url = url
-        , body = body
-        , headers =
-          [ ("Content-Type", "application/json")
-          ]
-        }
-  in
-    Http.fromJson decode response -- -> Task Error (List Activity)
-
-update : Msg -> Model -> (Model, Cmd Msg)
-update action model =
-  case action of
-    FetchActivities urlString ->
-      fetchData model urlString
-
-    ReceiveActivities activities ->
-      ({ model | activities = activities}, Cmd.none )
-
-    FetchError err ->
-      let
-        contents =
-          div [] [text (toString (Debug.log "err" err))]
-      in
-        ({ model | contents = contents}, Cmd.none )
-
-    SetCommentAuthor nwAuthor ->
-      let
-        oldComment =
-          model.comment
-
-        nwComment =
-          {oldComment | author = nwAuthor}
-
-      in
-        ( {model | comment = nwComment }, Cmd.none )
-
-    ShowCommentInput ->
-      ({model | showComment = True }, Cmd.none)
-
-    HideCommentInput ->
-      ({model | showComment = False }, Cmd.none)
-
-    SetCommentMsg nwMsg ->
-      let
-        oldComment =
-          model.comment
-
-        nwComment =
-          {oldComment | msg = nwMsg}
-
-      in
-        ( {model | comment = nwComment }, Cmd.none )
-
-    SaveComment ->
-      let
-        cmd =
-          Task.perform
-            SaveCommentFail
-            SaveCommentSuccess
-            (saveComment model)
-
-      in
-        (model, cmd)
-
-    SaveCommentSuccess activities ->
-      let
-
-        newModel =
-          { model
-          | activities = activities
-          , comment = newComment
-          , showComment = False
-          }
-
-      in
-        (newModel, Cmd.none)
-
-    SaveCommentFail err ->
-      (model, Cmd.none)
-
-view : Model -> Html Msg
-view model =
-  div []
-    [ section []
-      [ Html.h1 [] [text "De Voetbalpool"]
-      , viewCommentInput model
-      , section [] (List.map viewActivity model.activities)
-      ]
-    ]
-
-viewCommentInput : Model -> Html Msg
-viewCommentInput model =
-  let
-    commentInput v =
-      div [] [
-        textarea
-          [ value v
-          , placeholder "Het prikbord is open, ga je gang!"
-          , onInput
-              (\val -> SetCommentMsg val)
-          ] []
-      ]
-    authorInput v =
-      div [] [
-        input
-          [ value v
-          , placeholder "naam"
-          , onInput
-              (\val -> SetCommentAuthor val)
-          ] []
-      ]
-
-    saveButton =
-      if ((model.comment.msg == "") || (model.comment.author == ""))
-        then
-          Html.p [class "xxxs"] [text "(Je moet beide velden invullen.)"]
-        else
-          Html.span [onClick SaveComment, class "button right clickable xxxs"] [text "Prik!"]
-  in
-    if model.showComment
-      then
-        section []
-          [ div [class "activity commentInput "]
-            [ commentInput model.comment.msg
-            , authorInput model.comment.author
-            , div []
-              [ saveButton
-              , Html.p [class "xxxs"]
-                [ Html.a [onClick HideCommentInput, class "button-like right clickable"] [ text "Verberg"]
-                , text " het prikbord."
-                ]
-              ]
-            ]
-          ]
-      else
-        section []
-          [ Html.p []
-            [ text "Zet vooral ook iets op het  "
-            , Html.a [onClick ShowCommentInput, class "button-like right clickable"] [ text "prikbord"]
-            , text "."
-            ]
-          ]
-
-
-
-
-viewActivity : Activity -> Html Msg
-viewActivity activity =
-  case activity of
-    ANewBet activityMeta name uuid ->
-      div
-        [ class "activity new-bet"]
-        [ div [] [text (name ++ " doet mee.")]
-        , timeView activityMeta.date
-        ]
-
-    AComment activityMeta author comment ->
-      div
-        [ class "activity comment"]
-        [ div [class "author"] [text (author ++ " zegt:")]
-        , Markdown.toHtml [] comment
-        , timeView activityMeta.date
-        ]
-
-    ABlog activityMeta author blogTitle blog ->
-      div
-        [class "activity blog"]
-        [ div [class "blog-title"] [text blogTitle]
-        , Markdown.toHtml [] blog
-        , div [class "author"] [text author]
-        , timeView activityMeta.date
-        ]
-
-    ANewRanking activityMeta ->
-      div
-        [ class "activity ranking"]
-        [ div []
-          [ text "De "
-          , Html.a [ href "/voetbalpool/stand"] [ text "stand"]
-          , text " is bijgewerkt."
-          ]
-        , timeView activityMeta.date
-        ]
-
-
-
-
-timeView : Date.Date -> Html Msg
-timeView dt =
-  let
-
-    m =
-      Date.month dt
-      |> toMonth
-
-    d =
-      Date.day dt
-
-    dd =
-      Date.dayOfWeek dt
-      |> toDay
-
-
-    h =
-      Date.hour dt
-
-    mn =
-      Date.minute dt
-
-    toMonth mon =
-      case mon of
-        Jan ->
-          "januari"
-        Feb ->
-          "februari"
-        Mar ->
-          "maart"
-        Apr ->
-          "april"
-        May ->
-          "mei"
-        Jun ->
-          "juni"
-        Jul ->
-          "juli"
-        Aug ->
-          "augustus"
-        Sep ->
-          "september"
-        Oct ->
-          "oktober"
-        Nov ->
-          "november"
-        Dec ->
-          "december"
-
-    toDay day =
-      case day of
-        Mon ->
-          "maandag"
-        Tue ->
-          "dinsdag"
-        Wed ->
-          "woensdag"
-        Thu ->
-          "donderdag"
-        Fri ->
-          "vrijdag"
-        Sat ->
-          "zaterdag"
-        Sun ->
-          "zondag"
-
-    twoDigitString n =
-      if n < 10
-        then
-          "0" ++ toString n
-        else
-          toString n
-
-    dateString =
-      dd ++ " " ++ (toString d) ++ " " ++ m ++ ", " ++ (toString h) ++ ":" ++ (twoDigitString mn)
-  in
-    div [class "date"] [text dateString]
-
-
--- app stuff
-main : Program Never
-main =
-  Html.program
-    { init = fetchData newModel uriString
-    , update = update
-    , view = view
-    , subscriptions = \_ -> Sub.none
+    { activities = NotAsked
+    , comment = newComment
+    , post = newPost
+    , contents = (div [] [ text "niks" ])
+    , showComment = False
+    , showPost = False
+    , page = Home
+    , bet = NotAsked
+    , screenSize = Small
     }
 
 
--- Json
-encodeComment : Comment -> Json.Encode.Value
-encodeComment comment =
-  let
-    encodedComment =
-      Json.Encode.object
-          [ ("author", Json.Encode.string comment.author)
-          , ("msg", Json.Encode.string comment.msg)
-          ]
-  in
-    Json.Encode.object
-      [("comment", encodedComment)]
+update : Msg -> Model -> ( Model, Cmd Msg )
+update action model =
+    case action of
+        None ->
+            ( model, Cmd.none )
 
-encodeActivity : Activity -> Json.Encode.Value
-encodeActivity activity =
-  case activity of
-    AComment am author msg ->
-      Json.Encode.object
-        [ ("type", Json.Encode.string "comment")
-        , ("author", Json.Encode.string author)
-        , ("msg", Json.Encode.string msg)
-        , ("meta", encodeActivityMeta am)
+        FetchedBet res ->
+            ( { model | bet = res }, Cmd.none )
+
+        FetchedActivities res ->
+            ( { model | activities = res }, Cmd.none )
+
+        SetCommentAuthor nwAuthor ->
+            let
+                oldComment =
+                    model.comment
+
+                nwComment =
+                    { oldComment | author = nwAuthor }
+            in
+                ( { model | comment = nwComment }, Cmd.none )
+
+        ShowCommentInput ->
+            ( { model | showComment = True }, Cmd.none )
+
+        HideCommentInput ->
+            ( { model | showComment = False }, Cmd.none )
+
+        SetCommentMsg nwMsg ->
+            let
+                oldComment =
+                    model.comment
+
+                nwComment =
+                    { oldComment | msg = nwMsg }
+            in
+                ( { model | comment = nwComment }, Cmd.none )
+
+        SaveComment ->
+            let
+                cmd =
+                    Activities.saveComment model
+            in
+                ( model, cmd )
+
+        SavedComment res ->
+            ( { model | activities = res, comment = newComment, showComment = False }, Cmd.none )
+
+        SetPostAuthor nwAuthor ->
+            let
+                oldPost =
+                    model.post
+
+                nwPost =
+                    { oldPost | author = nwAuthor }
+            in
+                ( { model | post = nwPost }, Cmd.none )
+
+        ShowPostInput ->
+            ( { model | showPost = True }, Cmd.none )
+
+        HidePostInput ->
+            ( { model | showPost = False }, Cmd.none )
+
+        SetPostMsg nwMsg ->
+            let
+                oldPost =
+                    model.post
+
+                nwPost =
+                    { oldPost | msg = nwMsg }
+            in
+                ( { model | post = nwPost }, Cmd.none )
+
+        SetPostTitle newTitle ->
+            let
+                oldPost =
+                    model.post
+
+                nwPost =
+                    { oldPost | title = newTitle }
+            in
+                ( { model | post = nwPost }, Cmd.none )
+
+        SetPostPassphrase nwPassphrase ->
+            let
+                oldPost =
+                    model.post
+
+                nwPost =
+                    { oldPost | passphrase = nwPassphrase }
+            in
+                ( { model | post = nwPost }, Cmd.none )
+
+        SavePost ->
+            let
+                cmd =
+                    Activities.savePost model
+            in
+                ( model, cmd )
+
+        SavedPost res ->
+            ( { model | activities = res, post = newPost, showPost = False }, Cmd.none )
+
+        UrlChange location ->
+            let
+                ( page, msg ) =
+                    getPage location.hash
+
+                newModel =
+                    { model | page = page }
+            in
+                update msg newModel
+
+        Click location ->
+            ( model, Navigation.newUrl location )
+
+        BetSelected ->
+            let
+                mUuid =
+                    case model.page of
+                        Bets uuid ->
+                            Just uuid
+
+                        _ ->
+                            Nothing
+
+                cmd =
+                    case mUuid of
+                        Just uuid ->
+                            retrieveBet uuid FetchedBet
+
+                        _ ->
+                            Cmd.none
+            in
+                ( model, cmd )
+
+        RefreshActivities ->
+            ( model, Activities.fetchActivities model )
+
+        SetScreenSize sz ->
+            let
+                screenSize =
+                    classifyDevice sz
+            in
+                ( { model | screenSize = screenSize }, Cmd.none )
+
+
+getPage : String -> ( Page, Msg )
+getPage hash =
+    let
+        locs =
+            String.split "/" hash
+
+        emptyFunc =
+            (\_ -> Cmd.none)
+    in
+        case locs of
+            "#home" :: _ ->
+                ( Home, RefreshActivities )
+
+            "#blog" :: _ ->
+                ( Blog, RefreshActivities )
+
+            "#formulier" :: _ ->
+                ( Form, None )
+
+            "#inzendingen" :: uuid :: _ ->
+                if (Uuid.isValidUuid uuid) then
+                    ( Bets uuid, BetSelected )
+                else
+                    ( Ranking, None )
+
+            "#inzendingen" :: _ ->
+                ( Ranking, None )
+
+            "#stand" :: _ ->
+                ( Ranking, None )
+
+            _ ->
+                ( Home, RefreshActivities )
+
+
+view : Model -> Html Msg
+view model =
+    let
+        contentBase =
+            case model.page of
+                Home ->
+                    viewHome model
+
+                Blog ->
+                    viewBlog model
+
+                Ranking ->
+                    viewRanking model
+
+                Bets uuid ->
+                    viewBet model uuid
+
+                Form ->
+                    viewForm model
+
+        w =
+            bodyWidth model.screenSize
+
+        content =
+            Element.column UI.Style.None
+                [ padding (Size.margin model.screenSize) ]
+                [ contentBase
+                ]
+
+        page =
+            Element.column UI.Style.None
+                []
+                [ viewHeader model.screenSize
+                , nav model.page model.screenSize
+                , content
+                ]
+    in
+        Element.el UI.Style.Page [] page
+            |> Element.viewport UI.Style.stylesheet
+
+
+viewHome : Model -> Element.Element UI.Style.Style variation Msg
+viewHome model =
+    Element.column UI.Style.None
+        [ width (percent 100) ]
+        [ Activities.viewCommentInput model
+        , Activities.viewActivities model.activities
         ]
 
-    ABlog am author title msg ->
-      Json.Encode.object
-        [ ("type", Json.Encode.string "blog")
-        , ("author", Json.Encode.string author)
-        , ("title", Json.Encode.string title)
-        , ("msg", Json.Encode.string msg)
-        , ("meta", encodeActivityMeta am)
-        ]
 
-    ANewRanking am->
-      Json.Encode.object
-        [ ("type", Json.Encode.string "new-ranking")
-        , ("meta", encodeActivityMeta am)
-        ]
-
-    ANewBet am name betUuid ->
-      Json.Encode.object
-        [ ("type", Json.Encode.string "comment")
-        , ("name", Json.Encode.string name)
-        , ("bet-uuid", Json.Encode.string betUuid)
-        , ("meta", encodeActivityMeta am)
+viewBlog : Model -> Element.Element UI.Style.Style variation Msg
+viewBlog model =
+    Element.column UI.Style.None
+        []
+        [ Activities.viewPostInput model
+        , Activities.viewActivities model.activities
         ]
 
 
-encodeActivityMeta: ActivityMeta -> Json.Encode.Value
-encodeActivityMeta am =
-  Json.Encode.object
-    [ ("date", Json.Encode.float (Date.toTime am.date))
-    , ("active", Json.Encode.bool am.active)
-    , ("uuid", Json.Encode.string am.uuid)
-    ]
+viewRanking : Model -> Element.Element UI.Style.Style variation Msg
+viewRanking model =
+    Element.text "Nog niet klaar"
 
-type alias IncomingActivities = { activities: List Activity }
 
-{-
-decode : Decoder (List Activity)
-decode =
-  Json.Decode.map
-    (\x -> x.activities)
-    decodeIncoming
-  -}
+viewBet : Model -> String -> Element.Element UI.Style.Style variation Msg
+viewBet model uuid =
+    case model.bet of
+        NotAsked ->
+            Element.text "Aan het ophalen."
 
-decode : Decoder (List Activity)
-decode =
-  ("activities" := Json.Decode.list decodeActivity)
+        Loading ->
+            Element.text "Aan het ophalen..."
 
-decodeActivity : Decoder Activity
-decodeActivity =
-  ("type" := Json.Decode.string) `andThen` decodeActivityDetails
+        Failure err ->
+            UI.Text.error "Oeps. Daar ging iets niet goed."
 
-decodeActivityDetails : String -> Decoder Activity
-decodeActivityDetails tp =
-  case tp of
-    "comment" ->
-      Json.Decode.object3 AComment
-        ("meta" := decodeMeta)
-        ("author" := Json.Decode.string)
-        ("msg" := Json.Decode.string)
+        Success bet ->
+            Bets.View.viewBet bet model.screenSize
 
-    "blog" ->
-      Json.Decode.object4 ABlog
-        ("meta" := decodeMeta)
-        ("author" := Json.Decode.string)
-        ("title" := Json.Decode.string)
-        ("msg" := Json.Decode.string)
 
-    "new-bet" ->
-      Json.Decode.object3 ANewBet
-        ("meta" := decodeMeta)
-        ("name" := Json.Decode.string)
-        ("bet-uuid" := Json.Decode.string)
+viewForm : Model -> Element.Element UI.Style.Style variation Msg
+viewForm model =
+    Element.paragraph UI.Style.None
+        []
+        [ Element.link "/voetbalpool/formulier" <| Element.el UI.Style.Link [] (Element.text "Klik hier om naar het formulier te gaan.")
+        ]
 
-    "new-ranking" ->
-      Json.Decode.object1 ANewRanking
-        ("meta" := decodeMeta)
 
-    _ ->
-      Json.Decode.fail "WHOOPS"
+nav2 : Element.Element UI.Style.Style variation Msg
+nav2 =
+    Element.navigation UI.Style.Menu
+        [ paddingLeft 90, paddingBottom 20, spacing 30 ]
+        { name = "Main Navigation"
+        , options =
+            [ Element.link "/voetbalpool/" (Element.el (UI.Style.NavLink UI.Style.Selected) [] (Element.text "home"))
+            , Element.link "/voetbalpool/formulier/" (Element.el (UI.Style.NavLink UI.Style.Potential) [] (Element.text "formulier"))
+            , Element.link "/voetbalpool/stand/" (Element.el (UI.Style.NavLink UI.Style.Potential) [] (Element.text "stand"))
+            ]
+        }
 
-decodeMeta: Decoder ActivityMeta
-decodeMeta =
-  Json.Decode.object3 ActivityMeta
-    ("date" := decodeDate)
-    ("active" := Json.Decode.bool)
-    ("uuid" := Json.Decode.string)
 
-decodeDate : Decoder Date.Date
-decodeDate =
-  Json.Decode.float
-  |> Json.Decode.map Date.fromTime
+nav : Page -> ScreenSize -> Element.Element UI.Style.Style variation Msg
+nav page screenSize =
+    let
+        comparePage newPage =
+            case ( page, newPage ) of
+                ( Home, Home ) ->
+                    UI.Style.Selected
+
+                ( Bets _, Bets _ ) ->
+                    UI.Style.Selected
+
+                ( Ranking, Ranking ) ->
+                    UI.Style.Selected
+
+                ( Form, Form ) ->
+                    UI.Style.Selected
+
+                _ ->
+                    UI.Style.Potential
+
+        pageLink newPage hash linkText =
+            UI.Button.navLink (comparePage newPage) (Click hash) linkText
+    in
+        Element.navigation UI.Style.Menu
+            [ paddingLeft (Size.margin screenSize), paddingBottom 20, spacing 30 ]
+            { name = "Main Navigation"
+            , options =
+                [ pageLink Home "/voetbalpool/#home" "home"
+                , pageLink Ranking "/voetbalpool/#stand" "stand"
+                , pageLink Form "/voetbalpool/#formulier" "formulier"
+                ]
+            }
+
+
+viewHeader : ScreenSize -> Element.Element UI.Style.Style variation Msg
+viewHeader screenSize =
+    let
+        margin =
+            Size.margin screenSize
+    in
+        Element.header
+            (UI.Style.Title screenSize)
+            [ width (percent 100), paddingXY (margin) (margin) ]
+            (Element.text "De Voetbalpool")
+
+
+
+-- app stuff
+
+
+init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
+init flags loc =
+    let
+        ( page, msg ) =
+            getPage loc.hash
+
+        screenSize =
+            classifyDevice { width = flags.width, height = 0 }
+
+        model =
+            { newModel | page = page, screenSize = screenSize }
+
+        -- cmd =
+        --     fetchActivities model
+    in
+        update msg model
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.batch [ Window.resizes SetScreenSize ]
+
+
+type alias Flags =
+    { width : Int
+    }
+
+
+main : Program Flags Model Msg
+main =
+    Navigation.programWithFlags UrlChange
+        { init = init
+        , update = update
+        , view = view
+        , subscriptions = subscriptions
+        }
