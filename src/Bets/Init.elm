@@ -404,7 +404,7 @@ answers =
         , "m29" => answerGroupMatch G g1 g3 "2018/06/23 14:00" spartak
         , "m30" => answerGroupMatch G g4 g2 "2018/06/24 14:00" novgorod
         , "m45" => answerGroupMatch G g4 g1 "2018/06/28 20:00" kaliningrad
-        , "m46" => answerGroupMatch G g2 g4 "2018/06/28 20:00" saransk
+        , "m46" => answerGroupMatch G g2 g3 "2018/06/28 20:00" saransk
           -- group H
         , "m16" => answerGroupMatch H h3 h4 "2018/06/19 14:00" saransk
         , "m15" => answerGroupMatch H h1 h2 "2018/06/19 17:00" spartak
