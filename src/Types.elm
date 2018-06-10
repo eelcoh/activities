@@ -34,6 +34,7 @@ type Page
     | Form
     | Ranking
     | Bets String
+    | Login
 
 
 type alias ActivityMeta =
@@ -73,6 +74,10 @@ type Msg
     | RefreshActivities
     | BetSelected
     | SetScreenSize Window.Size
+    | SetUsername String
+    | SetPassword String
+    | Authenticate
+    | FetchedToken (WebData Token)
 
 
 type alias Model =
@@ -84,6 +89,8 @@ type alias Model =
     , showPost : Bool
     , page : Page
     , bet : WebData Bets.Types.Bet
+    , credentials : Credentials
+    , token : WebData Token
     , screenSize : ScreenSize
     }
 
@@ -105,3 +112,20 @@ type alias Post =
 type ScreenSize
     = Small
     | Big
+
+
+type alias Creds =
+    { username : String
+    , password : String
+    }
+
+
+type Credentials
+    = Empty
+    | WithUsername String
+    | WithPassword String
+    | Submittable String String
+
+
+type Token
+    = Token String

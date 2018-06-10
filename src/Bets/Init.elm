@@ -66,7 +66,7 @@ answers =
             "D2" => Just (team "ISL" "IJsland")
 
         d3 =
-            "D3" => Just (team "CRO" "Koratië")
+            "D3" => Just (team "CRO" "Kroatië")
 
         d4 =
             "D4" => Just (team "NGA" "Nigeria")

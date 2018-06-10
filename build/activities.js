@@ -25444,10 +25444,29 @@ var _user$project$Types$ActivityMeta = F3(
 	function (a, b, c) {
 		return {date: a, active: b, uuid: c};
 	});
-var _user$project$Types$Model = F9(
-	function (a, b, c, d, e, f, g, h, i) {
-		return {activities: a, comment: b, post: c, contents: d, showComment: e, showPost: f, page: g, bet: h, screenSize: i};
-	});
+var _user$project$Types$Model = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return {activities: a, comment: b, post: c, contents: d, showComment: e, showPost: f, page: g, bet: h, credentials: i, token: j, screenSize: k};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
 var _user$project$Types$Comment = F2(
 	function (a, b) {
 		return {author: a, msg: b};
@@ -25456,6 +25475,11 @@ var _user$project$Types$Post = F4(
 	function (a, b, c, d) {
 		return {author: a, title: b, msg: c, passphrase: d};
 	});
+var _user$project$Types$Creds = F2(
+	function (a, b) {
+		return {username: a, password: b};
+	});
+var _user$project$Types$Login = {ctor: 'Login'};
 var _user$project$Types$Bets = function (a) {
 	return {ctor: 'Bets', _0: a};
 };
@@ -25478,6 +25502,16 @@ var _user$project$Types$ANewBet = F3(
 	function (a, b, c) {
 		return {ctor: 'ANewBet', _0: a, _1: b, _2: c};
 	});
+var _user$project$Types$FetchedToken = function (a) {
+	return {ctor: 'FetchedToken', _0: a};
+};
+var _user$project$Types$Authenticate = {ctor: 'Authenticate'};
+var _user$project$Types$SetPassword = function (a) {
+	return {ctor: 'SetPassword', _0: a};
+};
+var _user$project$Types$SetUsername = function (a) {
+	return {ctor: 'SetUsername', _0: a};
+};
 var _user$project$Types$SetScreenSize = function (a) {
 	return {ctor: 'SetScreenSize', _0: a};
 };
@@ -25528,6 +25562,20 @@ var _user$project$Types$FetchedActivities = function (a) {
 };
 var _user$project$Types$Big = {ctor: 'Big'};
 var _user$project$Types$Small = {ctor: 'Small'};
+var _user$project$Types$Submittable = F2(
+	function (a, b) {
+		return {ctor: 'Submittable', _0: a, _1: b};
+	});
+var _user$project$Types$WithPassword = function (a) {
+	return {ctor: 'WithPassword', _0: a};
+};
+var _user$project$Types$WithUsername = function (a) {
+	return {ctor: 'WithUsername', _0: a};
+};
+var _user$project$Types$Empty = {ctor: 'Empty'};
+var _user$project$Types$Token = function (a) {
+	return {ctor: 'Token', _0: a};
+};
 
 var _user$project$UI_Color$secondaryText = A3(_elm_lang$core$Color$rgb, 0, 0, 0);
 var _user$project$UI_Color$primaryText = A3(_elm_lang$core$Color$rgb, 245, 245, 245);
@@ -30476,10 +30524,22 @@ var _user$project$Activities$viewActivities = function (wActivities) {
 				A2(_elm_lang$core$List$map, _user$project$Activities$viewActivity, _p6._0));
 	}
 };
-var _user$project$Activities$savePost = function (model) {
-	var post = _user$project$Activities$encodePost(model.post);
-	return A4(_ohanhi$remotedata_http$RemoteData_Http$post, '/activities/blogs', _user$project$Types$SavedPost, _user$project$Activities$decode, post);
-};
+var _user$project$Activities$savePost = F2(
+	function (model, token) {
+		var bearer = A2(_elm_lang$core$Basics_ops['++'], 'Bearer ', token);
+		var header = A2(_elm_lang$http$Http$header, 'Authorization', bearer);
+		var config = {
+			headers: {
+				ctor: '::',
+				_0: header,
+				_1: {ctor: '[]'}
+			},
+			withCredentials: true,
+			timeout: _elm_lang$core$Maybe$Nothing
+		};
+		var post = _user$project$Activities$encodePost(model.post);
+		return A5(_ohanhi$remotedata_http$RemoteData_Http$postWithConfig, config, '/activities/blogs', _user$project$Types$SavedPost, _user$project$Activities$decode, post);
+	});
 var _user$project$Activities$saveComment = function (model) {
 	var comment = _user$project$Activities$encodeComment(model.comment);
 	return A4(_ohanhi$remotedata_http$RemoteData_Http$post, '/activities/comments', _user$project$Types$SavedComment, _user$project$Activities$decode, comment);
@@ -30490,6 +30550,154 @@ var _user$project$Activities$fetchActivities = function (model) {
 var _user$project$Activities$IncomingActivities = function (a) {
 	return {activities: a};
 };
+
+var _user$project$Authentication$decode = A2(
+	_elm_lang$core$Json_Decode$map,
+	_user$project$Types$Token,
+	A2(_elm_lang$core$Json_Decode$field, 'token', _elm_lang$core$Json_Decode$string));
+var _user$project$Authentication$encodeCredentials = F2(
+	function (uid, pw) {
+		return _elm_lang$core$Json_Encode$object(
+			{
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'username',
+					_1: _elm_lang$core$Json_Encode$string(uid)
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'password',
+						_1: _elm_lang$core$Json_Encode$string(pw)
+					},
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+var _user$project$Authentication$viewLoginForm = function (model) {
+	var loginButton = function (isSubmittable) {
+		return isSubmittable ? A3(_user$project$UI_Button$pill, _user$project$UI_Style$Active, _user$project$Types$Authenticate, 'login!') : A3(_user$project$UI_Button$pill, _user$project$UI_Style$Inactive, _user$project$Types$None, 'je moet beide velden invullen');
+	};
+	var placeholder = function (p) {
+		return _mdgriffith$style_elements$Element_Input$placeholder(
+			{
+				text: p,
+				label: _mdgriffith$style_elements$Element_Input$hiddenLabel(p)
+			});
+	};
+	var username = function (v) {
+		var area = {
+			onChange: function (val) {
+				return _user$project$Types$SetUsername(val);
+			},
+			value: v,
+			label: placeholder('Username'),
+			options: {ctor: '[]'}
+		};
+		return A3(
+			_mdgriffith$style_elements$Element_Input$multiline,
+			_user$project$UI_Style$TextInput,
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Events$onFocus(_user$project$Types$ShowCommentInput),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$height(
+						_mdgriffith$style_elements$Element_Attributes$px(36)),
+					_1: {ctor: '[]'}
+				}
+			},
+			area);
+	};
+	var password = function (v) {
+		var area = {
+			onChange: function (val) {
+				return _user$project$Types$SetPassword(val);
+			},
+			value: v,
+			label: placeholder('Password'),
+			options: {ctor: '[]'}
+		};
+		return A3(
+			_mdgriffith$style_elements$Element_Input$text,
+			_user$project$UI_Style$TextInput,
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$height(
+					_mdgriffith$style_elements$Element_Attributes$px(36)),
+				_1: {ctor: '[]'}
+			},
+			area);
+	};
+	var _p0 = function () {
+		var _p1 = model.credentials;
+		switch (_p1.ctor) {
+			case 'Empty':
+				return {
+					ctor: '_Tuple3',
+					_0: username(''),
+					_1: password(''),
+					_2: false
+				};
+			case 'WithPassword':
+				return {
+					ctor: '_Tuple3',
+					_0: username(''),
+					_1: password(_p1._0),
+					_2: false
+				};
+			case 'WithUsername':
+				return {
+					ctor: '_Tuple3',
+					_0: username(_p1._0),
+					_1: password(''),
+					_2: false
+				};
+			default:
+				return {
+					ctor: '_Tuple3',
+					_0: username(_p1._0),
+					_1: password(_p1._1),
+					_2: true
+				};
+		}
+	}();
+	var inpUsername = _p0._0;
+	var inpPassword = _p0._1;
+	var isSubmittable = _p0._2;
+	return A3(
+		_mdgriffith$style_elements$Element$column,
+		_user$project$UI_Style$CommentInputBox,
+		{
+			ctor: '::',
+			_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$spacing(20),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: inpUsername,
+			_1: {
+				ctor: '::',
+				_0: inpPassword,
+				_1: {
+					ctor: '::',
+					_0: loginButton(isSubmittable),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Authentication$authenticate = F2(
+	function (uid, pw) {
+		var credentials = A2(_user$project$Authentication$encodeCredentials, uid, pw);
+		return A4(_ohanhi$remotedata_http$RemoteData_Http$post, '/authentications/', _user$project$Types$FetchedToken, _user$project$Authentication$decode, credentials);
+	});
 
 var _user$project$Bets_Types_Round$nextRound = function (r) {
 	var _p0 = r;
@@ -34161,54 +34369,7 @@ var _user$project$Main$viewHeader = function (screenSize) {
 		_mdgriffith$style_elements$Element$text('De Voetbalpool'));
 };
 var _user$project$Main$nav = F2(
-	function (page, screenSize) {
-		var comparePage = function (newPage) {
-			var _p0 = {ctor: '_Tuple2', _0: page, _1: newPage};
-			_v0_4:
-			do {
-				if (_p0.ctor === '_Tuple2') {
-					switch (_p0._0.ctor) {
-						case 'Home':
-							if (_p0._1.ctor === 'Home') {
-								return _user$project$UI_Style$Selected;
-							} else {
-								break _v0_4;
-							}
-						case 'Bets':
-							if (_p0._1.ctor === 'Bets') {
-								return _user$project$UI_Style$Selected;
-							} else {
-								break _v0_4;
-							}
-						case 'Ranking':
-							if (_p0._1.ctor === 'Ranking') {
-								return _user$project$UI_Style$Selected;
-							} else {
-								break _v0_4;
-							}
-						case 'Form':
-							if (_p0._1.ctor === 'Form') {
-								return _user$project$UI_Style$Selected;
-							} else {
-								break _v0_4;
-							}
-						default:
-							break _v0_4;
-					}
-				} else {
-					break _v0_4;
-				}
-			} while(false);
-			return _user$project$UI_Style$Potential;
-		};
-		var pageLink = F3(
-			function (newPage, hash, linkText) {
-				return A3(
-					_user$project$UI_Button$navLink,
-					comparePage(newPage),
-					_user$project$Types$Click(hash),
-					linkText);
-			});
+	function (options, screenSize) {
 		return A3(
 			_mdgriffith$style_elements$Element$navigation,
 			_user$project$UI_Style$Menu,
@@ -34226,22 +34387,138 @@ var _user$project$Main$nav = F2(
 					}
 				}
 			},
-			{
-				name: 'Main Navigation',
-				options: {
+			{name: 'Main Navigation', options: options});
+	});
+var _user$project$Main$comparePage = F2(
+	function (page, newPage) {
+		var _p0 = {ctor: '_Tuple2', _0: page, _1: newPage};
+		_v0_6:
+		do {
+			if (_p0.ctor === '_Tuple2') {
+				switch (_p0._0.ctor) {
+					case 'Home':
+						if (_p0._1.ctor === 'Home') {
+							return _user$project$UI_Style$Selected;
+						} else {
+							break _v0_6;
+						}
+					case 'Bets':
+						if (_p0._1.ctor === 'Bets') {
+							return _user$project$UI_Style$Selected;
+						} else {
+							break _v0_6;
+						}
+					case 'Ranking':
+						if (_p0._1.ctor === 'Ranking') {
+							return _user$project$UI_Style$Selected;
+						} else {
+							break _v0_6;
+						}
+					case 'Form':
+						if (_p0._1.ctor === 'Form') {
+							return _user$project$UI_Style$Selected;
+						} else {
+							break _v0_6;
+						}
+					case 'Blog':
+						if (_p0._1.ctor === 'Blog') {
+							return _user$project$UI_Style$Selected;
+						} else {
+							break _v0_6;
+						}
+					default:
+						if (_p0._1.ctor === 'Login') {
+							return _user$project$UI_Style$Selected;
+						} else {
+							break _v0_6;
+						}
+				}
+			} else {
+				break _v0_6;
+			}
+		} while(false);
+		return _user$project$UI_Style$Potential;
+	});
+var _user$project$Main$unauthenticatedOptions = F2(
+	function (page, screenSize) {
+		var pageLink = F3(
+			function (newPage, hash, linkText) {
+				return A3(
+					_user$project$UI_Button$navLink,
+					A2(_user$project$Main$comparePage, page, newPage),
+					_user$project$Types$Click(hash),
+					linkText);
+			});
+		return {
+			ctor: '::',
+			_0: A3(pageLink, _user$project$Types$Home, '/voetbalpool/#home', 'home'),
+			_1: {
+				ctor: '::',
+				_0: A3(pageLink, _user$project$Types$Ranking, '/voetbalpool/#stand', 'stand'),
+				_1: {
 					ctor: '::',
-					_0: A3(pageLink, _user$project$Types$Home, '/voetbalpool/#home', 'home'),
+					_0: A3(pageLink, _user$project$Types$Form, '/voetbalpool/#formulier', 'formulier'),
+					_1: {ctor: '[]'}
+				}
+			}
+		};
+	});
+var _user$project$Main$authenticatedOptions = F2(
+	function (page, screenSize) {
+		var pageLink = F3(
+			function (newPage, hash, linkText) {
+				return A3(
+					_user$project$UI_Button$navLink,
+					A2(_user$project$Main$comparePage, page, newPage),
+					_user$project$Types$Click(hash),
+					linkText);
+			});
+		return {
+			ctor: '::',
+			_0: A3(pageLink, _user$project$Types$Home, '/voetbalpool/#home', 'home'),
+			_1: {
+				ctor: '::',
+				_0: A3(pageLink, _user$project$Types$Ranking, '/voetbalpool/#stand', 'stand'),
+				_1: {
+					ctor: '::',
+					_0: A3(pageLink, _user$project$Types$Form, '/voetbalpool/#formulier', 'formulier'),
 					_1: {
 						ctor: '::',
-						_0: A3(pageLink, _user$project$Types$Ranking, '/voetbalpool/#stand', 'stand'),
-						_1: {
-							ctor: '::',
-							_0: A3(pageLink, _user$project$Types$Form, '/voetbalpool/#formulier', 'formulier'),
-							_1: {ctor: '[]'}
-						}
+						_0: A3(pageLink, _user$project$Types$Blog, '/voetbalpool/#blog', 'blog'),
+						_1: {ctor: '[]'}
 					}
 				}
-			});
+			}
+		};
+	});
+var _user$project$Main$viewNav = F3(
+	function (token, page, screenSize) {
+		var options = function () {
+			var _p1 = token;
+			if (_p1.ctor === 'Success') {
+				return A2(_user$project$Main$authenticatedOptions, page, screenSize);
+			} else {
+				return A2(_user$project$Main$unauthenticatedOptions, page, screenSize);
+			}
+		}();
+		return A3(
+			_mdgriffith$style_elements$Element$navigation,
+			_user$project$UI_Style$Menu,
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$paddingLeft(
+					_user$project$UI_Size$margin(screenSize)),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$paddingBottom(20),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$spacing(30),
+						_1: {ctor: '[]'}
+					}
+				}
+			},
+			{name: 'Main Navigation', options: options});
 	});
 var _user$project$Main$nav2 = A3(
 	_mdgriffith$style_elements$Element$navigation,
@@ -34316,8 +34593,8 @@ var _user$project$Main$viewForm = function (model) {
 };
 var _user$project$Main$viewBet = F2(
 	function (model, uuid) {
-		var _p1 = model.bet;
-		switch (_p1.ctor) {
+		var _p2 = model.bet;
+		switch (_p2.ctor) {
 			case 'NotAsked':
 				return _mdgriffith$style_elements$Element$text('Aan het ophalen.');
 			case 'Loading':
@@ -34325,7 +34602,7 @@ var _user$project$Main$viewBet = F2(
 			case 'Failure':
 				return _user$project$UI_Text$error('Oeps. Daar ging iets niet goed.');
 			default:
-				return A2(_user$project$Bets_View$viewBet, _p1._0, model.screenSize);
+				return A2(_user$project$Bets_View$viewBet, _p2._0, model.screenSize);
 		}
 	});
 var _user$project$Main$viewRanking = function (model) {
@@ -34369,8 +34646,8 @@ var _user$project$Main$viewHome = function (model) {
 var _user$project$Main$view = function (model) {
 	var w = _user$project$UI_Size$bodyWidth(model.screenSize);
 	var contentBase = function () {
-		var _p2 = model.page;
-		switch (_p2.ctor) {
+		var _p3 = model.page;
+		switch (_p3.ctor) {
 			case 'Home':
 				return _user$project$Main$viewHome(model);
 			case 'Blog':
@@ -34378,9 +34655,11 @@ var _user$project$Main$view = function (model) {
 			case 'Ranking':
 				return _user$project$Main$viewRanking(model);
 			case 'Bets':
-				return A2(_user$project$Main$viewBet, model, _p2._0);
-			default:
+				return A2(_user$project$Main$viewBet, model, _p3._0);
+			case 'Form':
 				return _user$project$Main$viewForm(model);
+			default:
+				return _user$project$Authentication$viewLoginForm(model);
 		}
 	}();
 	var content = A3(
@@ -34406,7 +34685,7 @@ var _user$project$Main$view = function (model) {
 			_0: _user$project$Main$viewHeader(model.screenSize),
 			_1: {
 				ctor: '::',
-				_0: A2(_user$project$Main$nav, model.page, model.screenSize),
+				_0: A3(_user$project$Main$viewNav, model.token, model.page, model.screenSize),
 				_1: {
 					ctor: '::',
 					_0: content,
@@ -34424,15 +34703,15 @@ var _user$project$Main$view = function (model) {
 			page));
 };
 var _user$project$Main$getPage = function (hash) {
-	var emptyFunc = function (_p3) {
+	var emptyFunc = function (_p4) {
 		return _elm_lang$core$Platform_Cmd$none;
 	};
 	var locs = A2(_elm_lang$core$String$split, '/', hash);
-	var _p4 = locs;
-	_v3_6:
+	var _p5 = locs;
+	_v4_7:
 	do {
-		if (_p4.ctor === '::') {
-			switch (_p4._0) {
+		if (_p5.ctor === '::') {
+			switch (_p5._0) {
 				case '#home':
 					return {ctor: '_Tuple2', _0: _user$project$Types$Home, _1: _user$project$Types$RefreshActivities};
 				case '#blog':
@@ -34440,11 +34719,11 @@ var _user$project$Main$getPage = function (hash) {
 				case '#formulier':
 					return {ctor: '_Tuple2', _0: _user$project$Types$Form, _1: _user$project$Types$None};
 				case '#inzendingen':
-					if (_p4._1.ctor === '::') {
-						var _p5 = _p4._1._0;
-						return _danyx23$elm_uuid$Uuid_Barebones$isValidUuid(_p5) ? {
+					if (_p5._1.ctor === '::') {
+						var _p6 = _p5._1._0;
+						return _danyx23$elm_uuid$Uuid_Barebones$isValidUuid(_p6) ? {
 							ctor: '_Tuple2',
-							_0: _user$project$Types$Bets(_p5),
+							_0: _user$project$Types$Bets(_p6),
 							_1: _user$project$Types$BetSelected
 						} : {ctor: '_Tuple2', _0: _user$project$Types$Ranking, _1: _user$project$Types$None};
 					} else {
@@ -34452,11 +34731,13 @@ var _user$project$Main$getPage = function (hash) {
 					}
 				case '#stand':
 					return {ctor: '_Tuple2', _0: _user$project$Types$Ranking, _1: _user$project$Types$None};
+				case '#login':
+					return {ctor: '_Tuple2', _0: _user$project$Types$Login, _1: _user$project$Types$None};
 				default:
-					break _v3_6;
+					break _v4_7;
 			}
 		} else {
-			break _v3_6;
+			break _v4_7;
 		}
 	} while(false);
 	return {ctor: '_Tuple2', _0: _user$project$Types$Home, _1: _user$project$Types$RefreshActivities};
@@ -34479,14 +34760,16 @@ var _user$project$Main$newModel = {
 	showPost: false,
 	page: _user$project$Types$Home,
 	bet: _krisajenkins$remotedata$RemoteData$NotAsked,
+	credentials: _user$project$Types$Empty,
+	token: _krisajenkins$remotedata$RemoteData$NotAsked,
 	screenSize: _user$project$Types$Small
 };
 var _user$project$Main$update = F2(
 	function (action, model) {
 		update:
 		while (true) {
-			var _p6 = action;
-			switch (_p6.ctor) {
+			var _p7 = action;
+			switch (_p7.ctor) {
 				case 'None':
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				case 'FetchedBet':
@@ -34494,7 +34777,7 @@ var _user$project$Main$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{bet: _p6._0}),
+							{bet: _p7._0}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				case 'FetchedActivities':
@@ -34502,14 +34785,14 @@ var _user$project$Main$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{activities: _p6._0}),
+							{activities: _p7._0}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				case 'SetCommentAuthor':
 					var oldComment = model.comment;
 					var nwComment = _elm_lang$core$Native_Utils.update(
 						oldComment,
-						{author: _p6._0});
+						{author: _p7._0});
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -34537,7 +34820,7 @@ var _user$project$Main$update = F2(
 					var oldComment = model.comment;
 					var nwComment = _elm_lang$core$Native_Utils.update(
 						oldComment,
-						{msg: _p6._0});
+						{msg: _p7._0});
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -34553,14 +34836,14 @@ var _user$project$Main$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{activities: _p6._0, comment: _user$project$Main$newComment, showComment: false}),
+							{activities: _p7._0, comment: _user$project$Main$newComment, showComment: false}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				case 'SetPostAuthor':
 					var oldPost = model.post;
 					var nwPost = _elm_lang$core$Native_Utils.update(
 						oldPost,
-						{author: _p6._0});
+						{author: _p7._0});
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -34588,7 +34871,7 @@ var _user$project$Main$update = F2(
 					var oldPost = model.post;
 					var nwPost = _elm_lang$core$Native_Utils.update(
 						oldPost,
-						{msg: _p6._0});
+						{msg: _p7._0});
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -34600,7 +34883,7 @@ var _user$project$Main$update = F2(
 					var oldPost = model.post;
 					var nwPost = _elm_lang$core$Native_Utils.update(
 						oldPost,
-						{title: _p6._0});
+						{title: _p7._0});
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -34612,7 +34895,7 @@ var _user$project$Main$update = F2(
 					var oldPost = model.post;
 					var nwPost = _elm_lang$core$Native_Utils.update(
 						oldPost,
-						{passphrase: _p6._0});
+						{passphrase: _p7._0});
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -34621,47 +34904,54 @@ var _user$project$Main$update = F2(
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				case 'SavePost':
-					var cmd = _user$project$Activities$savePost(model);
+					var cmd = function () {
+						var _p8 = model.token;
+						if (_p8.ctor === 'Success') {
+							return A2(_user$project$Activities$savePost, model, _p8._0._0);
+						} else {
+							return _elm_lang$core$Platform_Cmd$none;
+						}
+					}();
 					return {ctor: '_Tuple2', _0: model, _1: cmd};
 				case 'SavedPost':
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{activities: _p6._0, post: _user$project$Main$newPost, showPost: false}),
+							{activities: _p7._0, post: _user$project$Main$newPost, showPost: false}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				case 'UrlChange':
-					var _p7 = _user$project$Main$getPage(_p6._0.hash);
-					var page = _p7._0;
-					var msg = _p7._1;
+					var _p9 = _user$project$Main$getPage(_p7._0.hash);
+					var page = _p9._0;
+					var msg = _p9._1;
 					var newModel = _elm_lang$core$Native_Utils.update(
 						model,
 						{page: page});
-					var _v5 = msg,
-						_v6 = newModel;
-					action = _v5;
-					model = _v6;
+					var _v7 = msg,
+						_v8 = newModel;
+					action = _v7;
+					model = _v8;
 					continue update;
 				case 'Click':
 					return {
 						ctor: '_Tuple2',
 						_0: model,
-						_1: _elm_lang$navigation$Navigation$newUrl(_p6._0)
+						_1: _elm_lang$navigation$Navigation$newUrl(_p7._0)
 					};
 				case 'BetSelected':
 					var mUuid = function () {
-						var _p8 = model.page;
-						if (_p8.ctor === 'Bets') {
-							return _elm_lang$core$Maybe$Just(_p8._0);
+						var _p10 = model.page;
+						if (_p10.ctor === 'Bets') {
+							return _elm_lang$core$Maybe$Just(_p10._0);
 						} else {
 							return _elm_lang$core$Maybe$Nothing;
 						}
 					}();
 					var cmd = function () {
-						var _p9 = mUuid;
-						if (_p9.ctor === 'Just') {
-							return A2(_user$project$Bets_Api$retrieveBet, _p9._0, _user$project$Types$FetchedBet);
+						var _p11 = mUuid;
+						if (_p11.ctor === 'Just') {
+							return A2(_user$project$Bets_Api$retrieveBet, _p11._0, _user$project$Types$FetchedBet);
 						} else {
 							return _elm_lang$core$Platform_Cmd$none;
 						}
@@ -34673,8 +34963,8 @@ var _user$project$Main$update = F2(
 						_0: model,
 						_1: _user$project$Activities$fetchActivities(model)
 					};
-				default:
-					var screenSize = _user$project$UI_Size$classifyDevice(_p6._0);
+				case 'SetScreenSize':
+					var screenSize = _user$project$UI_Size$classifyDevice(_p7._0);
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -34682,6 +34972,78 @@ var _user$project$Main$update = F2(
 							{screenSize: screenSize}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
+				case 'SetUsername':
+					var _p13 = _p7._0;
+					var newCredentials = function () {
+						var _p12 = model.credentials;
+						switch (_p12.ctor) {
+							case 'Empty':
+								return _user$project$Types$WithUsername(_p13);
+							case 'WithPassword':
+								return A2(_user$project$Types$Submittable, _p13, _p12._0);
+							case 'WithUsername':
+								return _user$project$Types$WithUsername(_p12._0);
+							default:
+								return A2(_user$project$Types$Submittable, _p13, _p12._1);
+						}
+					}();
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{credentials: newCredentials}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				case 'SetPassword':
+					var _p15 = _p7._0;
+					var newCredentials = function () {
+						var _p14 = model.credentials;
+						switch (_p14.ctor) {
+							case 'Empty':
+								return _user$project$Types$WithPassword(_p15);
+							case 'WithPassword':
+								return _user$project$Types$WithPassword(_p15);
+							case 'WithUsername':
+								return A2(_user$project$Types$Submittable, _p14._0, _p15);
+							default:
+								return A2(_user$project$Types$Submittable, _p14._0, _p15);
+						}
+					}();
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{credentials: newCredentials}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				case 'FetchedToken':
+					var _p17 = _p7._0;
+					var newCredentials = function () {
+						var _p16 = _p17;
+						if (_p16.ctor === 'Success') {
+							return _user$project$Types$Empty;
+						} else {
+							return model.credentials;
+						}
+					}();
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{token: _p17, credentials: newCredentials}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				default:
+					var _p18 = model.credentials;
+					if (_p18.ctor === 'Submittable') {
+						return {
+							ctor: '_Tuple2',
+							_0: model,
+							_1: A2(_user$project$Authentication$authenticate, _p18._0, _p18._1)
+						};
+					} else {
+						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+					}
 			}
 		}
 	});
@@ -34689,9 +35051,9 @@ var _user$project$Main$init = F2(
 	function (flags, loc) {
 		var screenSize = _user$project$UI_Size$classifyDevice(
 			{width: flags.width, height: 0});
-		var _p10 = _user$project$Main$getPage(loc.hash);
-		var page = _p10._0;
-		var msg = _p10._1;
+		var _p19 = _user$project$Main$getPage(loc.hash);
+		var page = _p19._0;
+		var msg = _p19._1;
 		var model = _elm_lang$core$Native_Utils.update(
 			_user$project$Main$newModel,
 			{page: page, screenSize: screenSize});

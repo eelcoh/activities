@@ -11,6 +11,7 @@ import Navigation
 import Uuid.Barebones as Uuid
 import Types exposing (..)
 import Activities
+import Authentication
 import Bets.Api exposing (retrieveBet)
 import Bets.View
 import RemoteData exposing (RemoteData(..), WebData)
@@ -38,6 +39,8 @@ newModel =
     , showPost = False
     , page = Home
     , bet = NotAsked
+    , credentials = Empty
+    , token = NotAsked
     , screenSize = Small
     }
 
@@ -139,7 +142,12 @@ update action model =
         SavePost ->
             let
                 cmd =
-                    Activities.savePost model
+                    case model.token of
+                        RemoteData.Success (Token token) ->
+                            Activities.savePost model token
+
+                        _ ->
+                            Cmd.none
             in
                 ( model, cmd )
 
@@ -189,6 +197,62 @@ update action model =
             in
                 ( { model | screenSize = screenSize }, Cmd.none )
 
+        SetUsername uid ->
+            let
+                newCredentials =
+                    case model.credentials of
+                        Empty ->
+                            WithUsername uid
+
+                        WithPassword pw ->
+                            Submittable uid pw
+
+                        WithUsername uid ->
+                            WithUsername uid
+
+                        Submittable _ pw ->
+                            Submittable uid pw
+            in
+                ( { model | credentials = newCredentials }, Cmd.none )
+
+        SetPassword pw ->
+            let
+                newCredentials =
+                    case model.credentials of
+                        Empty ->
+                            WithPassword pw
+
+                        WithPassword _ ->
+                            WithPassword pw
+
+                        WithUsername uid ->
+                            Submittable uid pw
+
+                        Submittable uid _ ->
+                            Submittable uid pw
+            in
+                ( { model | credentials = newCredentials }, Cmd.none )
+
+        FetchedToken token ->
+            let
+                newCredentials =
+                    case token of
+                        Success _ ->
+                            Empty
+
+                        _ ->
+                            model.credentials
+            in
+                ( { model | token = token, credentials = newCredentials }, Cmd.none )
+
+        Authenticate ->
+            case model.credentials of
+                Submittable uid pw ->
+                    ( model, Authentication.authenticate uid pw )
+
+                _ ->
+                    ( model, Cmd.none )
+
 
 getPage : String -> ( Page, Msg )
 getPage hash =
@@ -221,6 +285,9 @@ getPage hash =
             "#stand" :: _ ->
                 ( Ranking, None )
 
+            "#login" :: _ ->
+                ( Login, None )
+
             _ ->
                 ( Home, RefreshActivities )
 
@@ -245,6 +312,9 @@ view model =
                 Form ->
                     viewForm model
 
+                Login ->
+                    Authentication.viewLoginForm model
+
         w =
             bodyWidth model.screenSize
 
@@ -258,7 +328,7 @@ view model =
             Element.column UI.Style.None
                 []
                 [ viewHeader model.screenSize
-                , nav model.page model.screenSize
+                , viewNav model.token model.page model.screenSize
                 , content
                 ]
     in
@@ -326,38 +396,81 @@ nav2 =
         }
 
 
-nav : Page -> ScreenSize -> Element.Element UI.Style.Style variation Msg
-nav page screenSize =
+viewNav : WebData Token -> Page -> ScreenSize -> Element.Element UI.Style.Style variation Msg
+viewNav token page screenSize =
     let
-        comparePage newPage =
-            case ( page, newPage ) of
-                ( Home, Home ) ->
-                    UI.Style.Selected
-
-                ( Bets _, Bets _ ) ->
-                    UI.Style.Selected
-
-                ( Ranking, Ranking ) ->
-                    UI.Style.Selected
-
-                ( Form, Form ) ->
-                    UI.Style.Selected
+        options =
+            case token of
+                Success _ ->
+                    authenticatedOptions page screenSize
 
                 _ ->
-                    UI.Style.Potential
-
-        pageLink newPage hash linkText =
-            UI.Button.navLink (comparePage newPage) (Click hash) linkText
+                    unauthenticatedOptions page screenSize
     in
         Element.navigation UI.Style.Menu
             [ paddingLeft (Size.margin screenSize), paddingBottom 20, spacing 30 ]
             { name = "Main Navigation"
-            , options =
-                [ pageLink Home "/voetbalpool/#home" "home"
-                , pageLink Ranking "/voetbalpool/#stand" "stand"
-                , pageLink Form "/voetbalpool/#formulier" "formulier"
-                ]
+            , options = options
             }
+
+
+comparePage : Page -> Page -> UI.Style.ButtonSemantics
+comparePage page newPage =
+    case ( page, newPage ) of
+        ( Home, Home ) ->
+            UI.Style.Selected
+
+        ( Bets _, Bets _ ) ->
+            UI.Style.Selected
+
+        ( Ranking, Ranking ) ->
+            UI.Style.Selected
+
+        ( Form, Form ) ->
+            UI.Style.Selected
+
+        ( Blog, Blog ) ->
+            UI.Style.Selected
+
+        ( Login, Login ) ->
+            UI.Style.Selected
+
+        _ ->
+            UI.Style.Potential
+
+
+unauthenticatedOptions : Page -> ScreenSize -> List (Element.Element UI.Style.Style variation Msg)
+unauthenticatedOptions page screenSize =
+    let
+        pageLink newPage hash linkText =
+            UI.Button.navLink (comparePage page newPage) (Click hash) linkText
+    in
+        [ pageLink Home "/voetbalpool/#home" "home"
+        , pageLink Ranking "/voetbalpool/#stand" "stand"
+        , pageLink Form "/voetbalpool/#formulier" "formulier"
+        ]
+
+
+authenticatedOptions : Page -> ScreenSize -> List (Element.Element UI.Style.Style variation Msg)
+authenticatedOptions page screenSize =
+    let
+        pageLink newPage hash linkText =
+            UI.Button.navLink (comparePage page newPage) (Click hash) linkText
+    in
+        [ pageLink Home "/voetbalpool/#home" "home"
+        , pageLink Ranking "/voetbalpool/#stand" "stand"
+        , pageLink Form "/voetbalpool/#formulier" "formulier"
+        , pageLink Blog "/voetbalpool/#blog" "blog"
+        ]
+
+
+nav : List (Element.Element UI.Style.Style variation msg) -> ScreenSize -> Element.Element UI.Style.Style variation msg
+nav options screenSize =
+    Element.navigation UI.Style.Menu
+        [ paddingLeft (Size.margin screenSize), paddingBottom 20, spacing 30 ]
+        { name = "Main Navigation"
+        , options = options
+        }
 
 
 viewHeader : ScreenSize -> Element.Element UI.Style.Style variation Msg

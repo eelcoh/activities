@@ -3,6 +3,7 @@ module Activities exposing (..)
 import Types exposing (Model, Activity(..), Msg(..), Comment, ActivityMeta, Post)
 import RemoteData exposing (RemoteData(..), WebData)
 import RemoteData.Http as Web
+import Http
 import Json.Encode
 import Json.Decode exposing (Decoder, andThen, maybe, field)
 import Element exposing (column, row)
@@ -31,13 +32,25 @@ saveComment model =
         Web.post "/activities/comments" SavedComment decode comment
 
 
-savePost : Model -> Cmd Msg
-savePost model =
+savePost : Model -> String -> Cmd Msg
+savePost model token =
     let
         post =
             encodePost model.post
+
+        bearer =
+            "Bearer " ++ token
+
+        header =
+            Http.header "Authorization" bearer
+
+        config =
+            { headers = [ header ]
+            , withCredentials = True
+            , timeout = Nothing
+            }
     in
-        Web.post "/activities/blogs" SavedPost decode post
+        Web.postWithConfig config "/activities/blogs" SavedPost decode post
 
 
 viewActivities : WebData (List Activity) -> Element.Element UI.Style.Style variation Msg
