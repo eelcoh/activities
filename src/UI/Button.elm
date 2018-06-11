@@ -100,3 +100,23 @@ maybeTeamBadge semantics team =
             Element.el UI.Style.TeamName [] (UI.Team.viewTeamEl (team))
     in
         Element.column (UI.Style.TeamButton semantics) buttonLayout [ textElement ]
+
+
+scoreButton : ScoreButtonSemantics -> msg -> String -> Element Style variation msg
+scoreButton semantics msg buttonText =
+    let
+        w =
+            px 48
+                |> width
+
+        h =
+            px 28
+                |> height
+
+        buttonLayout =
+            [ w, h, onClick msg, center, verticalCenter ]
+
+        textElement =
+            Element.el UI.Style.Score [] (text buttonText)
+    in
+        Element.column (UI.Style.ScoreButton semantics) buttonLayout [ textElement ]

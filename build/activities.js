@@ -25455,7 +25455,13 @@ var _user$project$Types$Model = function (a) {
 								return function (i) {
 									return function (j) {
 										return function (k) {
-											return {activities: a, comment: b, post: c, contents: d, showComment: e, showPost: f, page: g, bet: h, credentials: i, token: j, screenSize: k};
+											return function (l) {
+												return function (m) {
+													return function (n) {
+														return {activities: a, comment: b, post: c, contents: d, showComment: e, showPost: f, page: g, bet: h, credentials: i, token: j, ranking: k, matchResults: l, matchResult: m, screenSize: n};
+													};
+												};
+											};
 										};
 									};
 								};
@@ -25479,6 +25485,31 @@ var _user$project$Types$Creds = F2(
 	function (a, b) {
 		return {username: a, password: b};
 	});
+var _user$project$Types$RankingSummary = F2(
+	function (a, b) {
+		return {summary: a, time: b};
+	});
+var _user$project$Types$RankingGroup = F3(
+	function (a, b, c) {
+		return {pos: a, bets: b, total: c};
+	});
+var _user$project$Types$RankingSummaryLine = F5(
+	function (a, b, c, d, e) {
+		return {name: a, rounds: b, topscorer: c, total: d, uuid: e};
+	});
+var _user$project$Types$RoundScore = F2(
+	function (a, b) {
+		return {round: a, points: b};
+	});
+var _user$project$Types$MatchResults = function (a) {
+	return {results: a};
+};
+var _user$project$Types$MatchResult = F5(
+	function (a, b, c, d, e) {
+		return {matchResultId: a, match: b, homeTeam: c, awayTeam: d, score: e};
+	});
+var _user$project$Types$EditMatchResult = {ctor: 'EditMatchResult'};
+var _user$project$Types$Results = {ctor: 'Results'};
 var _user$project$Types$Login = {ctor: 'Login'};
 var _user$project$Types$Bets = function (a) {
 	return {ctor: 'Bets', _0: a};
@@ -25502,6 +25533,27 @@ var _user$project$Types$ANewBet = F3(
 	function (a, b, c) {
 		return {ctor: 'ANewBet', _0: a, _1: b, _2: c};
 	});
+var _user$project$Types$StoredMatchResult = function (a) {
+	return {ctor: 'StoredMatchResult', _0: a};
+};
+var _user$project$Types$CancelMatchResult = function (a) {
+	return {ctor: 'CancelMatchResult', _0: a};
+};
+var _user$project$Types$UpdateMatchResult = function (a) {
+	return {ctor: 'UpdateMatchResult', _0: a};
+};
+var _user$project$Types$EditMatch = function (a) {
+	return {ctor: 'EditMatch', _0: a};
+};
+var _user$project$Types$RefreshResults = {ctor: 'RefreshResults'};
+var _user$project$Types$FetchedMatchResults = function (a) {
+	return {ctor: 'FetchedMatchResults', _0: a};
+};
+var _user$project$Types$RefreshRanking = {ctor: 'RefreshRanking'};
+var _user$project$Types$FetchedRanking = function (a) {
+	return {ctor: 'FetchedRanking', _0: a};
+};
+var _user$project$Types$RecreateRanking = {ctor: 'RecreateRanking'};
 var _user$project$Types$FetchedToken = function (a) {
 	return {ctor: 'FetchedToken', _0: a};
 };
@@ -25576,6 +25628,8 @@ var _user$project$Types$Empty = {ctor: 'Empty'};
 var _user$project$Types$Token = function (a) {
 	return {ctor: 'Token', _0: a};
 };
+var _user$project$Types$Authorised = {ctor: 'Authorised'};
+var _user$project$Types$Unauthorised = {ctor: 'Unauthorised'};
 
 var _user$project$UI_Color$secondaryText = A3(_elm_lang$core$Color$rgb, 0, 0, 0);
 var _user$project$UI_Color$primaryText = A3(_elm_lang$core$Color$rgb, 245, 245, 245);
@@ -25636,6 +25690,18 @@ var _user$project$UI_Style$fontSansSerif = _mdgriffith$style_elements$Style_Font
 			}
 		}
 	});
+var _user$project$UI_Style$ScoreButton = function (a) {
+	return {ctor: 'ScoreButton', _0: a};
+};
+var _user$project$UI_Style$RankingHeader = {ctor: 'RankingHeader'};
+var _user$project$UI_Style$RankingNameH = {ctor: 'RankingNameH'};
+var _user$project$UI_Style$RankingPosH = {ctor: 'RankingPosH'};
+var _user$project$UI_Style$RankingPointsH = {ctor: 'RankingPointsH'};
+var _user$project$UI_Style$RankingName = {ctor: 'RankingName'};
+var _user$project$UI_Style$RankingPos = {ctor: 'RankingPos'};
+var _user$project$UI_Style$RankingPoints = {ctor: 'RankingPoints'};
+var _user$project$UI_Style$RankingLine = {ctor: 'RankingLine'};
+var _user$project$UI_Style$RankingGroup = {ctor: 'RankingGroup'};
 var _user$project$UI_Style$NavLink = function (a) {
 	return {ctor: 'NavLink', _0: a};
 };
@@ -26977,7 +27043,253 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																																									}
 																																																								}
 																																																							}),
-																																																						_1: {ctor: '[]'}
+																																																						_1: {
+																																																							ctor: '::',
+																																																							_0: A2(
+																																																								_mdgriffith$style_elements$Style$style,
+																																																								_user$project$UI_Style$RankingGroup,
+																																																								{
+																																																									ctor: '::',
+																																																									_0: _mdgriffith$style_elements$Style_Border$bottom(1),
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondary),
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: _user$project$UI_Style$fontMono,
+																																																											_1: {ctor: '[]'}
+																																																										}
+																																																									}
+																																																								}),
+																																																							_1: {
+																																																								ctor: '::',
+																																																								_0: A2(
+																																																									_mdgriffith$style_elements$Style$style,
+																																																									_user$project$UI_Style$RankingHeader,
+																																																									{
+																																																										ctor: '::',
+																																																										_0: _mdgriffith$style_elements$Style_Border$bottom(2),
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondary),
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: _user$project$UI_Style$fontMono,
+																																																												_1: {ctor: '[]'}
+																																																											}
+																																																										}
+																																																									}),
+																																																								_1: {
+																																																									ctor: '::',
+																																																									_0: A2(
+																																																										_mdgriffith$style_elements$Style$style,
+																																																										_user$project$UI_Style$RankingPoints,
+																																																										{
+																																																											ctor: '::',
+																																																											_0: _user$project$UI_Style$fontMono,
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: _mdgriffith$style_elements$Style_Font$alignRight,
+																																																												_1: {ctor: '[]'}
+																																																											}
+																																																										}),
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: A2(
+																																																											_mdgriffith$style_elements$Style$style,
+																																																											_user$project$UI_Style$RankingPos,
+																																																											{
+																																																												ctor: '::',
+																																																												_0: _user$project$UI_Style$fontMono,
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: _mdgriffith$style_elements$Style_Font$alignRight,
+																																																													_1: {ctor: '[]'}
+																																																												}
+																																																											}),
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: A2(
+																																																												_mdgriffith$style_elements$Style$style,
+																																																												_user$project$UI_Style$RankingName,
+																																																												{
+																																																													ctor: '::',
+																																																													_0: _user$project$UI_Style$fontMono,
+																																																													_1: {
+																																																														ctor: '::',
+																																																														_0: _mdgriffith$style_elements$Style_Font$alignLeft,
+																																																														_1: {ctor: '[]'}
+																																																													}
+																																																												}),
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: A2(
+																																																													_mdgriffith$style_elements$Style$style,
+																																																													_user$project$UI_Style$RankingPosH,
+																																																													{
+																																																														ctor: '::',
+																																																														_0: _user$project$UI_Style$fontMono,
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: _mdgriffith$style_elements$Style_Font$alignRight,
+																																																															_1: {
+																																																																ctor: '::',
+																																																																_0: _mdgriffith$style_elements$Style_Font$weight(700),
+																																																																_1: {ctor: '[]'}
+																																																															}
+																																																														}
+																																																													}),
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: A2(
+																																																														_mdgriffith$style_elements$Style$style,
+																																																														_user$project$UI_Style$RankingNameH,
+																																																														{
+																																																															ctor: '::',
+																																																															_0: _user$project$UI_Style$fontMono,
+																																																															_1: {
+																																																																ctor: '::',
+																																																																_0: _mdgriffith$style_elements$Style_Font$alignLeft,
+																																																																_1: {
+																																																																	ctor: '::',
+																																																																	_0: _mdgriffith$style_elements$Style_Font$weight(700),
+																																																																	_1: {ctor: '[]'}
+																																																																}
+																																																															}
+																																																														}),
+																																																													_1: {
+																																																														ctor: '::',
+																																																														_0: A2(
+																																																															_mdgriffith$style_elements$Style$style,
+																																																															_user$project$UI_Style$RankingPointsH,
+																																																															{
+																																																																ctor: '::',
+																																																																_0: _user$project$UI_Style$fontMono,
+																																																																_1: {
+																																																																	ctor: '::',
+																																																																	_0: _mdgriffith$style_elements$Style_Font$alignRight,
+																																																																	_1: {
+																																																																		ctor: '::',
+																																																																		_0: _mdgriffith$style_elements$Style_Font$weight(700),
+																																																																		_1: {ctor: '[]'}
+																																																																	}
+																																																																}
+																																																															}),
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: A2(
+																																																																_mdgriffith$style_elements$Style$style,
+																																																																_user$project$UI_Style$ScoreButton(_user$project$UI_Style$SBPotential),
+																																																																{
+																																																																	ctor: '::',
+																																																																	_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondary),
+																																																																	_1: {
+																																																																		ctor: '::',
+																																																																		_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: _mdgriffith$style_elements$Style_Border$all(1),
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondary),
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.0),
+																																																																					_1: {
+																																																																						ctor: '::',
+																																																																						_0: _mdgriffith$style_elements$Style_Font$center,
+																																																																						_1: {
+																																																																							ctor: '::',
+																																																																							_0: _mdgriffith$style_elements$Style_Font$size(15),
+																																																																							_1: {
+																																																																								ctor: '::',
+																																																																								_0: _mdgriffith$style_elements$Style$hover(
+																																																																									{
+																																																																										ctor: '::',
+																																																																										_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																																																																										_1: {ctor: '[]'}
+																																																																									}),
+																																																																								_1: {
+																																																																									ctor: '::',
+																																																																									_0: _mdgriffith$style_elements$Style_Font$typeface(
+																																																																										{
+																																																																											ctor: '::',
+																																																																											_0: _mdgriffith$style_elements$Style_Font$font('Roboto Mono'),
+																																																																											_1: {ctor: '[]'}
+																																																																										}),
+																																																																									_1: {ctor: '[]'}
+																																																																								}
+																																																																							}
+																																																																						}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}),
+																																																															_1: {
+																																																																ctor: '::',
+																																																																_0: A2(
+																																																																	_mdgriffith$style_elements$Style$style,
+																																																																	_user$project$UI_Style$ScoreButton(_user$project$UI_Style$SBSelected),
+																																																																	{
+																																																																		ctor: '::',
+																																																																		_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: _mdgriffith$style_elements$Style_Border$all(1),
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondary),
+																																																																					_1: {
+																																																																						ctor: '::',
+																																																																						_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.0),
+																																																																						_1: {
+																																																																							ctor: '::',
+																																																																							_0: _mdgriffith$style_elements$Style_Font$center,
+																																																																							_1: {
+																																																																								ctor: '::',
+																																																																								_0: _mdgriffith$style_elements$Style_Font$size(15),
+																																																																								_1: {
+																																																																									ctor: '::',
+																																																																									_0: _mdgriffith$style_elements$Style$hover(
+																																																																										{
+																																																																											ctor: '::',
+																																																																											_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																																																																											_1: {ctor: '[]'}
+																																																																										}),
+																																																																									_1: {
+																																																																										ctor: '::',
+																																																																										_0: _mdgriffith$style_elements$Style_Font$typeface(
+																																																																											{
+																																																																												ctor: '::',
+																																																																												_0: _mdgriffith$style_elements$Style_Font$font('Roboto Mono'),
+																																																																												_1: {ctor: '[]'}
+																																																																											}),
+																																																																										_1: {ctor: '[]'}
+																																																																									}
+																																																																								}
+																																																																							}
+																																																																						}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}),
+																																																																_1: {ctor: '[]'}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
 																																																					}
 																																																				}
 																																																			}
@@ -29232,6 +29544,48 @@ var _user$project$UI_Team$viewTeam = function (mTeam) {
 		_user$project$UI_Team$viewTeamEl(mTeam));
 };
 
+var _user$project$UI_Button$scoreButton = F3(
+	function (semantics, msg, buttonText) {
+		var textElement = A3(
+			_mdgriffith$style_elements$Element$el,
+			_user$project$UI_Style$Score,
+			{ctor: '[]'},
+			_mdgriffith$style_elements$Element$text(buttonText));
+		var h = _mdgriffith$style_elements$Element_Attributes$height(
+			_mdgriffith$style_elements$Element_Attributes$px(28));
+		var w = _mdgriffith$style_elements$Element_Attributes$width(
+			_mdgriffith$style_elements$Element_Attributes$px(48));
+		var buttonLayout = {
+			ctor: '::',
+			_0: w,
+			_1: {
+				ctor: '::',
+				_0: h,
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Events$onClick(msg),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$center,
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		};
+		return A3(
+			_mdgriffith$style_elements$Element$column,
+			_user$project$UI_Style$ScoreButton(semantics),
+			buttonLayout,
+			{
+				ctor: '::',
+				_0: textElement,
+				_1: {ctor: '[]'}
+			});
+	});
 var _user$project$UI_Button$maybeTeamBadge = F2(
 	function (semantics, team) {
 		var textElement = A3(
@@ -29492,6 +29846,95 @@ var _user$project$UI_Button$pill = F3(
 			});
 	});
 
+var _user$project$UI_Text$dateText = function (dt) {
+	var twoDigitString = function (n) {
+		return (_elm_lang$core$Native_Utils.cmp(n, 10) < 0) ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			'0',
+			_elm_lang$core$Basics$toString(n)) : _elm_lang$core$Basics$toString(n);
+	};
+	var toDay = function (day) {
+		var _p0 = day;
+		switch (_p0.ctor) {
+			case 'Mon':
+				return 'maandag';
+			case 'Tue':
+				return 'dinsdag';
+			case 'Wed':
+				return 'woensdag';
+			case 'Thu':
+				return 'donderdag';
+			case 'Fri':
+				return 'vrijdag';
+			case 'Sat':
+				return 'zaterdag';
+			default:
+				return 'zondag';
+		}
+	};
+	var toMonth = function (mon) {
+		var _p1 = mon;
+		switch (_p1.ctor) {
+			case 'Jan':
+				return 'januari';
+			case 'Feb':
+				return 'februari';
+			case 'Mar':
+				return 'maart';
+			case 'Apr':
+				return 'april';
+			case 'May':
+				return 'mei';
+			case 'Jun':
+				return 'juni';
+			case 'Jul':
+				return 'juli';
+			case 'Aug':
+				return 'augustus';
+			case 'Sep':
+				return 'september';
+			case 'Oct':
+				return 'oktober';
+			case 'Nov':
+				return 'november';
+			default:
+				return 'december';
+		}
+	};
+	var mn = _elm_lang$core$Date$minute(dt);
+	var h = _elm_lang$core$Date$hour(dt);
+	var dd = toDay(
+		_elm_lang$core$Date$dayOfWeek(dt));
+	var d = _elm_lang$core$Date$day(dt);
+	var m = toMonth(
+		_elm_lang$core$Date$month(dt));
+	var dateString = A2(
+		_elm_lang$core$Basics_ops['++'],
+		dd,
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			' ',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Basics$toString(d),
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					' ',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						m,
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							', ',
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								_elm_lang$core$Basics$toString(h),
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									':',
+									twoDigitString(mn)))))))));
+	return dateString;
+};
 var _user$project$UI_Text$error = function (txt) {
 	return A3(
 		_mdgriffith$style_elements$Element$el,
@@ -30232,102 +30675,13 @@ var _user$project$Activities$viewCommentInput = function (model) {
 		},
 		input);
 };
-var _user$project$Activities$dateText = function (dt) {
-	var twoDigitString = function (n) {
-		return (_elm_lang$core$Native_Utils.cmp(n, 10) < 0) ? A2(
-			_elm_lang$core$Basics_ops['++'],
-			'0',
-			_elm_lang$core$Basics$toString(n)) : _elm_lang$core$Basics$toString(n);
-	};
-	var toDay = function (day) {
-		var _p3 = day;
-		switch (_p3.ctor) {
-			case 'Mon':
-				return 'maandag';
-			case 'Tue':
-				return 'dinsdag';
-			case 'Wed':
-				return 'woensdag';
-			case 'Thu':
-				return 'donderdag';
-			case 'Fri':
-				return 'vrijdag';
-			case 'Sat':
-				return 'zaterdag';
-			default:
-				return 'zondag';
-		}
-	};
-	var toMonth = function (mon) {
-		var _p4 = mon;
-		switch (_p4.ctor) {
-			case 'Jan':
-				return 'januari';
-			case 'Feb':
-				return 'februari';
-			case 'Mar':
-				return 'maart';
-			case 'Apr':
-				return 'april';
-			case 'May':
-				return 'mei';
-			case 'Jun':
-				return 'juni';
-			case 'Jul':
-				return 'juli';
-			case 'Aug':
-				return 'augustus';
-			case 'Sep':
-				return 'september';
-			case 'Oct':
-				return 'oktober';
-			case 'Nov':
-				return 'november';
-			default:
-				return 'december';
-		}
-	};
-	var mn = _elm_lang$core$Date$minute(dt);
-	var h = _elm_lang$core$Date$hour(dt);
-	var dd = toDay(
-		_elm_lang$core$Date$dayOfWeek(dt));
-	var d = _elm_lang$core$Date$day(dt);
-	var m = toMonth(
-		_elm_lang$core$Date$month(dt));
-	var dateString = A2(
-		_elm_lang$core$Basics_ops['++'],
-		dd,
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			' ',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				_elm_lang$core$Basics$toString(d),
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					' ',
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						m,
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							', ',
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								_elm_lang$core$Basics$toString(h),
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									':',
-									twoDigitString(mn)))))))));
-	return dateString;
-};
 var _user$project$Activities$timeView = function (dt) {
 	return A3(
 		_mdgriffith$style_elements$Element$el,
 		_user$project$UI_Style$DateText,
 		{ctor: '[]'},
 		_mdgriffith$style_elements$Element$text(
-			_user$project$Activities$dateText(dt)));
+			_user$project$UI_Text$dateText(dt)));
 };
 var _user$project$Activities$commentView = function (c) {
 	var comment = _mdgriffith$style_elements$Element$html(
@@ -30467,15 +30821,15 @@ var _user$project$Activities$blogBox = F4(
 									A2(
 										_elm_lang$core$Basics_ops['++'],
 										', ',
-										_user$project$Activities$dateText(date))))),
+										_user$project$UI_Text$dateText(date))))),
 						_1: {ctor: '[]'}
 					}
 				}
 			});
 	});
 var _user$project$Activities$viewActivity = function (activity) {
-	var _p5 = activity;
-	switch (_p5.ctor) {
+	var _p3 = activity;
+	switch (_p3.ctor) {
 		case 'ANewBet':
 			return A3(
 				_mdgriffith$style_elements$Element$el,
@@ -30486,11 +30840,11 @@ var _user$project$Activities$viewActivity = function (activity) {
 					_1: {ctor: '[]'}
 				},
 				_mdgriffith$style_elements$Element$text(
-					A2(_elm_lang$core$Basics_ops['++'], _p5._1, 'doet mee')));
+					A2(_elm_lang$core$Basics_ops['++'], _p3._1, 'doet mee')));
 		case 'AComment':
-			return A3(_user$project$Activities$commentBox, _p5._1, _p5._2, _p5._0.date);
+			return A3(_user$project$Activities$commentBox, _p3._1, _p3._2, _p3._0.date);
 		case 'APost':
-			return A4(_user$project$Activities$blogBox, _p5._1, _p5._2, _p5._3, _p5._0.date);
+			return A4(_user$project$Activities$blogBox, _p3._1, _p3._2, _p3._3, _p3._0.date);
 		default:
 			return A3(
 				_mdgriffith$style_elements$Element$el,
@@ -30504,8 +30858,8 @@ var _user$project$Activities$viewActivity = function (activity) {
 	}
 };
 var _user$project$Activities$viewActivities = function (wActivities) {
-	var _p6 = wActivities;
-	switch (_p6.ctor) {
+	var _p4 = wActivities;
+	switch (_p4.ctor) {
 		case 'NotAsked':
 			return _mdgriffith$style_elements$Element$text('Aan het ophalen.');
 		case 'Loading':
@@ -30521,7 +30875,7 @@ var _user$project$Activities$viewActivities = function (wActivities) {
 					_0: _mdgriffith$style_elements$Element_Attributes$spacing(20),
 					_1: {ctor: '[]'}
 				},
-				A2(_elm_lang$core$List$map, _user$project$Activities$viewActivity, _p6._0));
+				A2(_elm_lang$core$List$map, _user$project$Activities$viewActivity, _p4._0));
 	}
 };
 var _user$project$Activities$savePost = F2(
@@ -30576,6 +30930,14 @@ var _user$project$Authentication$encodeCredentials = F2(
 				}
 			});
 	});
+var _user$project$Authentication$isAuthorised = function (model) {
+	var _p0 = model.token;
+	if (_p0.ctor === 'Success') {
+		return true;
+	} else {
+		return false;
+	}
+};
 var _user$project$Authentication$viewLoginForm = function (model) {
 	var loginButton = function (isSubmittable) {
 		return isSubmittable ? A3(_user$project$UI_Button$pill, _user$project$UI_Style$Active, _user$project$Types$Authenticate, 'login!') : A3(_user$project$UI_Button$pill, _user$project$UI_Style$Inactive, _user$project$Types$None, 'je moet beide velden invullen');
@@ -30631,9 +30993,9 @@ var _user$project$Authentication$viewLoginForm = function (model) {
 			},
 			area);
 	};
-	var _p0 = function () {
-		var _p1 = model.credentials;
-		switch (_p1.ctor) {
+	var _p1 = function () {
+		var _p2 = model.credentials;
+		switch (_p2.ctor) {
 			case 'Empty':
 				return {
 					ctor: '_Tuple3',
@@ -30645,28 +31007,28 @@ var _user$project$Authentication$viewLoginForm = function (model) {
 				return {
 					ctor: '_Tuple3',
 					_0: username(''),
-					_1: password(_p1._0),
+					_1: password(_p2._0),
 					_2: false
 				};
 			case 'WithUsername':
 				return {
 					ctor: '_Tuple3',
-					_0: username(_p1._0),
+					_0: username(_p2._0),
 					_1: password(''),
 					_2: false
 				};
 			default:
 				return {
 					ctor: '_Tuple3',
-					_0: username(_p1._0),
-					_1: password(_p1._1),
+					_0: username(_p2._0),
+					_1: password(_p2._1),
 					_2: true
 				};
 		}
 	}();
-	var inpUsername = _p0._0;
-	var inpPassword = _p0._1;
-	var isSubmittable = _p0._2;
+	var inpUsername = _p1._0;
+	var inpPassword = _p1._1;
+	var isSubmittable = _p1._2;
 	return A3(
 		_mdgriffith$style_elements$Element$column,
 		_user$project$UI_Style$CommentInputBox,
@@ -34343,6 +34705,902 @@ var _user$project$Bets_View$isWinner = F2(
 		}
 	});
 
+var _user$project$Ranking$decodeDate = A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Date$fromTime, _elm_lang$core$Json_Decode$float);
+var _user$project$Ranking$decodeRoundScore = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_user$project$Types$RoundScore,
+	A2(_elm_lang$core$Json_Decode$field, 'round', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'points', _elm_lang$core$Json_Decode$int));
+var _user$project$Ranking$decodeRankingSummaryLine = A6(
+	_elm_lang$core$Json_Decode$map5,
+	_user$project$Types$RankingSummaryLine,
+	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string),
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'rounds',
+		_elm_lang$core$Json_Decode$list(_user$project$Ranking$decodeRoundScore)),
+	A2(_elm_lang$core$Json_Decode$field, 'topscorer', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'total', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'uuid', _elm_lang$core$Json_Decode$string));
+var _user$project$Ranking$decodeRankingRankingGroup = A4(
+	_elm_lang$core$Json_Decode$map3,
+	_user$project$Types$RankingGroup,
+	A2(_elm_lang$core$Json_Decode$field, 'pos', _elm_lang$core$Json_Decode$int),
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'bets',
+		_elm_lang$core$Json_Decode$list(_user$project$Ranking$decodeRankingSummaryLine)),
+	A2(_elm_lang$core$Json_Decode$field, 'total', _elm_lang$core$Json_Decode$int));
+var _user$project$Ranking$decode = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_user$project$Types$RankingSummary,
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'summary',
+		_elm_lang$core$Json_Decode$list(_user$project$Ranking$decodeRankingRankingGroup)),
+	A2(_elm_lang$core$Json_Decode$field, 'time', _user$project$Ranking$decodeDate));
+var _user$project$Ranking$viewRankingLine = function (line) {
+	return A3(
+		_mdgriffith$style_elements$Element$el,
+		_user$project$UI_Style$RankingName,
+		{
+			ctor: '::',
+			_0: _mdgriffith$style_elements$Element_Attributes$width(
+				_mdgriffith$style_elements$Element_Attributes$px(200)),
+			_1: {ctor: '[]'}
+		},
+		_mdgriffith$style_elements$Element$text(line.name));
+};
+var _user$project$Ranking$viewRankingLines = function (lines) {
+	return A3(
+		_mdgriffith$style_elements$Element$column,
+		_user$project$UI_Style$None,
+		{
+			ctor: '::',
+			_0: _mdgriffith$style_elements$Element_Attributes$width(
+				_mdgriffith$style_elements$Element_Attributes$px(200)),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$paddingBottom(4),
+				_1: {ctor: '[]'}
+			}
+		},
+		A2(_elm_lang$core$List$map, _user$project$Ranking$viewRankingLine, lines));
+};
+var _user$project$Ranking$viewRankingGroup = function (grp) {
+	return A3(
+		_mdgriffith$style_elements$Element$row,
+		_user$project$UI_Style$RankingGroup,
+		{
+			ctor: '::',
+			_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 0, 5),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$spread,
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A3(
+				_mdgriffith$style_elements$Element$el,
+				_user$project$UI_Style$RankingPos,
+				{
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$width(
+						_mdgriffith$style_elements$Element_Attributes$px(20)),
+					_1: {ctor: '[]'}
+				},
+				_mdgriffith$style_elements$Element$text(
+					_elm_lang$core$Basics$toString(grp.pos))),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Ranking$viewRankingLines(grp.bets),
+				_1: {
+					ctor: '::',
+					_0: A3(
+						_mdgriffith$style_elements$Element$el,
+						_user$project$UI_Style$RankingPoints,
+						{
+							ctor: '::',
+							_0: _mdgriffith$style_elements$Element_Attributes$width(
+								_mdgriffith$style_elements$Element_Attributes$px(80)),
+							_1: {ctor: '[]'}
+						},
+						_mdgriffith$style_elements$Element$text(
+							_elm_lang$core$Basics$toString(grp.total))),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Ranking$viewRankingHeader = A3(
+	_mdgriffith$style_elements$Element$row,
+	_user$project$UI_Style$RankingHeader,
+	{
+		ctor: '::',
+		_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 0, 5),
+		_1: {
+			ctor: '::',
+			_0: _mdgriffith$style_elements$Element_Attributes$spread,
+			_1: {ctor: '[]'}
+		}
+	},
+	{
+		ctor: '::',
+		_0: A3(
+			_mdgriffith$style_elements$Element$el,
+			_user$project$UI_Style$RankingPosH,
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$width(
+					_mdgriffith$style_elements$Element_Attributes$px(20)),
+				_1: {ctor: '[]'}
+			},
+			_mdgriffith$style_elements$Element$text('#')),
+		_1: {
+			ctor: '::',
+			_0: A3(
+				_mdgriffith$style_elements$Element$el,
+				_user$project$UI_Style$RankingNameH,
+				{
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$width(
+						_mdgriffith$style_elements$Element_Attributes$px(200)),
+					_1: {ctor: '[]'}
+				},
+				_mdgriffith$style_elements$Element$text('Naam')),
+			_1: {
+				ctor: '::',
+				_0: A3(
+					_mdgriffith$style_elements$Element$el,
+					_user$project$UI_Style$RankingPointsH,
+					{
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$width(
+							_mdgriffith$style_elements$Element_Attributes$px(80)),
+						_1: {ctor: '[]'}
+					},
+					_mdgriffith$style_elements$Element$text('Punten')),
+				_1: {ctor: '[]'}
+			}
+		}
+	});
+var _user$project$Ranking$viewRankingGroups = function (model) {
+	var _p0 = model.ranking;
+	switch (_p0.ctor) {
+		case 'Success':
+			var _p1 = _p0._0;
+			var datetxt = A3(
+				_mdgriffith$style_elements$Element$el,
+				_user$project$UI_Style$AuthorText,
+				{
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$alignRight,
+					_1: {
+						ctor: '::',
+						_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 0, 10),
+						_1: {ctor: '[]'}
+					}
+				},
+				_mdgriffith$style_elements$Element$text(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'bijgewerkt op ',
+						_user$project$UI_Text$dateText(_p1.time))));
+			var rank = A2(_elm_lang$core$List$map, _user$project$Ranking$viewRankingGroup, _p1.summary);
+			var header = _user$project$Ranking$viewRankingHeader;
+			var column = A2(
+				_elm_lang$core$Basics_ops['++'],
+				{ctor: '::', _0: header, _1: rank},
+				{
+					ctor: '::',
+					_0: datetxt,
+					_1: {ctor: '[]'}
+				});
+			return A3(
+				_mdgriffith$style_elements$Element$column,
+				_user$project$UI_Style$None,
+				{
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$paddingBottom(50),
+					_1: {ctor: '[]'}
+				},
+				column);
+		case 'NotAsked':
+			return _mdgriffith$style_elements$Element$text('nog niet opgevraagd');
+		case 'Loading':
+			return _mdgriffith$style_elements$Element$text('aan het ophalen...');
+		default:
+			return _user$project$UI_Text$error('oei, daar ging iets niet helemaal goed');
+	}
+};
+var _user$project$Ranking$adminBox = function (model) {
+	return A3(_user$project$UI_Button$pill, _user$project$UI_Style$Active, _user$project$Types$RecreateRanking, 'recreate');
+};
+var _user$project$Ranking$viewRanking = function (model) {
+	var items = function () {
+		var _p2 = model.token;
+		if (_p2.ctor === 'Success') {
+			return {
+				ctor: '::',
+				_0: _user$project$Ranking$adminBox(model),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Ranking$viewRankingGroups(model),
+					_1: {ctor: '[]'}
+				}
+			};
+		} else {
+			return {
+				ctor: '::',
+				_0: _user$project$Ranking$viewRankingGroups(model),
+				_1: {ctor: '[]'}
+			};
+		}
+	}();
+	return A3(
+		_mdgriffith$style_elements$Element$column,
+		_user$project$UI_Style$None,
+		{ctor: '[]'},
+		items);
+};
+var _user$project$Ranking$recreate = function (_p3) {
+	var _p4 = _p3;
+	var bearer = A2(_elm_lang$core$Basics_ops['++'], 'Bearer ', _p4._0);
+	var header = A2(_elm_lang$http$Http$header, 'Authorization', bearer);
+	var config = {
+		headers: {
+			ctor: '::',
+			_0: header,
+			_1: {ctor: '[]'}
+		},
+		withCredentials: true,
+		timeout: _elm_lang$core$Maybe$Nothing
+	};
+	return A5(_ohanhi$remotedata_http$RemoteData_Http$postWithConfig, config, '/bets/ranking/initial/', _user$project$Types$FetchedRanking, _user$project$Ranking$decode, _elm_lang$core$Json_Encode$null);
+};
+var _user$project$Ranking$fetchRanking = A3(_ohanhi$remotedata_http$RemoteData_Http$get, '/bets/ranking/', _user$project$Types$FetchedRanking, _user$project$Ranking$decode);
+
+var _user$project$Score$row5 = {
+	ctor: '::',
+	_0: {ctor: '_Tuple2', _0: 5, _1: 5},
+	_1: {ctor: '[]'}
+};
+var _user$project$Score$row4 = {
+	ctor: '::',
+	_0: {ctor: '_Tuple2', _0: 5, _1: 4},
+	_1: {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 4, _1: 4},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 4, _1: 5},
+			_1: {ctor: '[]'}
+		}
+	}
+};
+var _user$project$Score$row3 = {
+	ctor: '::',
+	_0: {ctor: '_Tuple2', _0: 5, _1: 3},
+	_1: {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 4, _1: 3},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 3, _1: 3},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 3, _1: 4},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 3, _1: 5},
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	}
+};
+var _user$project$Score$row2 = {
+	ctor: '::',
+	_0: {ctor: '_Tuple2', _0: 5, _1: 2},
+	_1: {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 4, _1: 2},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 3, _1: 2},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 2, _1: 2},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 2, _1: 3},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 2, _1: 4},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 2, _1: 5},
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		}
+	}
+};
+var _user$project$Score$row1 = {
+	ctor: '::',
+	_0: {ctor: '_Tuple2', _0: 5, _1: 1},
+	_1: {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 4, _1: 1},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 3, _1: 1},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 2, _1: 1},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 1, _1: 1},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 1, _1: 2},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 1, _1: 3},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 1, _1: 4},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 1, _1: 5},
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+};
+var _user$project$Score$row0 = {
+	ctor: '::',
+	_0: {ctor: '_Tuple2', _0: 5, _1: 0},
+	_1: {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 4, _1: 0},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 3, _1: 0},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 2, _1: 0},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 1, _1: 0},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 0, _1: 0},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 0, _1: 1},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 0, _1: 2},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 0, _1: 3},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 0, _1: 4},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 0, _1: 5},
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+};
+var _user$project$Score$mkScore = F2(
+	function (h, a) {
+		return _elm_lang$core$Maybe$Just(
+			{
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Maybe$Just(h),
+				_1: _elm_lang$core$Maybe$Just(a)
+			});
+	});
+var _user$project$Score$scoreButton = F5(
+	function (c, match, home, away, t) {
+		var score = A2(_user$project$Score$mkScore, home, away);
+		var msg = _user$project$Types$UpdateMatchResult(
+			_elm_lang$core$Native_Utils.update(
+				match,
+				{score: score}));
+		return A3(_user$project$UI_Button$scoreButton, c, msg, t);
+	});
+var _user$project$Score$scoreString = F2(
+	function (h, a) {
+		return A3(
+			_elm_lang$core$List$foldr,
+			F2(
+				function (x, y) {
+					return A2(_elm_lang$core$Basics_ops['++'], x, y);
+				}),
+			'',
+			{
+				ctor: '::',
+				_0: ' ',
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$core$Basics$toString(h),
+					_1: {
+						ctor: '::',
+						_0: '-',
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$core$Basics$toString(a),
+							_1: {
+								ctor: '::',
+								_0: ' ',
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			});
+	});
+var _user$project$Score$indexedScores = function (scoreList) {
+	return A2(
+		_elm_lang$core$List$indexedMap,
+		F2(
+			function (v0, v1) {
+				return {ctor: '_Tuple2', _0: v0, _1: v1};
+			}),
+		A2(
+			_elm_lang$core$List$map,
+			function (_p0) {
+				var _p1 = _p0;
+				var _p3 = _p1._0;
+				var _p2 = _p1._1;
+				return {
+					ctor: '_Tuple3',
+					_0: _p3,
+					_1: _p2,
+					_2: A2(_user$project$Score$scoreString, _p3, _p2)
+				};
+			},
+			scoreList));
+};
+var _user$project$Score$scores = A2(
+	_elm_lang$core$List$map,
+	_user$project$Score$indexedScores,
+	{
+		ctor: '::',
+		_0: _user$project$Score$row0,
+		_1: {
+			ctor: '::',
+			_0: _user$project$Score$row1,
+			_1: {
+				ctor: '::',
+				_0: _user$project$Score$row2,
+				_1: {
+					ctor: '::',
+					_0: _user$project$Score$row3,
+					_1: {
+						ctor: '::',
+						_0: _user$project$Score$row4,
+						_1: {
+							ctor: '::',
+							_0: _user$project$Score$row5,
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		}
+	});
+var _user$project$Score$viewKeyboard = function (match) {
+	var toButton = function (_p4) {
+		var _p5 = _p4;
+		return A5(_user$project$Score$scoreButton, _user$project$UI_Style$SBPotential, match, _p5._1._0, _p5._1._1, _p5._1._2);
+	};
+	var toRow = function (scoreList) {
+		return A3(
+			_mdgriffith$style_elements$Element$row,
+			_user$project$UI_Style$ScoreRow,
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$center,
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$spacing(2),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
+						_1: {ctor: '[]'}
+					}
+				}
+			},
+			A2(_elm_lang$core$List$map, toButton, scoreList));
+	};
+	return A3(
+		_mdgriffith$style_elements$Element$column,
+		_user$project$UI_Style$ScoreColumn,
+		{
+			ctor: '::',
+			_0: _mdgriffith$style_elements$Element_Attributes$spacing(2),
+			_1: {ctor: '[]'}
+		},
+		A2(_elm_lang$core$List$map, toRow, _user$project$Score$scores));
+};
+
+var _user$project$Results$decodeRest = function (score) {
+	return A5(
+		_elm_lang$core$Json_Decode$map4,
+		F4(
+			function (mResId, m, h, a) {
+				return A5(_user$project$Types$MatchResult, mResId, m, h, a, score);
+			}),
+		A2(_elm_lang$core$Json_Decode$field, 'matchResultId', _elm_lang$core$Json_Decode$string),
+		A2(_elm_lang$core$Json_Decode$field, 'match', _elm_lang$core$Json_Decode$string),
+		A2(_elm_lang$core$Json_Decode$field, 'homeTeam', _user$project$Bets_Types_Team$decode),
+		A2(_elm_lang$core$Json_Decode$field, 'awayTeam', _user$project$Bets_Types_Team$decode));
+};
+var _user$project$Results$decodeScore = function (isSet) {
+	return isSet ? A3(
+		_elm_lang$core$Json_Decode$map2,
+		_user$project$Score$mkScore,
+		A2(_elm_lang$core$Json_Decode$field, 'homeScore', _elm_lang$core$Json_Decode$int),
+		A2(_elm_lang$core$Json_Decode$field, 'awayScore', _elm_lang$core$Json_Decode$int)) : A3(
+		_elm_lang$core$Json_Decode$map2,
+		F2(
+			function (_p1, _p0) {
+				return _elm_lang$core$Maybe$Nothing;
+			}),
+		A2(_elm_lang$core$Json_Decode$field, 'homeScore', _elm_lang$core$Json_Decode$int),
+		A2(_elm_lang$core$Json_Decode$field, 'awayScore', _elm_lang$core$Json_Decode$int));
+};
+var _user$project$Results$decodeMatchResult = A2(
+	_elm_lang$core$Json_Decode$andThen,
+	_user$project$Results$decodeRest,
+	A2(
+		_elm_lang$core$Json_Decode$andThen,
+		_user$project$Results$decodeScore,
+		A2(_elm_lang$core$Json_Decode$field, 'isSet', _elm_lang$core$Json_Decode$bool)));
+var _user$project$Results$decode = A2(
+	_elm_lang$core$Json_Decode$map,
+	_user$project$Types$MatchResults,
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'matchResults',
+		_elm_lang$core$Json_Decode$list(_user$project$Results$decodeMatchResult)));
+var _user$project$Results$encodeMatchResult = function (match) {
+	var _p2 = function () {
+		var _p3 = match.score;
+		if (_p3.ctor === 'Just') {
+			if (_p3._0._0.ctor === 'Just') {
+				if (_p3._0._1.ctor === 'Just') {
+					return {ctor: '_Tuple3', _0: _p3._0._0._0, _1: _p3._0._1._0, _2: true};
+				} else {
+					return {ctor: '_Tuple3', _0: _p3._0._0._0, _1: 0, _2: false};
+				}
+			} else {
+				if (_p3._0._1.ctor === 'Just') {
+					return {ctor: '_Tuple3', _0: 0, _1: _p3._0._1._0, _2: false};
+				} else {
+					return {ctor: '_Tuple3', _0: 0, _1: 0, _2: false};
+				}
+			}
+		} else {
+			return {ctor: '_Tuple3', _0: 0, _1: 0, _2: false};
+		}
+	}();
+	var homeScore = _p2._0;
+	var awayScore = _p2._1;
+	var isSet = _p2._2;
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'matchResultId',
+				_1: _elm_lang$core$Json_Encode$string(match.matchResultId)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'match',
+					_1: _elm_lang$core$Json_Encode$string(match.match)
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'homeTeam',
+						_1: _user$project$Bets_Types_Team$encode(match.homeTeam)
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'awayTeam',
+							_1: _user$project$Bets_Types_Team$encode(match.awayTeam)
+						},
+						_1: {
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'homeScore',
+								_1: _elm_lang$core$Json_Encode$int(homeScore)
+							},
+							_1: {
+								ctor: '::',
+								_0: {
+									ctor: '_Tuple2',
+									_0: 'awayScore',
+									_1: _elm_lang$core$Json_Encode$int(awayScore)
+								},
+								_1: {
+									ctor: '::',
+									_0: {
+										ctor: '_Tuple2',
+										_0: 'isSet',
+										_1: _elm_lang$core$Json_Encode$bool(isSet)
+									},
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$Results$displayMatch = F2(
+	function (access, match) {
+		var click = function () {
+			var _p4 = access;
+			if (_p4.ctor === 'Authorised') {
+				return _mdgriffith$style_elements$Element_Events$onClick(
+					_user$project$Types$EditMatch(match));
+			} else {
+				return _mdgriffith$style_elements$Element_Events$onClick(_user$project$Types$None);
+			}
+		}();
+		var pts = function () {
+			var _p5 = match.score;
+			if (_p5.ctor === 'Just') {
+				return _elm_lang$core$Maybe$Just(3);
+			} else {
+				return _elm_lang$core$Maybe$Nothing;
+			}
+		}();
+		var sc = _user$project$Bets_View$displayScore(match.score);
+		var away = _user$project$UI_Team$viewTeamEl(
+			_elm_lang$core$Maybe$Just(match.awayTeam));
+		var home = _user$project$UI_Team$viewTeamEl(
+			_elm_lang$core$Maybe$Just(match.homeTeam));
+		return A3(
+			_mdgriffith$style_elements$Element$row,
+			_user$project$UI_Style$MatchRow(pts),
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$spread,
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
+					_1: {
+						ctor: '::',
+						_0: click,
+						_1: {
+							ctor: '::',
+							_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 10, 5),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$style_elements$Element_Attributes$spacing(7),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$style_elements$Element_Attributes$width(
+										_mdgriffith$style_elements$Element_Attributes$px(150)),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$style_elements$Element_Attributes$height(
+											_mdgriffith$style_elements$Element_Attributes$px(70)),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			{
+				ctor: '::',
+				_0: home,
+				_1: {
+					ctor: '::',
+					_0: sc,
+					_1: {
+						ctor: '::',
+						_0: away,
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	});
+var _user$project$Results$edit = function (model) {
+	var items = function () {
+		var _p6 = {ctor: '_Tuple2', _0: model.token, _1: model.matchResult};
+		_v3_3:
+		do {
+			if ((_p6.ctor === '_Tuple2') && (_p6._0.ctor === 'Success')) {
+				switch (_p6._1.ctor) {
+					case 'Success':
+						var _p7 = _p6._1._0;
+						return {
+							ctor: '::',
+							_0: A2(_user$project$Results$displayMatch, _user$project$Types$Unauthorised, _p7),
+							_1: {
+								ctor: '::',
+								_0: _user$project$Score$viewKeyboard(_p7),
+								_1: {
+									ctor: '::',
+									_0: A3(
+										_user$project$UI_Button$pill,
+										_user$project$UI_Style$Active,
+										_user$project$Types$CancelMatchResult(_p7),
+										'Wissen'),
+									_1: {ctor: '[]'}
+								}
+							}
+						};
+					case 'Failure':
+						return {
+							ctor: '::',
+							_0: _user$project$UI_Text$error(
+								_elm_lang$core$Basics$toString(_p6._1._0)),
+							_1: {ctor: '[]'}
+						};
+					case 'NotAsked':
+						return {
+							ctor: '::',
+							_0: _user$project$UI_Text$error('geen wedstrijd geselecteerd'),
+							_1: {ctor: '[]'}
+						};
+					default:
+						break _v3_3;
+				}
+			} else {
+				break _v3_3;
+			}
+		} while(false);
+		return {
+			ctor: '::',
+			_0: _user$project$UI_Text$error('dit is niet de bedoeling'),
+			_1: {ctor: '[]'}
+		};
+	}();
+	var d = _elm_lang$core$Debug$log('edit');
+	return A3(
+		_mdgriffith$style_elements$Element$column,
+		_user$project$UI_Style$None,
+		{ctor: '[]'},
+		items);
+};
+var _user$project$Results$displayMatches = F2(
+	function (access, matches) {
+		return A3(
+			_mdgriffith$style_elements$Element$wrappedRow,
+			_user$project$UI_Style$Matches,
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$spacing(7),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$center,
+						_1: {ctor: '[]'}
+					}
+				}
+			},
+			A2(
+				_elm_lang$core$List$map,
+				_user$project$Results$displayMatch(access),
+				matches));
+	});
+var _user$project$Results$viewMatchResults = F2(
+	function (access, results) {
+		var _p8 = results;
+		switch (_p8.ctor) {
+			case 'Success':
+				return A2(_user$project$Results$displayMatches, access, _p8._0.results);
+			case 'NotAsked':
+				return _mdgriffith$style_elements$Element$text('nog niet opgevraagd');
+			case 'Loading':
+				return _mdgriffith$style_elements$Element$text('aan het ophalen...');
+			default:
+				return A3(
+					_mdgriffith$style_elements$Element$column,
+					_user$project$UI_Style$None,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _user$project$UI_Text$error('oei, oei, oei, daar ging iets niet helemaal goed'),
+						_1: {
+							ctor: '::',
+							_0: A3(
+								_mdgriffith$style_elements$Element$paragraph,
+								_user$project$UI_Style$Text,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _mdgriffith$style_elements$Element$text(
+										_elm_lang$core$Basics$toString(_p8._0)),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					});
+		}
+	});
+var _user$project$Results$view = function (model) {
+	var items = function () {
+		var _p9 = model.token;
+		if (_p9.ctor === 'Success') {
+			return {
+				ctor: '::',
+				_0: A2(_user$project$Results$viewMatchResults, _user$project$Types$Authorised, model.matchResults),
+				_1: {ctor: '[]'}
+			};
+		} else {
+			return {
+				ctor: '::',
+				_0: A2(_user$project$Results$viewMatchResults, _user$project$Types$Unauthorised, model.matchResults),
+				_1: {ctor: '[]'}
+			};
+		}
+	}();
+	return A3(
+		_mdgriffith$style_elements$Element$column,
+		_user$project$UI_Style$None,
+		{ctor: '[]'},
+		items);
+};
+var _user$project$Results$updateMatchResults = F2(
+	function (_p10, match) {
+		var _p11 = _p10;
+		var json = _user$project$Results$encodeMatchResult(match);
+		var url = A2(_elm_lang$core$Basics_ops['++'], '/bets/results/matches/', match.match);
+		var bearer = A2(_elm_lang$core$Basics_ops['++'], 'Bearer ', _p11._0);
+		var header = A2(_elm_lang$http$Http$header, 'Authorization', bearer);
+		var config = {
+			headers: {
+				ctor: '::',
+				_0: header,
+				_1: {ctor: '[]'}
+			},
+			withCredentials: true,
+			timeout: _elm_lang$core$Maybe$Nothing
+		};
+		return A5(_ohanhi$remotedata_http$RemoteData_Http$putWithConfig, config, url, _user$project$Types$StoredMatchResult, _user$project$Results$decodeMatchResult, json);
+	});
+var _user$project$Results$fetchMatchResults = A3(_ohanhi$remotedata_http$RemoteData_Http$get, '/bets/results/matches/', _user$project$Types$FetchedMatchResults, _user$project$Results$decode);
+
 var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$batch(
 		{
@@ -34392,7 +35650,7 @@ var _user$project$Main$nav = F2(
 var _user$project$Main$comparePage = F2(
 	function (page, newPage) {
 		var _p0 = {ctor: '_Tuple2', _0: page, _1: newPage};
-		_v0_6:
+		_v0_7:
 		do {
 			if (_p0.ctor === '_Tuple2') {
 				switch (_p0._0.ctor) {
@@ -34400,41 +35658,49 @@ var _user$project$Main$comparePage = F2(
 						if (_p0._1.ctor === 'Home') {
 							return _user$project$UI_Style$Selected;
 						} else {
-							break _v0_6;
+							break _v0_7;
 						}
 					case 'Bets':
 						if (_p0._1.ctor === 'Bets') {
 							return _user$project$UI_Style$Selected;
 						} else {
-							break _v0_6;
+							break _v0_7;
 						}
 					case 'Ranking':
 						if (_p0._1.ctor === 'Ranking') {
 							return _user$project$UI_Style$Selected;
 						} else {
-							break _v0_6;
+							break _v0_7;
+						}
+					case 'Results':
+						if (_p0._1.ctor === 'Results') {
+							return _user$project$UI_Style$Selected;
+						} else {
+							break _v0_7;
 						}
 					case 'Form':
 						if (_p0._1.ctor === 'Form') {
 							return _user$project$UI_Style$Selected;
 						} else {
-							break _v0_6;
+							break _v0_7;
 						}
 					case 'Blog':
 						if (_p0._1.ctor === 'Blog') {
 							return _user$project$UI_Style$Selected;
 						} else {
-							break _v0_6;
+							break _v0_7;
 						}
-					default:
+					case 'Login':
 						if (_p0._1.ctor === 'Login') {
 							return _user$project$UI_Style$Selected;
 						} else {
-							break _v0_6;
+							break _v0_7;
 						}
+					default:
+						break _v0_7;
 				}
 			} else {
-				break _v0_6;
+				break _v0_7;
 			}
 		} while(false);
 		return _user$project$UI_Style$Potential;
@@ -34457,8 +35723,12 @@ var _user$project$Main$unauthenticatedOptions = F2(
 				_0: A3(pageLink, _user$project$Types$Ranking, '/voetbalpool/#stand', 'stand'),
 				_1: {
 					ctor: '::',
-					_0: A3(pageLink, _user$project$Types$Form, '/voetbalpool/#formulier', 'formulier'),
-					_1: {ctor: '[]'}
+					_0: A3(pageLink, _user$project$Types$Results, '/voetbalpool/#resultaten', 'resultaten'),
+					_1: {
+						ctor: '::',
+						_0: A3(pageLink, _user$project$Types$Form, '/voetbalpool/#formulier', 'formulier'),
+						_1: {ctor: '[]'}
+					}
 				}
 			}
 		};
@@ -34481,11 +35751,15 @@ var _user$project$Main$authenticatedOptions = F2(
 				_0: A3(pageLink, _user$project$Types$Ranking, '/voetbalpool/#stand', 'stand'),
 				_1: {
 					ctor: '::',
-					_0: A3(pageLink, _user$project$Types$Form, '/voetbalpool/#formulier', 'formulier'),
+					_0: A3(pageLink, _user$project$Types$Results, '/voetbalpool/#resultaten', 'resultaten'),
 					_1: {
 						ctor: '::',
-						_0: A3(pageLink, _user$project$Types$Blog, '/voetbalpool/#blog', 'blog'),
-						_1: {ctor: '[]'}
+						_0: A3(pageLink, _user$project$Types$Form, '/voetbalpool/#formulier', 'formulier'),
+						_1: {
+							ctor: '::',
+							_0: A3(pageLink, _user$project$Types$Blog, '/voetbalpool/#blog', 'blog'),
+							_1: {ctor: '[]'}
+						}
 					}
 				}
 			}
@@ -34520,59 +35794,6 @@ var _user$project$Main$viewNav = F3(
 			},
 			{name: 'Main Navigation', options: options});
 	});
-var _user$project$Main$nav2 = A3(
-	_mdgriffith$style_elements$Element$navigation,
-	_user$project$UI_Style$Menu,
-	{
-		ctor: '::',
-		_0: _mdgriffith$style_elements$Element_Attributes$paddingLeft(90),
-		_1: {
-			ctor: '::',
-			_0: _mdgriffith$style_elements$Element_Attributes$paddingBottom(20),
-			_1: {
-				ctor: '::',
-				_0: _mdgriffith$style_elements$Element_Attributes$spacing(30),
-				_1: {ctor: '[]'}
-			}
-		}
-	},
-	{
-		name: 'Main Navigation',
-		options: {
-			ctor: '::',
-			_0: A2(
-				_mdgriffith$style_elements$Element$link,
-				'/voetbalpool/',
-				A3(
-					_mdgriffith$style_elements$Element$el,
-					_user$project$UI_Style$NavLink(_user$project$UI_Style$Selected),
-					{ctor: '[]'},
-					_mdgriffith$style_elements$Element$text('home'))),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_mdgriffith$style_elements$Element$link,
-					'/voetbalpool/formulier/',
-					A3(
-						_mdgriffith$style_elements$Element$el,
-						_user$project$UI_Style$NavLink(_user$project$UI_Style$Potential),
-						{ctor: '[]'},
-						_mdgriffith$style_elements$Element$text('formulier'))),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_mdgriffith$style_elements$Element$link,
-						'/voetbalpool/stand/',
-						A3(
-							_mdgriffith$style_elements$Element$el,
-							_user$project$UI_Style$NavLink(_user$project$UI_Style$Potential),
-							{ctor: '[]'},
-							_mdgriffith$style_elements$Element$text('stand'))),
-					_1: {ctor: '[]'}
-				}
-			}
-		}
-	});
 var _user$project$Main$viewForm = function (model) {
 	return A3(
 		_mdgriffith$style_elements$Element$paragraph,
@@ -34605,9 +35826,6 @@ var _user$project$Main$viewBet = F2(
 				return A2(_user$project$Bets_View$viewBet, _p2._0, model.screenSize);
 		}
 	});
-var _user$project$Main$viewRanking = function (model) {
-	return _mdgriffith$style_elements$Element$text('Nog niet klaar');
-};
 var _user$project$Main$viewBlog = function (model) {
 	return A3(
 		_mdgriffith$style_elements$Element$column,
@@ -34653,7 +35871,11 @@ var _user$project$Main$view = function (model) {
 			case 'Blog':
 				return _user$project$Main$viewBlog(model);
 			case 'Ranking':
-				return _user$project$Main$viewRanking(model);
+				return _user$project$Ranking$viewRanking(model);
+			case 'Results':
+				return _user$project$Results$view(model);
+			case 'EditMatchResult':
+				return _user$project$Results$edit(model);
 			case 'Bets':
 				return A2(_user$project$Main$viewBet, model, _p3._0);
 			case 'Form':
@@ -34708,7 +35930,7 @@ var _user$project$Main$getPage = function (hash) {
 	};
 	var locs = A2(_elm_lang$core$String$split, '/', hash);
 	var _p5 = locs;
-	_v4_7:
+	_v4_9:
 	do {
 		if (_p5.ctor === '::') {
 			switch (_p5._0) {
@@ -34730,16 +35952,27 @@ var _user$project$Main$getPage = function (hash) {
 						return {ctor: '_Tuple2', _0: _user$project$Types$Ranking, _1: _user$project$Types$None};
 					}
 				case '#stand':
-					return {ctor: '_Tuple2', _0: _user$project$Types$Ranking, _1: _user$project$Types$None};
+					return {ctor: '_Tuple2', _0: _user$project$Types$Ranking, _1: _user$project$Types$RefreshRanking};
+				case '#resultaten':
+					if (_p5._1.ctor === '::') {
+						if (_p5._1._0 === 'wedstrijd') {
+							return {ctor: '_Tuple2', _0: _user$project$Types$EditMatchResult, _1: _user$project$Types$None};
+						} else {
+							break _v4_9;
+						}
+					} else {
+						return {ctor: '_Tuple2', _0: _user$project$Types$Results, _1: _user$project$Types$RefreshResults};
+					}
 				case '#login':
 					return {ctor: '_Tuple2', _0: _user$project$Types$Login, _1: _user$project$Types$None};
 				default:
-					break _v4_7;
+					break _v4_9;
 			}
 		} else {
-			break _v4_7;
+			break _v4_9;
 		}
 	} while(false);
+	var page = A2(_elm_lang$core$Debug$log, 'page', locs);
 	return {ctor: '_Tuple2', _0: _user$project$Types$Home, _1: _user$project$Types$RefreshActivities};
 };
 var _user$project$Main$newPost = {author: '', title: '', msg: '', passphrase: ''};
@@ -34762,6 +35995,9 @@ var _user$project$Main$newModel = {
 	bet: _krisajenkins$remotedata$RemoteData$NotAsked,
 	credentials: _user$project$Types$Empty,
 	token: _krisajenkins$remotedata$RemoteData$NotAsked,
+	ranking: _krisajenkins$remotedata$RemoteData$NotAsked,
+	matchResults: _krisajenkins$remotedata$RemoteData$NotAsked,
+	matchResult: _krisajenkins$remotedata$RemoteData$NotAsked,
 	screenSize: _user$project$Types$Small
 };
 var _user$project$Main$update = F2(
@@ -34963,6 +36199,13 @@ var _user$project$Main$update = F2(
 						_0: model,
 						_1: _user$project$Activities$fetchActivities(model)
 					};
+				case 'RefreshRanking':
+					var _p12 = model.ranking;
+					if (_p12.ctor === 'Success') {
+						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+					} else {
+						return {ctor: '_Tuple2', _0: model, _1: _user$project$Ranking$fetchRanking};
+					}
 				case 'SetScreenSize':
 					var screenSize = _user$project$UI_Size$classifyDevice(_p7._0);
 					return {
@@ -34973,18 +36216,18 @@ var _user$project$Main$update = F2(
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				case 'SetUsername':
-					var _p13 = _p7._0;
+					var _p14 = _p7._0;
 					var newCredentials = function () {
-						var _p12 = model.credentials;
-						switch (_p12.ctor) {
+						var _p13 = model.credentials;
+						switch (_p13.ctor) {
 							case 'Empty':
-								return _user$project$Types$WithUsername(_p13);
+								return _user$project$Types$WithUsername(_p14);
 							case 'WithPassword':
-								return A2(_user$project$Types$Submittable, _p13, _p12._0);
+								return A2(_user$project$Types$Submittable, _p14, _p13._0);
 							case 'WithUsername':
-								return _user$project$Types$WithUsername(_p12._0);
+								return _user$project$Types$WithUsername(_p13._0);
 							default:
-								return A2(_user$project$Types$Submittable, _p13, _p12._1);
+								return A2(_user$project$Types$Submittable, _p14, _p13._1);
 						}
 					}();
 					return {
@@ -34995,18 +36238,18 @@ var _user$project$Main$update = F2(
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				case 'SetPassword':
-					var _p15 = _p7._0;
+					var _p16 = _p7._0;
 					var newCredentials = function () {
-						var _p14 = model.credentials;
-						switch (_p14.ctor) {
+						var _p15 = model.credentials;
+						switch (_p15.ctor) {
 							case 'Empty':
-								return _user$project$Types$WithPassword(_p15);
+								return _user$project$Types$WithPassword(_p16);
 							case 'WithPassword':
-								return _user$project$Types$WithPassword(_p15);
+								return _user$project$Types$WithPassword(_p16);
 							case 'WithUsername':
-								return A2(_user$project$Types$Submittable, _p14._0, _p15);
+								return A2(_user$project$Types$Submittable, _p15._0, _p16);
 							default:
-								return A2(_user$project$Types$Submittable, _p14._0, _p15);
+								return A2(_user$project$Types$Submittable, _p15._0, _p16);
 						}
 					}();
 					return {
@@ -35017,10 +36260,10 @@ var _user$project$Main$update = F2(
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				case 'FetchedToken':
-					var _p17 = _p7._0;
+					var _p18 = _p7._0;
 					var newCredentials = function () {
-						var _p16 = _p17;
-						if (_p16.ctor === 'Success') {
+						var _p17 = _p18;
+						if (_p17.ctor === 'Success') {
 							return _user$project$Types$Empty;
 						} else {
 							return model.credentials;
@@ -35030,17 +36273,101 @@ var _user$project$Main$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{token: _p17, credentials: newCredentials}),
+							{token: _p18, credentials: newCredentials}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
-				default:
-					var _p18 = model.credentials;
-					if (_p18.ctor === 'Submittable') {
+				case 'Authenticate':
+					var _p19 = model.credentials;
+					if (_p19.ctor === 'Submittable') {
 						return {
 							ctor: '_Tuple2',
 							_0: model,
-							_1: A2(_user$project$Authentication$authenticate, _p18._0, _p18._1)
+							_1: A2(_user$project$Authentication$authenticate, _p19._0, _p19._1)
 						};
+					} else {
+						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+					}
+				case 'RecreateRanking':
+					var cmd = function () {
+						var _p20 = model.token;
+						if (_p20.ctor === 'Success') {
+							return _user$project$Ranking$recreate(_p20._0);
+						} else {
+							return _elm_lang$core$Platform_Cmd$none;
+						}
+					}();
+					return {ctor: '_Tuple2', _0: model, _1: cmd};
+				case 'FetchedRanking':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{ranking: _p7._0}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				case 'FetchedMatchResults':
+					var _p22 = _p7._0;
+					var nwModel = function () {
+						var _p21 = _p22;
+						if (_p21.ctor === 'Failure') {
+							var d = _elm_lang$core$Debug$log(
+								_elm_lang$core$Basics$toString(_p21._0));
+							return _elm_lang$core$Native_Utils.update(
+								model,
+								{matchResults: _p22});
+						} else {
+							return _elm_lang$core$Native_Utils.update(
+								model,
+								{matchResults: _p22});
+						}
+					}();
+					return {ctor: '_Tuple2', _0: nwModel, _1: _elm_lang$core$Platform_Cmd$none};
+				case 'StoredMatchResult':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{matchResult: _p7._0}),
+						_1: _user$project$Results$fetchMatchResults
+					};
+				case 'RefreshResults':
+					var _p23 = model.ranking;
+					if (_p23.ctor === 'Success') {
+						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+					} else {
+						return {ctor: '_Tuple2', _0: model, _1: _user$project$Results$fetchMatchResults};
+					}
+				case 'EditMatch':
+					var _p24 = _p7._0;
+					var url = A2(_elm_lang$core$Basics_ops['++'], '#resultaten/wedstrijd/', _p24.match);
+					var mId = A2(_elm_lang$core$Debug$log, 'matchId', url);
+					var cmd = _elm_lang$navigation$Navigation$newUrl(url);
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								matchResult: _krisajenkins$remotedata$RemoteData$Success(_p24),
+								page: _user$project$Types$EditMatchResult
+							}),
+						_1: cmd
+					};
+				case 'UpdateMatchResult':
+					var _p25 = model.token;
+					if (_p25.ctor === 'Success') {
+						var cmd = A2(_user$project$Results$updateMatchResults, _p25._0, _p7._0);
+						return {ctor: '_Tuple2', _0: model, _1: cmd};
+					} else {
+						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+					}
+				default:
+					var _p26 = model.token;
+					if (_p26.ctor === 'Success') {
+						var canceledMatch = _elm_lang$core$Native_Utils.update(
+							_p7._0,
+							{score: _elm_lang$core$Maybe$Nothing});
+						var cmd = A2(_user$project$Results$updateMatchResults, _p26._0, canceledMatch);
+						return {ctor: '_Tuple2', _0: model, _1: cmd};
 					} else {
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 					}
@@ -35051,9 +36378,9 @@ var _user$project$Main$init = F2(
 	function (flags, loc) {
 		var screenSize = _user$project$UI_Size$classifyDevice(
 			{width: flags.width, height: 0});
-		var _p19 = _user$project$Main$getPage(loc.hash);
-		var page = _p19._0;
-		var msg = _p19._1;
+		var _p27 = _user$project$Main$getPage(loc.hash);
+		var page = _p27._0;
+		var msg = _p27._1;
 		var model = _elm_lang$core$Native_Utils.update(
 			_user$project$Main$newModel,
 			{page: page, screenSize: screenSize});

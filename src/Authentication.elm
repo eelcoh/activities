@@ -2,6 +2,7 @@ module Authentication exposing (..)
 
 import Types exposing (Model, Msg(..), Credentials(..), Token(..))
 import RemoteData.Http as Web
+import RemoteData exposing (RemoteData(..), WebData)
 import Json.Encode
 import Json.Decode exposing (Decoder, andThen, maybe, field)
 import Element exposing (column, row)
@@ -75,6 +76,16 @@ viewLoginForm model =
             , inpPassword
             , loginButton isSubmittable
             ]
+
+
+isAuthorised : Model -> Bool
+isAuthorised model =
+    case model.token of
+        Success _ ->
+            True
+
+        _ ->
+            False
 
 
 

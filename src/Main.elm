@@ -12,6 +12,8 @@ import Uuid.Barebones as Uuid
 import Types exposing (..)
 import Activities
 import Authentication
+import Ranking
+import Results
 import Bets.Api exposing (retrieveBet)
 import Bets.View
 import RemoteData exposing (RemoteData(..), WebData)
@@ -41,6 +43,9 @@ newModel =
     , bet = NotAsked
     , credentials = Empty
     , token = NotAsked
+    , ranking = NotAsked
+    , matchResults = NotAsked
+    , matchResult = NotAsked
     , screenSize = Small
     }
 
@@ -190,6 +195,14 @@ update action model =
         RefreshActivities ->
             ( model, Activities.fetchActivities model )
 
+        RefreshRanking ->
+            case model.ranking of
+                Success _ ->
+                    ( model, Cmd.none )
+
+                _ ->
+                    ( model, Ranking.fetchRanking )
+
         SetScreenSize sz ->
             let
                 screenSize =
@@ -253,6 +266,88 @@ update action model =
                 _ ->
                     ( model, Cmd.none )
 
+        RecreateRanking ->
+            let
+                cmd =
+                    case model.token of
+                        RemoteData.Success token ->
+                            Ranking.recreate token
+
+                        _ ->
+                            Cmd.none
+            in
+                ( model, cmd )
+
+        FetchedRanking ranking ->
+            ( { model | ranking = ranking }, Cmd.none )
+
+        FetchedMatchResults results ->
+            let
+                nwModel =
+                    case results of
+                        Failure e ->
+                            let
+                                d =
+                                    Debug.log (Basics.toString e)
+                            in
+                                { model | matchResults = results }
+
+                        _ ->
+                            { model | matchResults = results }
+            in
+                ( nwModel, Cmd.none )
+
+        StoredMatchResult result ->
+            ( { model | matchResult = result }, Results.fetchMatchResults )
+
+        RefreshResults ->
+            case model.ranking of
+                Success _ ->
+                    ( model, Cmd.none )
+
+                _ ->
+                    ( model, Results.fetchMatchResults )
+
+        EditMatch match ->
+            let
+                url =
+                    "#resultaten/wedstrijd/" ++ match.match
+
+                mId =
+                    Debug.log "matchId" url
+
+                cmd =
+                    Navigation.newUrl url
+            in
+                ( { model | matchResult = Success match, page = EditMatchResult }, cmd )
+
+        UpdateMatchResult match ->
+            case model.token of
+                Success token ->
+                    let
+                        cmd =
+                            Results.updateMatchResults token match
+                    in
+                        ( model, cmd )
+
+                _ ->
+                    ( model, Cmd.none )
+
+        CancelMatchResult match ->
+            case model.token of
+                Success token ->
+                    let
+                        canceledMatch =
+                            { match | score = Nothing }
+
+                        cmd =
+                            Results.updateMatchResults token canceledMatch
+                    in
+                        ( model, cmd )
+
+                _ ->
+                    ( model, Cmd.none )
+
 
 getPage : String -> ( Page, Msg )
 getPage hash =
@@ -283,13 +378,23 @@ getPage hash =
                 ( Ranking, None )
 
             "#stand" :: _ ->
-                ( Ranking, None )
+                ( Ranking, RefreshRanking )
+
+            "#resultaten" :: "wedstrijd" :: _ ->
+                ( EditMatchResult, None )
+
+            "#resultaten" :: [] ->
+                ( Results, RefreshResults )
 
             "#login" :: _ ->
                 ( Login, None )
 
             _ ->
-                ( Home, RefreshActivities )
+                let
+                    page =
+                        Debug.log "page" locs
+                in
+                    ( Home, RefreshActivities )
 
 
 view : Model -> Html Msg
@@ -304,7 +409,13 @@ view model =
                     viewBlog model
 
                 Ranking ->
-                    viewRanking model
+                    Ranking.viewRanking model
+
+                Results ->
+                    Results.view model
+
+                EditMatchResult ->
+                    Results.edit model
 
                 Bets uuid ->
                     viewBet model uuid
@@ -354,11 +465,6 @@ viewBlog model =
         ]
 
 
-viewRanking : Model -> Element.Element UI.Style.Style variation Msg
-viewRanking model =
-    Element.text "Nog niet klaar"
-
-
 viewBet : Model -> String -> Element.Element UI.Style.Style variation Msg
 viewBet model uuid =
     case model.bet of
@@ -381,19 +487,6 @@ viewForm model =
         []
         [ Element.link "/voetbalpool/formulier" <| Element.el UI.Style.Link [] (Element.text "Klik hier om naar het formulier te gaan.")
         ]
-
-
-nav2 : Element.Element UI.Style.Style variation Msg
-nav2 =
-    Element.navigation UI.Style.Menu
-        [ paddingLeft 90, paddingBottom 20, spacing 30 ]
-        { name = "Main Navigation"
-        , options =
-            [ Element.link "/voetbalpool/" (Element.el (UI.Style.NavLink UI.Style.Selected) [] (Element.text "home"))
-            , Element.link "/voetbalpool/formulier/" (Element.el (UI.Style.NavLink UI.Style.Potential) [] (Element.text "formulier"))
-            , Element.link "/voetbalpool/stand/" (Element.el (UI.Style.NavLink UI.Style.Potential) [] (Element.text "stand"))
-            ]
-        }
 
 
 viewNav : WebData Token -> Page -> ScreenSize -> Element.Element UI.Style.Style variation Msg
@@ -426,6 +519,9 @@ comparePage page newPage =
         ( Ranking, Ranking ) ->
             UI.Style.Selected
 
+        ( Results, Results ) ->
+            UI.Style.Selected
+
         ( Form, Form ) ->
             UI.Style.Selected
 
@@ -447,6 +543,7 @@ unauthenticatedOptions page screenSize =
     in
         [ pageLink Home "/voetbalpool/#home" "home"
         , pageLink Ranking "/voetbalpool/#stand" "stand"
+        , pageLink Results "/voetbalpool/#resultaten" "resultaten"
         , pageLink Form "/voetbalpool/#formulier" "formulier"
         ]
 
@@ -459,6 +556,7 @@ authenticatedOptions page screenSize =
     in
         [ pageLink Home "/voetbalpool/#home" "home"
         , pageLink Ranking "/voetbalpool/#stand" "stand"
+        , pageLink Results "/voetbalpool/#resultaten" "resultaten"
         , pageLink Form "/voetbalpool/#formulier" "formulier"
         , pageLink Blog "/voetbalpool/#blog" "blog"
         ]

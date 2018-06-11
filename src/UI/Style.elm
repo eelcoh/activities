@@ -52,6 +52,16 @@ type Style
     | AuthorInput
     | Clickable
     | NavLink ButtonSemantics
+    | RankingGroup
+    | RankingLine
+    | RankingPoints
+    | RankingPos
+    | RankingName
+    | RankingPointsH
+    | RankingPosH
+    | RankingNameH
+    | RankingHeader
+    | ScoreButton ScoreButtonSemantics
 
 
 type ScoreButtonSemantics
@@ -452,5 +462,68 @@ stylesheet =
             , Font.size 12
             , Font.center
             , fontSansSerif
+            ]
+        , style RankingGroup
+            [ Border.bottom 1
+            , Color.border secondary
+            , fontMono
+            ]
+        , style RankingHeader
+            [ Border.bottom 2
+            , Color.border secondary
+            , fontMono
+            ]
+        , style RankingPoints
+            [ fontMono
+            , Font.alignRight
+            ]
+        , style RankingPos
+            [ fontMono
+            , Font.alignRight
+            ]
+        , style RankingName
+            [ fontMono
+            , Font.alignLeft
+            ]
+        , style RankingPosH
+            [ fontMono
+            , Font.alignRight
+            , Font.weight 700
+            ]
+        , style RankingNameH
+            [ fontMono
+            , Font.alignLeft
+            , Font.weight 700
+            ]
+        , style RankingPointsH
+            [ fontMono
+            , Font.alignRight
+            , Font.weight 700
+            ]
+        , style (ScoreButton SBPotential)
+            [ Color.background secondary
+            , Color.text secondaryText
+            , Border.all 1
+            , Color.border secondary
+            , Font.lineHeight 1.0
+            , Font.center
+            , Font.size 15
+            , hover [ cursor "pointer" ]
+            , Font.typeface
+                [ Font.font "Roboto Mono"
+                ]
+            ]
+        , style (ScoreButton SBSelected)
+            [ Color.background secondaryLight
+            , Color.text secondaryText
+            , Border.all 1
+            , Color.border secondary
+            , Font.lineHeight 1.0
+            , Font.center
+            , Font.size 15
+            , hover [ cursor "pointer" ]
+            , Font.typeface
+                [ Font.font "Roboto Mono"
+                ]
             ]
         ]

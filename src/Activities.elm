@@ -92,7 +92,7 @@ blogBox author title blog date =
         [ verticalSpread, padding 20 ]
         [ Element.paragraph UI.Style.PostTitle [] [ (Element.text title) ]
         , blogView blog
-        , Element.el UI.Style.AuthorText [ alignRight ] (Element.text (author ++ ", " ++ (dateText date)))
+        , Element.el UI.Style.AuthorText [ alignRight ] (Element.text (author ++ ", " ++ (UI.Text.dateText date)))
         ]
 
 
@@ -134,100 +134,7 @@ commentView c =
 
 timeView : Date.Date -> Element.Element UI.Style.Style variation Msg
 timeView dt =
-    Element.el UI.Style.DateText [] (Element.text (dateText dt))
-
-
-dateText : Date.Date -> String
-dateText dt =
-    let
-        m =
-            Date.month dt
-                |> toMonth
-
-        d =
-            Date.day dt
-
-        dd =
-            Date.dayOfWeek dt
-                |> toDay
-
-        h =
-            Date.hour dt
-
-        mn =
-            Date.minute dt
-
-        toMonth mon =
-            case mon of
-                Jan ->
-                    "januari"
-
-                Feb ->
-                    "februari"
-
-                Mar ->
-                    "maart"
-
-                Apr ->
-                    "april"
-
-                May ->
-                    "mei"
-
-                Jun ->
-                    "juni"
-
-                Jul ->
-                    "juli"
-
-                Aug ->
-                    "augustus"
-
-                Sep ->
-                    "september"
-
-                Oct ->
-                    "oktober"
-
-                Nov ->
-                    "november"
-
-                Dec ->
-                    "december"
-
-        toDay day =
-            case day of
-                Mon ->
-                    "maandag"
-
-                Tue ->
-                    "dinsdag"
-
-                Wed ->
-                    "woensdag"
-
-                Thu ->
-                    "donderdag"
-
-                Fri ->
-                    "vrijdag"
-
-                Sat ->
-                    "zaterdag"
-
-                Sun ->
-                    "zondag"
-
-        twoDigitString n =
-            if n < 10 then
-                "0" ++ toString n
-            else
-                toString n
-
-        dateString =
-            dd ++ " " ++ (toString d) ++ " " ++ m ++ ", " ++ (toString h) ++ ":" ++ (twoDigitString mn)
-    in
-        dateString
+    Element.el UI.Style.DateText [] (Element.text (UI.Text.dateText dt))
 
 
 viewCommentInput : Model -> Element.Element UI.Style.Style variation Msg

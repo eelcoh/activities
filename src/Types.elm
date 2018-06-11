@@ -35,6 +35,8 @@ type Page
     | Ranking
     | Bets String
     | Login
+    | Results
+    | EditMatchResult
 
 
 type alias ActivityMeta =
@@ -78,6 +80,15 @@ type Msg
     | SetPassword String
     | Authenticate
     | FetchedToken (WebData Token)
+    | RecreateRanking
+    | FetchedRanking (WebData RankingSummary)
+    | RefreshRanking
+    | FetchedMatchResults (WebData MatchResults)
+    | RefreshResults
+    | EditMatch MatchResult
+    | UpdateMatchResult MatchResult
+    | CancelMatchResult MatchResult
+    | StoredMatchResult (WebData MatchResult)
 
 
 type alias Model =
@@ -91,6 +102,9 @@ type alias Model =
     , bet : WebData Bets.Types.Bet
     , credentials : Credentials
     , token : WebData Token
+    , ranking : WebData RankingSummary
+    , matchResults : WebData MatchResults
+    , matchResult : WebData MatchResult
     , screenSize : ScreenSize
     }
 
@@ -129,3 +143,62 @@ type Credentials
 
 type Token
     = Token String
+
+
+type alias RankingSummary =
+    { summary : List RankingGroup
+    , time : Date.Date
+    }
+
+
+type alias RankingGroup =
+    { pos : Int
+    , bets : List RankingSummaryLine
+    , total : Int
+    }
+
+
+type alias RankingSummaryLine =
+    { name : String
+    , rounds : List RoundScore
+    , topscorer : Int
+    , total : Int
+    , uuid : String
+    }
+
+
+type alias RoundScore =
+    { round : String
+    , points : Int
+    }
+
+
+
+-- Results
+-- type MatchResult struct {
+-- 	MatchResultId bson.ObjectId `bson:"_id" json:"matchResultId"`
+-- 	MatchId       string        `json:"match"`
+-- 	HomeTeam      Team          `json:"homeTeam"`
+-- 	AwayTeam      Team          `json:"awayTeam"`
+-- 	HomeScore     int           `json:"homeScore"`
+-- 	AwayScore     int           `json:"awayScore"`
+-- 	IsSet         bool          `json:"isSet"`
+-- }
+
+
+type alias MatchResults =
+    { results : List MatchResult }
+
+
+type alias MatchResult =
+    { matchResultId : String
+    , match : String
+    , homeTeam : Bets.Types.Team
+    , awayTeam : Bets.Types.Team
+    , score : Maybe Bets.Types.Score
+    }
+
+
+type Access
+    = Unauthorised
+    | Authorised

@@ -3,6 +3,7 @@ module UI.Text exposing (..)
 import Element
 import Element.Attributes exposing (center, alignLeft, px, spacing, paddingLeft, paddingTop, verticalCenter, maxWidth, width)
 import UI.Style
+import Date exposing (Month(..), Day(..))
 
 
 header1 : String -> Element.Element UI.Style.Style variation msg
@@ -55,3 +56,96 @@ error txt =
         UI.Style.Error
         []
         (Element.text txt)
+
+
+dateText : Date.Date -> String
+dateText dt =
+    let
+        m =
+            Date.month dt
+                |> toMonth
+
+        d =
+            Date.day dt
+
+        dd =
+            Date.dayOfWeek dt
+                |> toDay
+
+        h =
+            Date.hour dt
+
+        mn =
+            Date.minute dt
+
+        toMonth mon =
+            case mon of
+                Jan ->
+                    "januari"
+
+                Feb ->
+                    "februari"
+
+                Mar ->
+                    "maart"
+
+                Apr ->
+                    "april"
+
+                May ->
+                    "mei"
+
+                Jun ->
+                    "juni"
+
+                Jul ->
+                    "juli"
+
+                Aug ->
+                    "augustus"
+
+                Sep ->
+                    "september"
+
+                Oct ->
+                    "oktober"
+
+                Nov ->
+                    "november"
+
+                Dec ->
+                    "december"
+
+        toDay day =
+            case day of
+                Mon ->
+                    "maandag"
+
+                Tue ->
+                    "dinsdag"
+
+                Wed ->
+                    "woensdag"
+
+                Thu ->
+                    "donderdag"
+
+                Fri ->
+                    "vrijdag"
+
+                Sat ->
+                    "zaterdag"
+
+                Sun ->
+                    "zondag"
+
+        twoDigitString n =
+            if n < 10 then
+                "0" ++ toString n
+            else
+                toString n
+
+        dateString =
+            dd ++ " " ++ (toString d) ++ " " ++ m ++ ", " ++ (toString h) ++ ":" ++ (twoDigitString mn)
+    in
+        dateString
