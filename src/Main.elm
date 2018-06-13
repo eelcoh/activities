@@ -44,6 +44,7 @@ newModel =
     , credentials = Empty
     , token = NotAsked
     , ranking = NotAsked
+    , rankingDetails = NotAsked
     , matchResults = NotAsked
     , matchResult = NotAsked
     , screenSize = Small
@@ -192,6 +193,26 @@ update action model =
             in
                 ( model, cmd )
 
+        ViewRankingDetails uuid ->
+            let
+                url =
+                    "#stand/" ++ uuid
+
+                cmd =
+                    Navigation.newUrl url
+            in
+                ( model, cmd )
+
+        RetrieveRankingDetails uuid ->
+            let
+                cmd =
+                    Ranking.fetchRankingDetails uuid
+            in
+                ( model, cmd )
+
+        FetchedRankingDetails results ->
+            ( { model | rankingDetails = results }, Cmd.none )
+
         RefreshActivities ->
             ( model, Activities.fetchActivities model )
 
@@ -313,9 +334,6 @@ update action model =
                 url =
                     "#resultaten/wedstrijd/" ++ match.match
 
-                mId =
-                    Debug.log "matchId" url
-
                 cmd =
                     Navigation.newUrl url
             in
@@ -377,6 +395,12 @@ getPage hash =
             "#inzendingen" :: _ ->
                 ( Ranking, None )
 
+            "#stand" :: uuid :: _ ->
+                if (Uuid.isValidUuid uuid) then
+                    ( RankingDetailsView, RetrieveRankingDetails uuid )
+                else
+                    ( Ranking, None )
+
             "#stand" :: _ ->
                 ( Ranking, RefreshRanking )
 
@@ -410,6 +434,9 @@ view model =
 
                 Ranking ->
                     Ranking.viewRanking model
+
+                RankingDetailsView ->
+                    Ranking.viewRankingDetails model
 
                 Results ->
                     Results.view model

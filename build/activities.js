@@ -25458,7 +25458,9 @@ var _user$project$Types$Model = function (a) {
 											return function (l) {
 												return function (m) {
 													return function (n) {
-														return {activities: a, comment: b, post: c, contents: d, showComment: e, showPost: f, page: g, bet: h, credentials: i, token: j, ranking: k, matchResults: l, matchResult: m, screenSize: n};
+														return function (o) {
+															return {activities: a, comment: b, post: c, contents: d, showComment: e, showPost: f, page: g, bet: h, credentials: i, token: j, ranking: k, rankingDetails: l, matchResults: m, matchResult: n, screenSize: o};
+														};
 													};
 												};
 											};
@@ -25497,6 +25499,10 @@ var _user$project$Types$RankingSummaryLine = F5(
 	function (a, b, c, d, e) {
 		return {name: a, rounds: b, topscorer: c, total: d, uuid: e};
 	});
+var _user$project$Types$RankingDetails = F6(
+	function (a, b, c, d, e, f) {
+		return {name: a, rounds: b, topscorer: c, total: d, uuid: e, bet: f};
+	});
 var _user$project$Types$RoundScore = F2(
 	function (a, b) {
 		return {round: a, points: b};
@@ -25514,6 +25520,7 @@ var _user$project$Types$Login = {ctor: 'Login'};
 var _user$project$Types$Bets = function (a) {
 	return {ctor: 'Bets', _0: a};
 };
+var _user$project$Types$RankingDetailsView = {ctor: 'RankingDetailsView'};
 var _user$project$Types$Ranking = {ctor: 'Ranking'};
 var _user$project$Types$Form = {ctor: 'Form'};
 var _user$project$Types$Blog = {ctor: 'Blog'};
@@ -25548,6 +25555,15 @@ var _user$project$Types$EditMatch = function (a) {
 var _user$project$Types$RefreshResults = {ctor: 'RefreshResults'};
 var _user$project$Types$FetchedMatchResults = function (a) {
 	return {ctor: 'FetchedMatchResults', _0: a};
+};
+var _user$project$Types$RetrieveRankingDetails = function (a) {
+	return {ctor: 'RetrieveRankingDetails', _0: a};
+};
+var _user$project$Types$ViewRankingDetails = function (a) {
+	return {ctor: 'ViewRankingDetails', _0: a};
+};
+var _user$project$Types$FetchedRankingDetails = function (a) {
+	return {ctor: 'FetchedRankingDetails', _0: a};
 };
 var _user$project$Types$RefreshRanking = {ctor: 'RefreshRanking'};
 var _user$project$Types$FetchedRanking = function (a) {
@@ -27118,7 +27134,28 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																																													_1: {
 																																																														ctor: '::',
 																																																														_0: _mdgriffith$style_elements$Style_Font$alignLeft,
-																																																														_1: {ctor: '[]'}
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: _mdgriffith$style_elements$Style$hover(
+																																																																{
+																																																																	ctor: '::',
+																																																																	_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																																																																	_1: {
+																																																																		ctor: '::',
+																																																																		_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$orange),
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: _mdgriffith$style_elements$Style_Font$weight(700),
+																																																																				_1: {ctor: '[]'}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}),
+																																																															_1: {ctor: '[]'}
+																																																														}
 																																																													}
 																																																												}),
 																																																											_1: {
@@ -34711,6 +34748,18 @@ var _user$project$Ranking$decodeRoundScore = A3(
 	_user$project$Types$RoundScore,
 	A2(_elm_lang$core$Json_Decode$field, 'round', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'points', _elm_lang$core$Json_Decode$int));
+var _user$project$Ranking$decodeRankingDetails = A7(
+	_elm_lang$core$Json_Decode$map6,
+	_user$project$Types$RankingDetails,
+	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string),
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'rounds',
+		_elm_lang$core$Json_Decode$list(_user$project$Ranking$decodeRoundScore)),
+	A2(_elm_lang$core$Json_Decode$field, 'topscorer', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'total', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'uuid', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'bet', _user$project$Bets_Bet$decode));
 var _user$project$Ranking$decodeRankingSummaryLine = A6(
 	_elm_lang$core$Json_Decode$map5,
 	_user$project$Types$RankingSummaryLine,
@@ -34739,15 +34788,34 @@ var _user$project$Ranking$decode = A3(
 		'summary',
 		_elm_lang$core$Json_Decode$list(_user$project$Ranking$decodeRankingRankingGroup)),
 	A2(_elm_lang$core$Json_Decode$field, 'time', _user$project$Ranking$decodeDate));
+var _user$project$Ranking$viewRankingDetails = function (model) {
+	var _p0 = model.rankingDetails;
+	switch (_p0.ctor) {
+		case 'NotAsked':
+			return _mdgriffith$style_elements$Element$text('Aan het ophalen.');
+		case 'Loading':
+			return _mdgriffith$style_elements$Element$text('Aan het ophalen...');
+		case 'Failure':
+			return _user$project$UI_Text$error('Oeps. Daar ging iets niet goed.');
+		default:
+			return A2(_user$project$Bets_View$viewBet, _p0._0.bet, model.screenSize);
+	}
+};
 var _user$project$Ranking$viewRankingLine = function (line) {
+	var click = _mdgriffith$style_elements$Element_Events$onClick(
+		_user$project$Types$ViewRankingDetails(line.uuid));
 	return A3(
 		_mdgriffith$style_elements$Element$el,
 		_user$project$UI_Style$RankingName,
 		{
 			ctor: '::',
-			_0: _mdgriffith$style_elements$Element_Attributes$width(
-				_mdgriffith$style_elements$Element_Attributes$px(200)),
-			_1: {ctor: '[]'}
+			_0: click,
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$width(
+					_mdgriffith$style_elements$Element_Attributes$px(200)),
+				_1: {ctor: '[]'}
+			}
 		},
 		_mdgriffith$style_elements$Element$text(line.name));
 };
@@ -34867,10 +34935,10 @@ var _user$project$Ranking$viewRankingHeader = A3(
 		}
 	});
 var _user$project$Ranking$viewRankingGroups = function (model) {
-	var _p0 = model.ranking;
-	switch (_p0.ctor) {
+	var _p1 = model.ranking;
+	switch (_p1.ctor) {
 		case 'Success':
-			var _p1 = _p0._0;
+			var _p2 = _p1._0;
 			var datetxt = A3(
 				_mdgriffith$style_elements$Element$el,
 				_user$project$UI_Style$AuthorText,
@@ -34887,8 +34955,8 @@ var _user$project$Ranking$viewRankingGroups = function (model) {
 					A2(
 						_elm_lang$core$Basics_ops['++'],
 						'bijgewerkt op ',
-						_user$project$UI_Text$dateText(_p1.time))));
-			var rank = A2(_elm_lang$core$List$map, _user$project$Ranking$viewRankingGroup, _p1.summary);
+						_user$project$UI_Text$dateText(_p2.time))));
+			var rank = A2(_elm_lang$core$List$map, _user$project$Ranking$viewRankingGroup, _p2.summary);
 			var header = _user$project$Ranking$viewRankingHeader;
 			var column = A2(
 				_elm_lang$core$Basics_ops['++'],
@@ -34920,8 +34988,8 @@ var _user$project$Ranking$adminBox = function (model) {
 };
 var _user$project$Ranking$viewRanking = function (model) {
 	var items = function () {
-		var _p2 = model.token;
-		if (_p2.ctor === 'Success') {
+		var _p3 = model.token;
+		if (_p3.ctor === 'Success') {
 			return {
 				ctor: '::',
 				_0: _user$project$Ranking$adminBox(model),
@@ -34945,9 +35013,9 @@ var _user$project$Ranking$viewRanking = function (model) {
 		{ctor: '[]'},
 		items);
 };
-var _user$project$Ranking$recreate = function (_p3) {
-	var _p4 = _p3;
-	var bearer = A2(_elm_lang$core$Basics_ops['++'], 'Bearer ', _p4._0);
+var _user$project$Ranking$recreate = function (_p4) {
+	var _p5 = _p4;
+	var bearer = A2(_elm_lang$core$Basics_ops['++'], 'Bearer ', _p5._0);
 	var header = A2(_elm_lang$http$Http$header, 'Authorization', bearer);
 	var config = {
 		headers: {
@@ -34959,6 +35027,13 @@ var _user$project$Ranking$recreate = function (_p3) {
 		timeout: _elm_lang$core$Maybe$Nothing
 	};
 	return A5(_ohanhi$remotedata_http$RemoteData_Http$postWithConfig, config, '/bets/ranking/initial/', _user$project$Types$FetchedRanking, _user$project$Ranking$decode, _elm_lang$core$Json_Encode$null);
+};
+var _user$project$Ranking$fetchRankingDetails = function (uuid) {
+	return A3(
+		_ohanhi$remotedata_http$RemoteData_Http$get,
+		A2(_elm_lang$core$Basics_ops['++'], '/bets/ranking/', uuid),
+		_user$project$Types$FetchedRankingDetails,
+		_user$project$Ranking$decodeRankingDetails);
 };
 var _user$project$Ranking$fetchRanking = A3(_ohanhi$remotedata_http$RemoteData_Http$get, '/bets/ranking/', _user$project$Types$FetchedRanking, _user$project$Ranking$decode);
 
@@ -35872,6 +35947,8 @@ var _user$project$Main$view = function (model) {
 				return _user$project$Main$viewBlog(model);
 			case 'Ranking':
 				return _user$project$Ranking$viewRanking(model);
+			case 'RankingDetailsView':
+				return _user$project$Ranking$viewRankingDetails(model);
 			case 'Results':
 				return _user$project$Results$view(model);
 			case 'EditMatchResult':
@@ -35930,7 +36007,7 @@ var _user$project$Main$getPage = function (hash) {
 	};
 	var locs = A2(_elm_lang$core$String$split, '/', hash);
 	var _p5 = locs;
-	_v4_9:
+	_v4_10:
 	do {
 		if (_p5.ctor === '::') {
 			switch (_p5._0) {
@@ -35952,13 +36029,22 @@ var _user$project$Main$getPage = function (hash) {
 						return {ctor: '_Tuple2', _0: _user$project$Types$Ranking, _1: _user$project$Types$None};
 					}
 				case '#stand':
-					return {ctor: '_Tuple2', _0: _user$project$Types$Ranking, _1: _user$project$Types$RefreshRanking};
+					if (_p5._1.ctor === '::') {
+						var _p7 = _p5._1._0;
+						return _danyx23$elm_uuid$Uuid_Barebones$isValidUuid(_p7) ? {
+							ctor: '_Tuple2',
+							_0: _user$project$Types$RankingDetailsView,
+							_1: _user$project$Types$RetrieveRankingDetails(_p7)
+						} : {ctor: '_Tuple2', _0: _user$project$Types$Ranking, _1: _user$project$Types$None};
+					} else {
+						return {ctor: '_Tuple2', _0: _user$project$Types$Ranking, _1: _user$project$Types$RefreshRanking};
+					}
 				case '#resultaten':
 					if (_p5._1.ctor === '::') {
 						if (_p5._1._0 === 'wedstrijd') {
 							return {ctor: '_Tuple2', _0: _user$project$Types$EditMatchResult, _1: _user$project$Types$None};
 						} else {
-							break _v4_9;
+							break _v4_10;
 						}
 					} else {
 						return {ctor: '_Tuple2', _0: _user$project$Types$Results, _1: _user$project$Types$RefreshResults};
@@ -35966,10 +36052,10 @@ var _user$project$Main$getPage = function (hash) {
 				case '#login':
 					return {ctor: '_Tuple2', _0: _user$project$Types$Login, _1: _user$project$Types$None};
 				default:
-					break _v4_9;
+					break _v4_10;
 			}
 		} else {
-			break _v4_9;
+			break _v4_10;
 		}
 	} while(false);
 	var page = A2(_elm_lang$core$Debug$log, 'page', locs);
@@ -35996,6 +36082,7 @@ var _user$project$Main$newModel = {
 	credentials: _user$project$Types$Empty,
 	token: _krisajenkins$remotedata$RemoteData$NotAsked,
 	ranking: _krisajenkins$remotedata$RemoteData$NotAsked,
+	rankingDetails: _krisajenkins$remotedata$RemoteData$NotAsked,
 	matchResults: _krisajenkins$remotedata$RemoteData$NotAsked,
 	matchResult: _krisajenkins$remotedata$RemoteData$NotAsked,
 	screenSize: _user$project$Types$Small
@@ -36004,8 +36091,8 @@ var _user$project$Main$update = F2(
 	function (action, model) {
 		update:
 		while (true) {
-			var _p7 = action;
-			switch (_p7.ctor) {
+			var _p8 = action;
+			switch (_p8.ctor) {
 				case 'None':
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				case 'FetchedBet':
@@ -36013,7 +36100,7 @@ var _user$project$Main$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{bet: _p7._0}),
+							{bet: _p8._0}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				case 'FetchedActivities':
@@ -36021,14 +36108,14 @@ var _user$project$Main$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{activities: _p7._0}),
+							{activities: _p8._0}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				case 'SetCommentAuthor':
 					var oldComment = model.comment;
 					var nwComment = _elm_lang$core$Native_Utils.update(
 						oldComment,
-						{author: _p7._0});
+						{author: _p8._0});
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -36056,7 +36143,7 @@ var _user$project$Main$update = F2(
 					var oldComment = model.comment;
 					var nwComment = _elm_lang$core$Native_Utils.update(
 						oldComment,
-						{msg: _p7._0});
+						{msg: _p8._0});
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -36072,14 +36159,14 @@ var _user$project$Main$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{activities: _p7._0, comment: _user$project$Main$newComment, showComment: false}),
+							{activities: _p8._0, comment: _user$project$Main$newComment, showComment: false}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				case 'SetPostAuthor':
 					var oldPost = model.post;
 					var nwPost = _elm_lang$core$Native_Utils.update(
 						oldPost,
-						{author: _p7._0});
+						{author: _p8._0});
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -36107,7 +36194,7 @@ var _user$project$Main$update = F2(
 					var oldPost = model.post;
 					var nwPost = _elm_lang$core$Native_Utils.update(
 						oldPost,
-						{msg: _p7._0});
+						{msg: _p8._0});
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -36119,7 +36206,7 @@ var _user$project$Main$update = F2(
 					var oldPost = model.post;
 					var nwPost = _elm_lang$core$Native_Utils.update(
 						oldPost,
-						{title: _p7._0});
+						{title: _p8._0});
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -36131,7 +36218,7 @@ var _user$project$Main$update = F2(
 					var oldPost = model.post;
 					var nwPost = _elm_lang$core$Native_Utils.update(
 						oldPost,
-						{passphrase: _p7._0});
+						{passphrase: _p8._0});
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -36141,9 +36228,9 @@ var _user$project$Main$update = F2(
 					};
 				case 'SavePost':
 					var cmd = function () {
-						var _p8 = model.token;
-						if (_p8.ctor === 'Success') {
-							return A2(_user$project$Activities$savePost, model, _p8._0._0);
+						var _p9 = model.token;
+						if (_p9.ctor === 'Success') {
+							return A2(_user$project$Activities$savePost, model, _p9._0._0);
 						} else {
 							return _elm_lang$core$Platform_Cmd$none;
 						}
@@ -36154,13 +36241,13 @@ var _user$project$Main$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{activities: _p7._0, post: _user$project$Main$newPost, showPost: false}),
+							{activities: _p8._0, post: _user$project$Main$newPost, showPost: false}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				case 'UrlChange':
-					var _p9 = _user$project$Main$getPage(_p7._0.hash);
-					var page = _p9._0;
-					var msg = _p9._1;
+					var _p10 = _user$project$Main$getPage(_p8._0.hash);
+					var page = _p10._0;
+					var msg = _p10._1;
 					var newModel = _elm_lang$core$Native_Utils.update(
 						model,
 						{page: page});
@@ -36173,26 +36260,41 @@ var _user$project$Main$update = F2(
 					return {
 						ctor: '_Tuple2',
 						_0: model,
-						_1: _elm_lang$navigation$Navigation$newUrl(_p7._0)
+						_1: _elm_lang$navigation$Navigation$newUrl(_p8._0)
 					};
 				case 'BetSelected':
 					var mUuid = function () {
-						var _p10 = model.page;
-						if (_p10.ctor === 'Bets') {
-							return _elm_lang$core$Maybe$Just(_p10._0);
+						var _p11 = model.page;
+						if (_p11.ctor === 'Bets') {
+							return _elm_lang$core$Maybe$Just(_p11._0);
 						} else {
 							return _elm_lang$core$Maybe$Nothing;
 						}
 					}();
 					var cmd = function () {
-						var _p11 = mUuid;
-						if (_p11.ctor === 'Just') {
-							return A2(_user$project$Bets_Api$retrieveBet, _p11._0, _user$project$Types$FetchedBet);
+						var _p12 = mUuid;
+						if (_p12.ctor === 'Just') {
+							return A2(_user$project$Bets_Api$retrieveBet, _p12._0, _user$project$Types$FetchedBet);
 						} else {
 							return _elm_lang$core$Platform_Cmd$none;
 						}
 					}();
 					return {ctor: '_Tuple2', _0: model, _1: cmd};
+				case 'ViewRankingDetails':
+					var url = A2(_elm_lang$core$Basics_ops['++'], '#stand/', _p8._0);
+					var cmd = _elm_lang$navigation$Navigation$newUrl(url);
+					return {ctor: '_Tuple2', _0: model, _1: cmd};
+				case 'RetrieveRankingDetails':
+					var cmd = _user$project$Ranking$fetchRankingDetails(_p8._0);
+					return {ctor: '_Tuple2', _0: model, _1: cmd};
+				case 'FetchedRankingDetails':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{rankingDetails: _p8._0}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
 				case 'RefreshActivities':
 					return {
 						ctor: '_Tuple2',
@@ -36200,14 +36302,14 @@ var _user$project$Main$update = F2(
 						_1: _user$project$Activities$fetchActivities(model)
 					};
 				case 'RefreshRanking':
-					var _p12 = model.ranking;
-					if (_p12.ctor === 'Success') {
+					var _p13 = model.ranking;
+					if (_p13.ctor === 'Success') {
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 					} else {
 						return {ctor: '_Tuple2', _0: model, _1: _user$project$Ranking$fetchRanking};
 					}
 				case 'SetScreenSize':
-					var screenSize = _user$project$UI_Size$classifyDevice(_p7._0);
+					var screenSize = _user$project$UI_Size$classifyDevice(_p8._0);
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -36216,18 +36318,18 @@ var _user$project$Main$update = F2(
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				case 'SetUsername':
-					var _p14 = _p7._0;
+					var _p15 = _p8._0;
 					var newCredentials = function () {
-						var _p13 = model.credentials;
-						switch (_p13.ctor) {
+						var _p14 = model.credentials;
+						switch (_p14.ctor) {
 							case 'Empty':
-								return _user$project$Types$WithUsername(_p14);
+								return _user$project$Types$WithUsername(_p15);
 							case 'WithPassword':
-								return A2(_user$project$Types$Submittable, _p14, _p13._0);
+								return A2(_user$project$Types$Submittable, _p15, _p14._0);
 							case 'WithUsername':
-								return _user$project$Types$WithUsername(_p13._0);
+								return _user$project$Types$WithUsername(_p14._0);
 							default:
-								return A2(_user$project$Types$Submittable, _p14, _p13._1);
+								return A2(_user$project$Types$Submittable, _p15, _p14._1);
 						}
 					}();
 					return {
@@ -36238,18 +36340,18 @@ var _user$project$Main$update = F2(
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				case 'SetPassword':
-					var _p16 = _p7._0;
+					var _p17 = _p8._0;
 					var newCredentials = function () {
-						var _p15 = model.credentials;
-						switch (_p15.ctor) {
+						var _p16 = model.credentials;
+						switch (_p16.ctor) {
 							case 'Empty':
-								return _user$project$Types$WithPassword(_p16);
+								return _user$project$Types$WithPassword(_p17);
 							case 'WithPassword':
-								return _user$project$Types$WithPassword(_p16);
+								return _user$project$Types$WithPassword(_p17);
 							case 'WithUsername':
-								return A2(_user$project$Types$Submittable, _p15._0, _p16);
+								return A2(_user$project$Types$Submittable, _p16._0, _p17);
 							default:
-								return A2(_user$project$Types$Submittable, _p15._0, _p16);
+								return A2(_user$project$Types$Submittable, _p16._0, _p17);
 						}
 					}();
 					return {
@@ -36260,10 +36362,10 @@ var _user$project$Main$update = F2(
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				case 'FetchedToken':
-					var _p18 = _p7._0;
+					var _p19 = _p8._0;
 					var newCredentials = function () {
-						var _p17 = _p18;
-						if (_p17.ctor === 'Success') {
+						var _p18 = _p19;
+						if (_p18.ctor === 'Success') {
 							return _user$project$Types$Empty;
 						} else {
 							return model.credentials;
@@ -36273,25 +36375,25 @@ var _user$project$Main$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{token: _p18, credentials: newCredentials}),
+							{token: _p19, credentials: newCredentials}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				case 'Authenticate':
-					var _p19 = model.credentials;
-					if (_p19.ctor === 'Submittable') {
+					var _p20 = model.credentials;
+					if (_p20.ctor === 'Submittable') {
 						return {
 							ctor: '_Tuple2',
 							_0: model,
-							_1: A2(_user$project$Authentication$authenticate, _p19._0, _p19._1)
+							_1: A2(_user$project$Authentication$authenticate, _p20._0, _p20._1)
 						};
 					} else {
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 					}
 				case 'RecreateRanking':
 					var cmd = function () {
-						var _p20 = model.token;
-						if (_p20.ctor === 'Success') {
-							return _user$project$Ranking$recreate(_p20._0);
+						var _p21 = model.token;
+						if (_p21.ctor === 'Success') {
+							return _user$project$Ranking$recreate(_p21._0);
 						} else {
 							return _elm_lang$core$Platform_Cmd$none;
 						}
@@ -36302,23 +36404,23 @@ var _user$project$Main$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{ranking: _p7._0}),
+							{ranking: _p8._0}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				case 'FetchedMatchResults':
-					var _p22 = _p7._0;
+					var _p23 = _p8._0;
 					var nwModel = function () {
-						var _p21 = _p22;
-						if (_p21.ctor === 'Failure') {
+						var _p22 = _p23;
+						if (_p22.ctor === 'Failure') {
 							var d = _elm_lang$core$Debug$log(
-								_elm_lang$core$Basics$toString(_p21._0));
+								_elm_lang$core$Basics$toString(_p22._0));
 							return _elm_lang$core$Native_Utils.update(
 								model,
-								{matchResults: _p22});
+								{matchResults: _p23});
 						} else {
 							return _elm_lang$core$Native_Utils.update(
 								model,
-								{matchResults: _p22});
+								{matchResults: _p23});
 						}
 					}();
 					return {ctor: '_Tuple2', _0: nwModel, _1: _elm_lang$core$Platform_Cmd$none};
@@ -36327,46 +36429,45 @@ var _user$project$Main$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{matchResult: _p7._0}),
+							{matchResult: _p8._0}),
 						_1: _user$project$Results$fetchMatchResults
 					};
 				case 'RefreshResults':
-					var _p23 = model.ranking;
-					if (_p23.ctor === 'Success') {
+					var _p24 = model.ranking;
+					if (_p24.ctor === 'Success') {
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 					} else {
 						return {ctor: '_Tuple2', _0: model, _1: _user$project$Results$fetchMatchResults};
 					}
 				case 'EditMatch':
-					var _p24 = _p7._0;
-					var url = A2(_elm_lang$core$Basics_ops['++'], '#resultaten/wedstrijd/', _p24.match);
-					var mId = A2(_elm_lang$core$Debug$log, 'matchId', url);
+					var _p25 = _p8._0;
+					var url = A2(_elm_lang$core$Basics_ops['++'], '#resultaten/wedstrijd/', _p25.match);
 					var cmd = _elm_lang$navigation$Navigation$newUrl(url);
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
 							{
-								matchResult: _krisajenkins$remotedata$RemoteData$Success(_p24),
+								matchResult: _krisajenkins$remotedata$RemoteData$Success(_p25),
 								page: _user$project$Types$EditMatchResult
 							}),
 						_1: cmd
 					};
 				case 'UpdateMatchResult':
-					var _p25 = model.token;
-					if (_p25.ctor === 'Success') {
-						var cmd = A2(_user$project$Results$updateMatchResults, _p25._0, _p7._0);
+					var _p26 = model.token;
+					if (_p26.ctor === 'Success') {
+						var cmd = A2(_user$project$Results$updateMatchResults, _p26._0, _p8._0);
 						return {ctor: '_Tuple2', _0: model, _1: cmd};
 					} else {
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 					}
 				default:
-					var _p26 = model.token;
-					if (_p26.ctor === 'Success') {
+					var _p27 = model.token;
+					if (_p27.ctor === 'Success') {
 						var canceledMatch = _elm_lang$core$Native_Utils.update(
-							_p7._0,
+							_p8._0,
 							{score: _elm_lang$core$Maybe$Nothing});
-						var cmd = A2(_user$project$Results$updateMatchResults, _p26._0, canceledMatch);
+						var cmd = A2(_user$project$Results$updateMatchResults, _p27._0, canceledMatch);
 						return {ctor: '_Tuple2', _0: model, _1: cmd};
 					} else {
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
@@ -36378,9 +36479,9 @@ var _user$project$Main$init = F2(
 	function (flags, loc) {
 		var screenSize = _user$project$UI_Size$classifyDevice(
 			{width: flags.width, height: 0});
-		var _p27 = _user$project$Main$getPage(loc.hash);
-		var page = _p27._0;
-		var msg = _p27._1;
+		var _p28 = _user$project$Main$getPage(loc.hash);
+		var page = _p28._0;
+		var msg = _p28._1;
 		var model = _elm_lang$core$Native_Utils.update(
 			_user$project$Main$newModel,
 			{page: page, screenSize: screenSize});

@@ -484,6 +484,12 @@ stylesheet =
         , style RankingName
             [ fontMono
             , Font.alignLeft
+            , hover
+                [ cursor "pointer"
+                , Color.background secondaryLight
+                , Color.text UI.Color.orange
+                , Font.weight 700
+                ]
             ]
         , style RankingPosH
             [ fontMono

@@ -33,6 +33,7 @@ type Page
     | Blog
     | Form
     | Ranking
+    | RankingDetailsView
     | Bets String
     | Login
     | Results
@@ -83,6 +84,9 @@ type Msg
     | RecreateRanking
     | FetchedRanking (WebData RankingSummary)
     | RefreshRanking
+    | FetchedRankingDetails (WebData RankingDetails)
+    | ViewRankingDetails String
+    | RetrieveRankingDetails String
     | FetchedMatchResults (WebData MatchResults)
     | RefreshResults
     | EditMatch MatchResult
@@ -103,6 +107,7 @@ type alias Model =
     , credentials : Credentials
     , token : WebData Token
     , ranking : WebData RankingSummary
+    , rankingDetails : WebData RankingDetails
     , matchResults : WebData MatchResults
     , matchResult : WebData MatchResult
     , screenSize : ScreenSize
@@ -164,6 +169,16 @@ type alias RankingSummaryLine =
     , topscorer : Int
     , total : Int
     , uuid : String
+    }
+
+
+type alias RankingDetails =
+    { name : String
+    , rounds : List RoundScore
+    , topscorer : Int
+    , total : Int
+    , uuid : String
+    , bet : Bets.Types.Bet
     }
 
 

@@ -1,6 +1,6 @@
-module Ranking exposing (viewRanking, recreate, fetchRanking)
+module Ranking exposing (viewRanking, viewRankingDetails, recreate, fetchRanking, fetchRankingDetails)
 
-import Types exposing (Model, Activity(..), Msg(..), RankingSummary, RankingSummaryLine, RoundScore, Token(..), RankingGroup)
+import Types exposing (Model, Activity(..), Msg(..), RankingSummary, RankingSummaryLine, RoundScore, Token(..), RankingGroup, RankingDetails)
 import RemoteData exposing (RemoteData(..))
 import RemoteData.Http as Web
 import Http
@@ -8,15 +8,23 @@ import Json.Encode
 import Json.Decode exposing (Decoder, andThen, maybe, field)
 import Element exposing (column, row)
 import Element.Attributes exposing (spread, px, padding, paddingLeft, paddingTop, paddingBottom, paddingXY, spacing, alignLeft, verticalSpread, center, alignRight, width, height)
+import Element.Events as Events
 import UI.Style
 import UI.Button
 import UI.Text
 import Date
+import Bets.Bet
+import Bets.View
 
 
 fetchRanking : Cmd Msg
 fetchRanking =
     Web.get "/bets/ranking/" FetchedRanking decode
+
+
+fetchRankingDetails : String -> Cmd Msg
+fetchRankingDetails uuid =
+    Web.get ("/bets/ranking/" ++ uuid) FetchedRankingDetails decodeRankingDetails
 
 
 recreate : Token -> Cmd Msg
@@ -61,7 +69,7 @@ adminBox model =
     UI.Button.pill UI.Style.Active RecreateRanking "recreate"
 
 
-viewRankingGroups : Model -> Element.Element UI.Style.Style variation msg
+viewRankingGroups : Model -> Element.Element UI.Style.Style variation Msg
 viewRankingGroups model =
     case model.ranking of
         Success ranking ->
@@ -104,7 +112,7 @@ viewRankingHeader =
         ]
 
 
-viewRankingGroup : RankingGroup -> Element.Element UI.Style.Style variation msg
+viewRankingGroup : RankingGroup -> Element.Element UI.Style.Style variation Msg
 viewRankingGroup grp =
     Element.row UI.Style.RankingGroup
         [ paddingXY 0 5, spread ]
@@ -114,16 +122,36 @@ viewRankingGroup grp =
         ]
 
 
-viewRankingLines : List RankingSummaryLine -> Element.Element UI.Style.Style variation msg
+viewRankingLines : List RankingSummaryLine -> Element.Element UI.Style.Style variation Msg
 viewRankingLines lines =
     Element.column UI.Style.None
         [ width (px 200), paddingBottom 4 ]
         (List.map viewRankingLine lines)
 
 
-viewRankingLine : RankingSummaryLine -> Element.Element UI.Style.Style variation msg
+viewRankingLine : RankingSummaryLine -> Element.Element UI.Style.Style variation Msg
 viewRankingLine line =
-    Element.el UI.Style.RankingName [ width (px 200) ] (Element.text line.name)
+    let
+        click =
+            Events.onClick (ViewRankingDetails line.uuid)
+    in
+        Element.el UI.Style.RankingName [ click, width (px 200) ] (Element.text line.name)
+
+
+viewRankingDetails : Model -> Element.Element UI.Style.Style variation Msg
+viewRankingDetails model =
+    case model.rankingDetails of
+        NotAsked ->
+            Element.text "Aan het ophalen."
+
+        Loading ->
+            Element.text "Aan het ophalen..."
+
+        Failure err ->
+            UI.Text.error "Oeps. Daar ging iets niet goed."
+
+        Success details ->
+            Bets.View.viewBet details.bet model.screenSize
 
 
 decode : Decoder RankingSummary
@@ -162,3 +190,14 @@ decodeDate : Decoder Date.Date
 decodeDate =
     Json.Decode.float
         |> Json.Decode.map Date.fromTime
+
+
+decodeRankingDetails : Decoder RankingDetails
+decodeRankingDetails =
+    Json.Decode.map6 RankingDetails
+        (field "name" Json.Decode.string)
+        (field "rounds" (Json.Decode.list decodeRoundScore))
+        (field "topscorer" Json.Decode.int)
+        (field "total" Json.Decode.int)
+        (field "uuid" Json.Decode.string)
+        (field "bet" Bets.Bet.decode)
