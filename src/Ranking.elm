@@ -7,7 +7,7 @@ import Http
 import Json.Encode
 import Json.Decode exposing (Decoder, andThen, maybe, field)
 import Element exposing (column, row)
-import Element.Attributes exposing (spread, px, padding, paddingLeft, paddingTop, paddingBottom, paddingXY, spacing, alignLeft, verticalSpread, center, alignRight, width, height)
+import Element.Attributes exposing (spread, px, fill, padding, paddingLeft, paddingRight, paddingTop, paddingBottom, paddingXY, spacing, alignLeft, verticalSpread, center, alignRight, width, height)
 import Element.Events as Events
 import UI.Style
 import UI.Button
@@ -106,9 +106,9 @@ viewRankingHeader : Element.Element UI.Style.Style variation msg
 viewRankingHeader =
     Element.row UI.Style.RankingHeader
         [ paddingXY 0 5, spread ]
-        [ Element.el UI.Style.RankingPosH [ width (px 20) ] (Element.text "#")
-        , Element.el UI.Style.RankingNameH [ width (px 200) ] (Element.text "Naam")
-        , Element.el UI.Style.RankingPointsH [ width (px 80) ] (Element.text "Punten")
+        [ Element.el UI.Style.RankingPosH [ width (px 40), paddingRight 10 ] (Element.text "#")
+        , Element.el UI.Style.RankingNameH [ width (fill), paddingLeft 10, paddingRight 10 ] (Element.text "Naam")
+        , Element.el UI.Style.RankingPointsH [ width (px 100), paddingLeft 10, paddingRight 20 ] (Element.text "Punten")
         ]
 
 
@@ -116,16 +116,16 @@ viewRankingGroup : RankingGroup -> Element.Element UI.Style.Style variation Msg
 viewRankingGroup grp =
     Element.row UI.Style.RankingGroup
         [ paddingXY 0 5, spread ]
-        [ Element.el UI.Style.RankingPos [ width (px 20) ] (Element.text (Basics.toString grp.pos))
+        [ Element.el UI.Style.RankingPos [ width (px 40), paddingRight 10 ] (Element.text (Basics.toString grp.pos))
         , viewRankingLines grp.bets
-        , Element.el UI.Style.RankingPoints [ width (px 80) ] (Element.text (Basics.toString grp.total))
+        , Element.el UI.Style.RankingPoints [ width (px 100), paddingLeft 10, paddingRight 20 ] (Element.text (Basics.toString grp.total))
         ]
 
 
 viewRankingLines : List RankingSummaryLine -> Element.Element UI.Style.Style variation Msg
 viewRankingLines lines =
     Element.column UI.Style.None
-        [ width (px 200), paddingBottom 4 ]
+        [ width (fill), paddingBottom 4, paddingLeft 10, paddingRight 10 ]
         (List.map viewRankingLine lines)
 
 
@@ -135,7 +135,7 @@ viewRankingLine line =
         click =
             Events.onClick (ViewRankingDetails line.uuid)
     in
-        Element.el UI.Style.RankingName [ click, width (px 200) ] (Element.text line.name)
+        Element.el UI.Style.RankingName [ click ] (Element.text line.name)
 
 
 viewRankingDetails : Model -> Element.Element UI.Style.Style variation Msg

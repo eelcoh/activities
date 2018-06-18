@@ -26425,7 +26425,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																												_0: _mdgriffith$style_elements$Style_Font$center,
 																												_1: {
 																													ctor: '::',
-																													_0: _mdgriffith$style_elements$Style_Border$all(2),
+																													_0: _mdgriffith$style_elements$Style_Border$all(5),
 																													_1: {
 																														ctor: '::',
 																														_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondaryLight),
@@ -26470,22 +26470,26 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																													_0: _mdgriffith$style_elements$Style_Font$center,
 																													_1: {
 																														ctor: '::',
-																														_0: _mdgriffith$style_elements$Style_Border$all(2),
+																														_0: _mdgriffith$style_elements$Style_Border$all(5),
 																														_1: {
 																															ctor: '::',
-																															_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$orange),
+																															_0: _mdgriffith$style_elements$Style_Border$dashed,
 																															_1: {
 																																ctor: '::',
-																																_0: _mdgriffith$style_elements$Style$hover(
-																																	{
-																																		ctor: '::',
-																																		_0: _mdgriffith$style_elements$Style$cursor('pointer'),
-																																		_1: {ctor: '[]'}
-																																	}),
+																																_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$right),
 																																_1: {
 																																	ctor: '::',
-																																	_0: _user$project$UI_Style$fontMono,
-																																	_1: {ctor: '[]'}
+																																	_0: _mdgriffith$style_elements$Style$hover(
+																																		{
+																																			ctor: '::',
+																																			_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																																			_1: {ctor: '[]'}
+																																		}),
+																																	_1: {
+																																		ctor: '::',
+																																		_0: _user$project$UI_Style$fontMono,
+																																		_1: {ctor: '[]'}
+																																	}
 																																}
 																															}
 																														}
@@ -26515,7 +26519,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																														_0: _mdgriffith$style_elements$Style_Font$center,
 																														_1: {
 																															ctor: '::',
-																															_0: _mdgriffith$style_elements$Style_Border$all(2),
+																															_0: _mdgriffith$style_elements$Style_Border$all(5),
 																															_1: {
 																																ctor: '::',
 																																_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$right),
@@ -26560,7 +26564,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																															_0: _mdgriffith$style_elements$Style_Font$center,
 																															_1: {
 																																ctor: '::',
-																																_0: _mdgriffith$style_elements$Style_Border$all(2),
+																																_0: _mdgriffith$style_elements$Style_Border$all(5),
 																																_1: {
 																																	ctor: '::',
 																																	_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$wrong),
@@ -34106,15 +34110,35 @@ var _user$project$Bets_View$errorBox = function (text) {
 		});
 };
 var _user$project$Bets_View$displayParticipant = function (bet) {
+	var residenceText = F2(
+		function (x, y) {
+			return A2(_elm_lang$core$Basics_ops['++'], x, y);
+		})('uit ');
+	var p = function (part) {
+		return A2(
+			_elm_lang$core$Maybe$withDefault,
+			_user$project$UI_Text$simpleText('onbekend'),
+			A2(
+				_elm_lang$core$Maybe$map,
+				_user$project$UI_Text$simpleText,
+				A2(_elm_lang$core$Maybe$map, residenceText, part.residence)));
+	};
+	var h = function (part) {
+		return A2(
+			_elm_lang$core$Maybe$withDefault,
+			_user$project$Bets_View$errorBox('whoeps'),
+			A2(_elm_lang$core$Maybe$map, _user$project$UI_Text$header1, part.name));
+	};
 	var nameText = F2(
 		function (x, y) {
 			return A2(_elm_lang$core$Basics_ops['++'], x, y);
-		})('Dank voor je inzending, ');
+		})('De pool van ');
 	var mAnswer = A2(_user$project$Bets_Bet$getAnswer, bet, 'me');
 	var _p0 = mAnswer;
 	if (((_p0.ctor === 'Just') && (_p0._0.ctor === '_Tuple2')) && (_p0._0._1.ctor === 'AnswerParticipant')) {
+		var _p1 = _p0._0._1._0;
 		return A3(
-			_mdgriffith$style_elements$Element$row,
+			_mdgriffith$style_elements$Element$column,
 			_user$project$UI_Style$None,
 			{
 				ctor: '::',
@@ -34127,14 +34151,12 @@ var _user$project$Bets_View$displayParticipant = function (bet) {
 			},
 			{
 				ctor: '::',
-				_0: A2(
-					_elm_lang$core$Maybe$withDefault,
-					_user$project$Bets_View$errorBox('whoeps'),
-					A2(
-						_elm_lang$core$Maybe$map,
-						_user$project$UI_Text$header1,
-						A2(_elm_lang$core$Maybe$map, nameText, _p0._0._1._0.name))),
-				_1: {ctor: '[]'}
+				_0: h(_p1),
+				_1: {
+					ctor: '::',
+					_0: p(_p1),
+					_1: {ctor: '[]'}
+				}
 			});
 	} else {
 		return _mdgriffith$style_elements$Element$empty;
@@ -34162,9 +34184,9 @@ var _user$project$Bets_View$displayTopscorer = function (bet) {
 				mTs));
 	};
 	var mAnswer = A2(_user$project$Bets_Bet$getAnswer, bet, 'ts');
-	var _p1 = mAnswer;
-	if (((_p1.ctor === 'Just') && (_p1._0.ctor === '_Tuple2')) && (_p1._0._1.ctor === 'AnswerTopscorer')) {
-		var _p2 = _p1._0._1._0;
+	var _p2 = mAnswer;
+	if (((_p2.ctor === 'Just') && (_p2._0.ctor === '_Tuple2')) && (_p2._0._1.ctor === 'AnswerTopscorer')) {
+		var _p3 = _p2._0._1._0;
 		return A3(
 			_mdgriffith$style_elements$Element$row,
 			_user$project$UI_Style$None,
@@ -34182,11 +34204,11 @@ var _user$project$Bets_View$displayTopscorer = function (bet) {
 				_0: A2(
 					_user$project$UI_Button$maybeTeamBadge,
 					_user$project$UI_Style$NotYet,
-					_elm_lang$core$Tuple$second(_p2)),
+					_elm_lang$core$Tuple$second(_p3)),
 				_1: {
 					ctor: '::',
 					_0: tsName(
-						_elm_lang$core$Tuple$first(_p2)),
+						_elm_lang$core$Tuple$first(_p3)),
 					_1: {ctor: '[]'}
 				}
 			});
@@ -34205,8 +34227,8 @@ var _user$project$Bets_View$mkButton = F5(
 		var attrs = {ctor: '[]'};
 		var answerId = _elm_lang$core$Tuple$first(answer);
 		var s = function () {
-			var _p3 = hasQualified;
-			switch (_p3.ctor) {
+			var _p4 = hasQualified;
+			switch (_p4.ctor) {
 				case 'In':
 					return _user$project$UI_Style$Did;
 				case 'Out':
@@ -34219,13 +34241,13 @@ var _user$project$Bets_View$mkButton = F5(
 	});
 var _user$project$Bets_View$viewMatchWinner = F3(
 	function (bet, answer, mBracket) {
-		var _p4 = mBracket;
-		if ((_p4.ctor === 'Just') && (_p4._0.ctor === 'MatchNode')) {
-			var _p6 = _p4._0._0;
-			var _p5 = _p4._0._5;
+		var _p5 = mBracket;
+		if ((_p5.ctor === 'Just') && (_p5._0.ctor === 'MatchNode')) {
+			var _p7 = _p5._0._0;
+			var _p6 = _p5._0._5;
 			var dash = _elm_lang$html$Html$text(' - ');
-			var awayButton = A5(_user$project$Bets_View$mkButton, answer, _user$project$Bets_Types$AwayTeam, _p6, _p5, _p4._0._3);
-			var homeButton = A5(_user$project$Bets_View$mkButton, answer, _user$project$Bets_Types$HomeTeam, _p6, _p5, _p4._0._2);
+			var awayButton = A5(_user$project$Bets_View$mkButton, answer, _user$project$Bets_Types$AwayTeam, _p7, _p6, _p5._0._3);
+			var homeButton = A5(_user$project$Bets_View$mkButton, answer, _user$project$Bets_Types$HomeTeam, _p7, _p6, _p5._0._2);
 			return A3(
 				_mdgriffith$style_elements$Element$row,
 				_user$project$UI_Style$None,
@@ -34471,8 +34493,8 @@ var _user$project$Bets_View$displayBracket = function (bet) {
 			_1: {ctor: '[]'}
 		});
 	var mAnswer = A2(_user$project$Bets_Bet$getAnswer, bet, 'br');
-	var _p7 = mAnswer;
-	if (((_p7.ctor === 'Just') && (_p7._0.ctor === '_Tuple2')) && (_p7._0._1.ctor === 'AnswerBracket')) {
+	var _p8 = mAnswer;
+	if (((_p8.ctor === 'Just') && (_p8._0.ctor === '_Tuple2')) && (_p8._0._1.ctor === 'AnswerBracket')) {
 		return A3(
 			_mdgriffith$style_elements$Element$column,
 			_user$project$UI_Style$None,
@@ -34486,7 +34508,7 @@ var _user$project$Bets_View$displayBracket = function (bet) {
 				_0: introduction,
 				_1: {
 					ctor: '::',
-					_0: A3(_user$project$Bets_View$viewBracket, bet, _p7._0, _p7._0._1._0),
+					_0: A3(_user$project$Bets_View$viewBracket, bet, _p8._0, _p8._0._1._0),
 					_1: {ctor: '[]'}
 				}
 			});
@@ -34496,9 +34518,9 @@ var _user$project$Bets_View$displayBracket = function (bet) {
 };
 var _user$project$Bets_View$displayScore = function (mScore) {
 	var txt = function () {
-		var _p8 = mScore;
-		if (_p8.ctor === 'Just') {
-			return _user$project$Bets_Types_Score$asString(_p8._0);
+		var _p9 = mScore;
+		if (_p9.ctor === 'Just') {
+			return _user$project$Bets_Types_Score$asString(_p9._0);
 		} else {
 			return ' _-_ ';
 		}
@@ -34544,8 +34566,8 @@ var _user$project$Bets_View$scoreString = F2(
 				}
 			});
 	});
-var _user$project$Bets_View$displayMatch = function (_p9) {
-	var _p10 = _p9;
+var _user$project$Bets_View$displayMatch = function (_p10) {
+	var _p11 = _p10;
 	var disp = F3(
 		function (match, mScore, pts) {
 			var sc = _user$project$Bets_View$displayScore(mScore);
@@ -34597,10 +34619,10 @@ var _user$project$Bets_View$displayMatch = function (_p9) {
 					}
 				});
 		});
-	var _p11 = _p10._1;
-	if (_p11.ctor === 'AnswerGroupMatch') {
+	var _p12 = _p11._1;
+	if (_p12.ctor === 'AnswerGroupMatch') {
 		return _elm_lang$core$Maybe$Just(
-			A3(disp, _p11._1, _p11._2, _p11._3));
+			A3(disp, _p12._1, _p12._2, _p12._3));
 	} else {
 		return _elm_lang$core$Maybe$Nothing;
 	}
@@ -34649,14 +34671,6 @@ var _user$project$Bets_View$matchesIntro = function () {
 		});
 }();
 var _user$project$Bets_View$intro = function () {
-	var lnk = A2(
-		_mdgriffith$style_elements$Element$link,
-		'/voetbalpool/formulier',
-		A3(
-			_mdgriffith$style_elements$Element$el,
-			_user$project$UI_Style$Link,
-			{ctor: '[]'},
-			_mdgriffith$style_elements$Element$text('Mocht je nog een pooltje in willen vullen, klik dan hier!')));
 	var introtext = 'Dank voor je inzending!\n            ';
 	return A3(
 		_mdgriffith$style_elements$Element$paragraph,
@@ -34665,11 +34679,7 @@ var _user$project$Bets_View$intro = function () {
 		{
 			ctor: '::',
 			_0: _user$project$UI_Text$simpleText(introtext),
-			_1: {
-				ctor: '::',
-				_0: lnk,
-				_1: {ctor: '[]'}
-			}
+			_1: {ctor: '[]'}
 		});
 }();
 var _user$project$Bets_View$viewBet = F2(
@@ -34692,33 +34702,29 @@ var _user$project$Bets_View$viewBet = F2(
 				_0: _user$project$Bets_View$displayParticipant(bet),
 				_1: {
 					ctor: '::',
-					_0: _user$project$Bets_View$intro,
+					_0: _user$project$UI_Text$header2('De wedstrijden'),
 					_1: {
 						ctor: '::',
-						_0: _user$project$UI_Text$header2('De wedstrijden'),
+						_0: _user$project$Bets_View$matchesIntro,
 						_1: {
 							ctor: '::',
-							_0: _user$project$Bets_View$matchesIntro,
+							_0: _user$project$Bets_View$displayMatches(bet.answers),
 							_1: {
 								ctor: '::',
-								_0: _user$project$Bets_View$displayMatches(bet.answers),
+								_0: _user$project$UI_Text$header2('Het Schema'),
 								_1: {
 									ctor: '::',
-									_0: _user$project$UI_Text$header2('Het Schema'),
+									_0: _user$project$Bets_View$displayBracket(bet),
 									_1: {
 										ctor: '::',
-										_0: _user$project$Bets_View$displayBracket(bet),
+										_0: _user$project$UI_Text$header2('De Topscorer'),
 										_1: {
 											ctor: '::',
-											_0: _user$project$UI_Text$header2('De Topscorer'),
+											_0: _user$project$Bets_View$topscorerIntro,
 											_1: {
 												ctor: '::',
-												_0: _user$project$Bets_View$topscorerIntro,
-												_1: {
-													ctor: '::',
-													_0: _user$project$Bets_View$displayTopscorer(bet),
-													_1: {ctor: '[]'}
-												}
+												_0: _user$project$Bets_View$displayTopscorer(bet),
+												_1: {ctor: '[]'}
 											}
 										}
 									}
@@ -34734,8 +34740,8 @@ var _user$project$Bets_View$No = {ctor: 'No'};
 var _user$project$Bets_View$Yes = {ctor: 'Yes'};
 var _user$project$Bets_View$isWinner = F2(
 	function (bracketWinner, homeOrAway) {
-		var _p12 = bracketWinner;
-		if (_p12.ctor === 'None') {
+		var _p13 = bracketWinner;
+		if (_p13.ctor === 'None') {
 			return _user$project$Bets_View$Undecided;
 		} else {
 			return _elm_lang$core$Native_Utils.eq(homeOrAway, bracketWinner) ? _user$project$Bets_View$Yes : _user$project$Bets_View$No;
@@ -34810,12 +34816,7 @@ var _user$project$Ranking$viewRankingLine = function (line) {
 		{
 			ctor: '::',
 			_0: click,
-			_1: {
-				ctor: '::',
-				_0: _mdgriffith$style_elements$Element_Attributes$width(
-					_mdgriffith$style_elements$Element_Attributes$px(200)),
-				_1: {ctor: '[]'}
-			}
+			_1: {ctor: '[]'}
 		},
 		_mdgriffith$style_elements$Element$text(line.name));
 };
@@ -34825,12 +34826,19 @@ var _user$project$Ranking$viewRankingLines = function (lines) {
 		_user$project$UI_Style$None,
 		{
 			ctor: '::',
-			_0: _mdgriffith$style_elements$Element_Attributes$width(
-				_mdgriffith$style_elements$Element_Attributes$px(200)),
+			_0: _mdgriffith$style_elements$Element_Attributes$width(_mdgriffith$style_elements$Element_Attributes$fill),
 			_1: {
 				ctor: '::',
 				_0: _mdgriffith$style_elements$Element_Attributes$paddingBottom(4),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$paddingLeft(10),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$paddingRight(10),
+						_1: {ctor: '[]'}
+					}
+				}
 			}
 		},
 		A2(_elm_lang$core$List$map, _user$project$Ranking$viewRankingLine, lines));
@@ -34856,8 +34864,12 @@ var _user$project$Ranking$viewRankingGroup = function (grp) {
 				{
 					ctor: '::',
 					_0: _mdgriffith$style_elements$Element_Attributes$width(
-						_mdgriffith$style_elements$Element_Attributes$px(20)),
-					_1: {ctor: '[]'}
+						_mdgriffith$style_elements$Element_Attributes$px(40)),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$paddingRight(10),
+						_1: {ctor: '[]'}
+					}
 				},
 				_mdgriffith$style_elements$Element$text(
 					_elm_lang$core$Basics$toString(grp.pos))),
@@ -34872,8 +34884,16 @@ var _user$project$Ranking$viewRankingGroup = function (grp) {
 						{
 							ctor: '::',
 							_0: _mdgriffith$style_elements$Element_Attributes$width(
-								_mdgriffith$style_elements$Element_Attributes$px(80)),
-							_1: {ctor: '[]'}
+								_mdgriffith$style_elements$Element_Attributes$px(100)),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$style_elements$Element_Attributes$paddingLeft(10),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$style_elements$Element_Attributes$paddingRight(20),
+									_1: {ctor: '[]'}
+								}
+							}
 						},
 						_mdgriffith$style_elements$Element$text(
 							_elm_lang$core$Basics$toString(grp.total))),
@@ -34902,8 +34922,12 @@ var _user$project$Ranking$viewRankingHeader = A3(
 			{
 				ctor: '::',
 				_0: _mdgriffith$style_elements$Element_Attributes$width(
-					_mdgriffith$style_elements$Element_Attributes$px(20)),
-				_1: {ctor: '[]'}
+					_mdgriffith$style_elements$Element_Attributes$px(40)),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$paddingRight(10),
+					_1: {ctor: '[]'}
+				}
 			},
 			_mdgriffith$style_elements$Element$text('#')),
 		_1: {
@@ -34913,9 +34937,16 @@ var _user$project$Ranking$viewRankingHeader = A3(
 				_user$project$UI_Style$RankingNameH,
 				{
 					ctor: '::',
-					_0: _mdgriffith$style_elements$Element_Attributes$width(
-						_mdgriffith$style_elements$Element_Attributes$px(200)),
-					_1: {ctor: '[]'}
+					_0: _mdgriffith$style_elements$Element_Attributes$width(_mdgriffith$style_elements$Element_Attributes$fill),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$paddingLeft(10),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$style_elements$Element_Attributes$paddingRight(10),
+							_1: {ctor: '[]'}
+						}
+					}
 				},
 				_mdgriffith$style_elements$Element$text('Naam')),
 			_1: {
@@ -34926,8 +34957,16 @@ var _user$project$Ranking$viewRankingHeader = A3(
 					{
 						ctor: '::',
 						_0: _mdgriffith$style_elements$Element_Attributes$width(
-							_mdgriffith$style_elements$Element_Attributes$px(80)),
-						_1: {ctor: '[]'}
+							_mdgriffith$style_elements$Element_Attributes$px(100)),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$style_elements$Element_Attributes$paddingLeft(10),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$style_elements$Element_Attributes$paddingRight(20),
+								_1: {ctor: '[]'}
+							}
+						}
 					},
 					_mdgriffith$style_elements$Element$text('Punten')),
 				_1: {ctor: '[]'}
@@ -35799,11 +35838,7 @@ var _user$project$Main$unauthenticatedOptions = F2(
 				_1: {
 					ctor: '::',
 					_0: A3(pageLink, _user$project$Types$Results, '/voetbalpool/#resultaten', 'resultaten'),
-					_1: {
-						ctor: '::',
-						_0: A3(pageLink, _user$project$Types$Form, '/voetbalpool/#formulier', 'formulier'),
-						_1: {ctor: '[]'}
-					}
+					_1: {ctor: '[]'}
 				}
 			}
 		};
@@ -35829,12 +35864,8 @@ var _user$project$Main$authenticatedOptions = F2(
 					_0: A3(pageLink, _user$project$Types$Results, '/voetbalpool/#resultaten', 'resultaten'),
 					_1: {
 						ctor: '::',
-						_0: A3(pageLink, _user$project$Types$Form, '/voetbalpool/#formulier', 'formulier'),
-						_1: {
-							ctor: '::',
-							_0: A3(pageLink, _user$project$Types$Blog, '/voetbalpool/#blog', 'blog'),
-							_1: {ctor: '[]'}
-						}
+						_0: A3(pageLink, _user$project$Types$Blog, '/voetbalpool/#blog', 'blog'),
+						_1: {ctor: '[]'}
 					}
 				}
 			}
@@ -36433,7 +36464,7 @@ var _user$project$Main$update = F2(
 						_1: _user$project$Results$fetchMatchResults
 					};
 				case 'RefreshResults':
-					var _p24 = model.ranking;
+					var _p24 = model.matchResults;
 					if (_p24.ctor === 'Success') {
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 					} else {

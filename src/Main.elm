@@ -322,7 +322,7 @@ update action model =
             ( { model | matchResult = result }, Results.fetchMatchResults )
 
         RefreshResults ->
-            case model.ranking of
+            case model.matchResults of
                 Success _ ->
                     ( model, Cmd.none )
 
@@ -571,7 +571,7 @@ unauthenticatedOptions page screenSize =
         [ pageLink Home "/voetbalpool/#home" "home"
         , pageLink Ranking "/voetbalpool/#stand" "stand"
         , pageLink Results "/voetbalpool/#resultaten" "resultaten"
-        , pageLink Form "/voetbalpool/#formulier" "formulier"
+          --, pageLink Form "/voetbalpool/#formulier" "formulier"
         ]
 
 
@@ -584,7 +584,7 @@ authenticatedOptions page screenSize =
         [ pageLink Home "/voetbalpool/#home" "home"
         , pageLink Ranking "/voetbalpool/#stand" "stand"
         , pageLink Results "/voetbalpool/#resultaten" "resultaten"
-        , pageLink Form "/voetbalpool/#formulier" "formulier"
+          -- , pageLink Form "/voetbalpool/#formulier" "formulier"
         , pageLink Blog "/voetbalpool/#blog" "blog"
         ]
 

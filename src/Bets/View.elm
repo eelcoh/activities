@@ -26,7 +26,7 @@ viewBet bet screenSize =
         Element.column UI.Style.None
             [ spacing 20, w ]
             [ displayParticipant bet
-            , intro
+              --, intro
             , UI.Text.header2 "De wedstrijden"
             , matchesIntro
             , displayMatches bet.answers
@@ -55,14 +55,10 @@ intro =
         introtext =
             """Dank voor je inzending!
             """
-
-        lnk =
-            Element.link "/voetbalpool/formulier" <| Element.el UI.Style.Link [] (Element.text "Mocht je nog een pooltje in willen vullen, klik dan hier!")
     in
         Element.paragraph UI.Style.None
             []
             [ UI.Text.simpleText introtext
-            , lnk
             ]
 
 
@@ -395,14 +391,25 @@ displayParticipant bet =
         mAnswer =
             Bets.Bet.getAnswer bet "me"
 
-        nameText =
-            (++) "Dank voor je inzending, "
+        h part =
+            part.name
+                |> Maybe.map UI.Text.header1
+                |> Maybe.withDefault (errorBox "whoeps")
+
+        residenceText =
+            (++) "uit "
+
+        p part =
+            Maybe.map residenceText part.residence
+                |> Maybe.map UI.Text.simpleText
+                |> Maybe.withDefault (UI.Text.simpleText "onbekend")
     in
         case mAnswer of
             Just (( answerId, AnswerParticipant part ) as answer) ->
-                Element.row UI.Style.None
+                Element.column UI.Style.None
                     [ spacing 20, verticalCenter ]
-                    [ (Maybe.map nameText part.name) |> Maybe.map UI.Text.header1 |> Maybe.withDefault (errorBox "whoeps")
+                    [ h part
+                    , p part
                     ]
 
             _ ->

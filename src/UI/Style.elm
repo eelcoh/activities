@@ -294,7 +294,7 @@ stylesheet =
             , Color.text secondaryText
             , Font.size (scale 1)
             , Font.center
-            , Border.all 2
+            , Border.all 5
             , Color.border secondaryLight
             , hover [ cursor "pointer" ]
             , fontMono
@@ -304,8 +304,9 @@ stylesheet =
             , Color.text secondaryText
             , Font.size (scale 1)
             , Font.center
-            , Border.all 2
-            , Color.border UI.Color.orange
+            , Border.all 5
+            , Border.dashed
+            , Color.border UI.Color.right
             , hover [ cursor "pointer" ]
             , fontMono
             ]
@@ -314,7 +315,7 @@ stylesheet =
             , Color.text secondaryText
             , Font.size (scale 1)
             , Font.center
-            , Border.all 2
+            , Border.all 5
             , Color.border UI.Color.right
             , hover [ cursor "pointer" ]
             , fontMono
@@ -324,7 +325,7 @@ stylesheet =
             , Color.text secondaryText
             , Font.size (scale 1)
             , Font.center
-            , Border.all 2
+            , Border.all 5
             , Color.border UI.Color.wrong
             , hover [ cursor "pointer" ]
             , fontMono
