@@ -34129,10 +34129,6 @@ var _user$project$Bets_View$displayParticipant = function (bet) {
 			_user$project$Bets_View$errorBox('whoeps'),
 			A2(_elm_lang$core$Maybe$map, _user$project$UI_Text$header1, part.name));
 	};
-	var nameText = F2(
-		function (x, y) {
-			return A2(_elm_lang$core$Basics_ops['++'], x, y);
-		})('De pool van ');
 	var mAnswer = A2(_user$project$Bets_Bet$getAnswer, bet, 'me');
 	var _p0 = mAnswer;
 	if (((_p0.ctor === 'Just') && (_p0._0.ctor === '_Tuple2')) && (_p0._0._1.ctor === 'AnswerParticipant')) {
@@ -34884,7 +34880,7 @@ var _user$project$Ranking$viewRankingGroup = function (grp) {
 						{
 							ctor: '::',
 							_0: _mdgriffith$style_elements$Element_Attributes$width(
-								_mdgriffith$style_elements$Element_Attributes$px(100)),
+								_mdgriffith$style_elements$Element_Attributes$px(55)),
 							_1: {
 								ctor: '::',
 								_0: _mdgriffith$style_elements$Element_Attributes$paddingLeft(10),
