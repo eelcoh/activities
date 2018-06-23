@@ -8,6 +8,7 @@ import UI.Style exposing (ButtonSemantics, ScoreButtonSemantics, Style)
 import UI.Team
 import Navigation
 import Bets.Types
+import Types exposing (Msg)
 
 
 pill : ButtonSemantics -> msg -> String -> Element Style variation msg
