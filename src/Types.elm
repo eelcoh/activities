@@ -38,6 +38,7 @@ type Page
     | Login
     | Results
     | EditMatchResult
+    | KOResults
 
 
 type alias ActivityMeta =
@@ -93,6 +94,12 @@ type Msg
     | UpdateMatchResult MatchResult
     | CancelMatchResult MatchResult
     | StoredMatchResult (WebData MatchResult)
+    | FetchedKnockoutsResults (WebData KnockoutsResults)
+    | StoredKnockoutsResults (WebData KnockoutsResults)
+    | Qualify Bets.Types.Round Bets.Types.HasQualified Bets.Types.Team
+    | UpdateKnockoutsResults
+    | InitialiseKnockoutsResults
+    | RefreshKnockoutsResults
 
 
 type alias Model =
@@ -110,6 +117,7 @@ type alias Model =
     , rankingDetails : WebData RankingDetails
     , matchResults : WebData MatchResults
     , matchResult : WebData MatchResult
+    , knockoutsResults : DataStatus (WebData KnockoutsResults)
     , screenSize : ScreenSize
     }
 
@@ -188,19 +196,6 @@ type alias RoundScore =
     }
 
 
-
--- Results
--- type MatchResult struct {
--- 	MatchResultId bson.ObjectId `bson:"_id" json:"matchResultId"`
--- 	MatchId       string        `json:"match"`
--- 	HomeTeam      Team          `json:"homeTeam"`
--- 	AwayTeam      Team          `json:"awayTeam"`
--- 	HomeScore     int           `json:"homeScore"`
--- 	AwayScore     int           `json:"awayScore"`
--- 	IsSet         bool          `json:"isSet"`
--- }
-
-
 type alias MatchResults =
     { results : List MatchResult }
 
@@ -217,3 +212,25 @@ type alias MatchResult =
 type Access
     = Unauthorised
     | Authorised
+
+
+type alias KnockoutsResults =
+    { i : Knockouts
+    , ii : Knockouts
+    , iii : Knockouts
+    , iv : Knockouts
+    , v : Knockouts
+    , vi : Knockouts
+    }
+
+
+type alias Knockouts =
+    { teamsIn : List Bets.Types.Team
+    , teamsOut : List Bets.Types.Team
+    }
+
+
+type DataStatus a
+    = Fresh a
+    | Dirty a
+    | Stale a

@@ -25459,7 +25459,9 @@ var _user$project$Types$Model = function (a) {
 												return function (m) {
 													return function (n) {
 														return function (o) {
-															return {activities: a, comment: b, post: c, contents: d, showComment: e, showPost: f, page: g, bet: h, credentials: i, token: j, ranking: k, rankingDetails: l, matchResults: m, matchResult: n, screenSize: o};
+															return function (p) {
+																return {activities: a, comment: b, post: c, contents: d, showComment: e, showPost: f, page: g, bet: h, credentials: i, token: j, ranking: k, rankingDetails: l, matchResults: m, matchResult: n, knockoutsResults: o, screenSize: p};
+															};
 														};
 													};
 												};
@@ -25514,6 +25516,15 @@ var _user$project$Types$MatchResult = F5(
 	function (a, b, c, d, e) {
 		return {matchResultId: a, match: b, homeTeam: c, awayTeam: d, score: e};
 	});
+var _user$project$Types$KnockoutsResults = F6(
+	function (a, b, c, d, e, f) {
+		return {i: a, ii: b, iii: c, iv: d, v: e, vi: f};
+	});
+var _user$project$Types$Knockouts = F2(
+	function (a, b) {
+		return {teamsIn: a, teamsOut: b};
+	});
+var _user$project$Types$KOResults = {ctor: 'KOResults'};
 var _user$project$Types$EditMatchResult = {ctor: 'EditMatchResult'};
 var _user$project$Types$Results = {ctor: 'Results'};
 var _user$project$Types$Login = {ctor: 'Login'};
@@ -25540,6 +25551,19 @@ var _user$project$Types$ANewBet = F3(
 	function (a, b, c) {
 		return {ctor: 'ANewBet', _0: a, _1: b, _2: c};
 	});
+var _user$project$Types$RefreshKnockoutsResults = {ctor: 'RefreshKnockoutsResults'};
+var _user$project$Types$InitialiseKnockoutsResults = {ctor: 'InitialiseKnockoutsResults'};
+var _user$project$Types$UpdateKnockoutsResults = {ctor: 'UpdateKnockoutsResults'};
+var _user$project$Types$Qualify = F3(
+	function (a, b, c) {
+		return {ctor: 'Qualify', _0: a, _1: b, _2: c};
+	});
+var _user$project$Types$StoredKnockoutsResults = function (a) {
+	return {ctor: 'StoredKnockoutsResults', _0: a};
+};
+var _user$project$Types$FetchedKnockoutsResults = function (a) {
+	return {ctor: 'FetchedKnockoutsResults', _0: a};
+};
 var _user$project$Types$StoredMatchResult = function (a) {
 	return {ctor: 'StoredMatchResult', _0: a};
 };
@@ -25646,6 +25670,15 @@ var _user$project$Types$Token = function (a) {
 };
 var _user$project$Types$Authorised = {ctor: 'Authorised'};
 var _user$project$Types$Unauthorised = {ctor: 'Unauthorised'};
+var _user$project$Types$Stale = function (a) {
+	return {ctor: 'Stale', _0: a};
+};
+var _user$project$Types$Dirty = function (a) {
+	return {ctor: 'Dirty', _0: a};
+};
+var _user$project$Types$Fresh = function (a) {
+	return {ctor: 'Fresh', _0: a};
+};
 
 var _user$project$UI_Color$secondaryText = A3(_elm_lang$core$Color$rgb, 0, 0, 0);
 var _user$project$UI_Color$primaryText = A3(_elm_lang$core$Color$rgb, 245, 245, 245);
@@ -25759,6 +25792,7 @@ var _user$project$UI_Style$Emphasis = {ctor: 'Emphasis'};
 var _user$project$UI_Style$Page = {ctor: 'Page'};
 var _user$project$UI_Style$ErrorText = {ctor: 'ErrorText'};
 var _user$project$UI_Style$Error = {ctor: 'Error'};
+var _user$project$UI_Style$Header3 = {ctor: 'Header3'};
 var _user$project$UI_Style$Header2 = {ctor: 'Header2'};
 var _user$project$UI_Style$Header1 = {ctor: 'Header1'};
 var _user$project$UI_Style$Title = function (a) {
@@ -25871,19 +25905,19 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 						ctor: '::',
 						_0: A2(
 							_mdgriffith$style_elements$Style$style,
-							_user$project$UI_Style$Menu,
+							_user$project$UI_Style$Header3,
 							{
 								ctor: '::',
 								_0: _mdgriffith$style_elements$Style_Font$size(20),
 								_1: {
 									ctor: '::',
-									_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$primaryText),
+									_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
 									_1: {
 										ctor: '::',
-										_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$primary),
+										_0: _user$project$UI_Style$fontSerif,
 										_1: {
 											ctor: '::',
-											_0: _user$project$UI_Style$fontSansSerif,
+											_0: _mdgriffith$style_elements$Style_Font$weight(600),
 											_1: {ctor: '[]'}
 										}
 									}
@@ -25893,32 +25927,20 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 							ctor: '::',
 							_0: A2(
 								_mdgriffith$style_elements$Style$style,
-								_user$project$UI_Style$Error,
+								_user$project$UI_Style$Menu,
 								{
 									ctor: '::',
-									_0: _mdgriffith$style_elements$Style_Color$text(_elm_lang$core$Color$red),
+									_0: _mdgriffith$style_elements$Style_Font$size(20),
 									_1: {
 										ctor: '::',
-										_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
+										_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$primaryText),
 										_1: {
 											ctor: '::',
-											_0: _mdgriffith$style_elements$Style_Border$all(1),
+											_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$primary),
 											_1: {
 												ctor: '::',
-												_0: _mdgriffith$style_elements$Style_Color$border(_elm_lang$core$Color$red),
-												_1: {
-													ctor: '::',
-													_0: _mdgriffith$style_elements$Style_Font$size(20),
-													_1: {
-														ctor: '::',
-														_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.4),
-														_1: {
-															ctor: '::',
-															_0: _user$project$UI_Style$fontSerif,
-															_1: {ctor: '[]'}
-														}
-													}
-												}
+												_0: _user$project$UI_Style$fontSansSerif,
+												_1: {ctor: '[]'}
 											}
 										}
 									}
@@ -25927,17 +25949,33 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 								ctor: '::',
 								_0: A2(
 									_mdgriffith$style_elements$Style$style,
-									_user$project$UI_Style$Text,
+									_user$project$UI_Style$Error,
 									{
 										ctor: '::',
-										_0: _mdgriffith$style_elements$Style_Font$size(20),
+										_0: _mdgriffith$style_elements$Style_Color$text(_elm_lang$core$Color$red),
 										_1: {
 											ctor: '::',
-											_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.6),
+											_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
 											_1: {
 												ctor: '::',
-												_0: _user$project$UI_Style$fontSerif,
-												_1: {ctor: '[]'}
+												_0: _mdgriffith$style_elements$Style_Border$all(1),
+												_1: {
+													ctor: '::',
+													_0: _mdgriffith$style_elements$Style_Color$border(_elm_lang$core$Color$red),
+													_1: {
+														ctor: '::',
+														_0: _mdgriffith$style_elements$Style_Font$size(20),
+														_1: {
+															ctor: '::',
+															_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.4),
+															_1: {
+																ctor: '::',
+																_0: _user$project$UI_Style$fontSerif,
+																_1: {ctor: '[]'}
+															}
+														}
+													}
+												}
 											}
 										}
 									}),
@@ -25945,13 +25983,13 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 									ctor: '::',
 									_0: A2(
 										_mdgriffith$style_elements$Style$style,
-										_user$project$UI_Style$Introduction,
+										_user$project$UI_Style$Text,
 										{
 											ctor: '::',
 											_0: _mdgriffith$style_elements$Style_Font$size(20),
 											_1: {
 												ctor: '::',
-												_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.4),
+												_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.6),
 												_1: {
 													ctor: '::',
 													_0: _user$project$UI_Style$fontSerif,
@@ -25963,70 +26001,57 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 										ctor: '::',
 										_0: A2(
 											_mdgriffith$style_elements$Style$style,
-											_user$project$UI_Style$Page,
-											{ctor: '[]'}),
+											_user$project$UI_Style$Introduction,
+											{
+												ctor: '::',
+												_0: _mdgriffith$style_elements$Style_Font$size(20),
+												_1: {
+													ctor: '::',
+													_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.4),
+													_1: {
+														ctor: '::',
+														_0: _user$project$UI_Style$fontSerif,
+														_1: {ctor: '[]'}
+													}
+												}
+											}),
 										_1: {
 											ctor: '::',
 											_0: A2(
 												_mdgriffith$style_elements$Style$style,
-												_user$project$UI_Style$Button(_user$project$UI_Style$Active),
-												{
-													ctor: '::',
-													_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$primaryDark),
-													_1: {
-														ctor: '::',
-														_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$primaryText),
-														_1: {
-															ctor: '::',
-															_0: _mdgriffith$style_elements$Style$hover(
-																{
-																	ctor: '::',
-																	_0: _mdgriffith$style_elements$Style$cursor('pointer'),
-																	_1: {
-																		ctor: '::',
-																		_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$orange),
-																		_1: {
-																			ctor: '::',
-																			_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$white),
-																			_1: {ctor: '[]'}
-																		}
-																	}
-																}),
-															_1: {
-																ctor: '::',
-																_0: _user$project$UI_Style$fontSerif,
-																_1: {ctor: '[]'}
-															}
-														}
-													}
-												}),
+												_user$project$UI_Style$Page,
+												{ctor: '[]'}),
 											_1: {
 												ctor: '::',
 												_0: A2(
 													_mdgriffith$style_elements$Style$style,
-													_user$project$UI_Style$Button(_user$project$UI_Style$Inactive),
+													_user$project$UI_Style$Button(_user$project$UI_Style$Active),
 													{
 														ctor: '::',
-														_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondary),
+														_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$primaryDark),
 														_1: {
 															ctor: '::',
-															_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryDark),
+															_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$primaryText),
 															_1: {
 																ctor: '::',
-																_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.0),
+																_0: _mdgriffith$style_elements$Style$hover(
+																	{
+																		ctor: '::',
+																		_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																		_1: {
+																			ctor: '::',
+																			_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$orange),
+																			_1: {
+																				ctor: '::',
+																				_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$white),
+																				_1: {ctor: '[]'}
+																			}
+																		}
+																	}),
 																_1: {
 																	ctor: '::',
-																	_0: _mdgriffith$style_elements$Style$hover(
-																		{
-																			ctor: '::',
-																			_0: _mdgriffith$style_elements$Style$cursor('not-allowed'),
-																			_1: {ctor: '[]'}
-																		}),
-																	_1: {
-																		ctor: '::',
-																		_0: _user$project$UI_Style$fontSerif,
-																		_1: {ctor: '[]'}
-																	}
+																	_0: _user$project$UI_Style$fontSerif,
+																	_1: {ctor: '[]'}
 																}
 															}
 														}
@@ -26035,26 +26060,29 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 													ctor: '::',
 													_0: A2(
 														_mdgriffith$style_elements$Style$style,
-														_user$project$UI_Style$Button(_user$project$UI_Style$Wrong),
+														_user$project$UI_Style$Button(_user$project$UI_Style$Inactive),
 														{
 															ctor: '::',
-															_0: _mdgriffith$style_elements$Style_Color$background(
-																A3(_elm_lang$core$Color$rgb, 233, 30, 99)),
+															_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondary),
 															_1: {
 																ctor: '::',
-																_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$white),
+																_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryDark),
 																_1: {
 																	ctor: '::',
-																	_0: _mdgriffith$style_elements$Style$hover(
-																		{
-																			ctor: '::',
-																			_0: _mdgriffith$style_elements$Style$cursor('pointer'),
-																			_1: {ctor: '[]'}
-																		}),
+																	_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.0),
 																	_1: {
 																		ctor: '::',
-																		_0: _user$project$UI_Style$fontSerif,
-																		_1: {ctor: '[]'}
+																		_0: _mdgriffith$style_elements$Style$hover(
+																			{
+																				ctor: '::',
+																				_0: _mdgriffith$style_elements$Style$cursor('not-allowed'),
+																				_1: {ctor: '[]'}
+																			}),
+																		_1: {
+																			ctor: '::',
+																			_0: _user$project$UI_Style$fontSerif,
+																			_1: {ctor: '[]'}
+																		}
 																	}
 																}
 															}
@@ -26063,10 +26091,11 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 														ctor: '::',
 														_0: A2(
 															_mdgriffith$style_elements$Style$style,
-															_user$project$UI_Style$Button(_user$project$UI_Style$Right),
+															_user$project$UI_Style$Button(_user$project$UI_Style$Wrong),
 															{
 																ctor: '::',
-																_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$selected),
+																_0: _mdgriffith$style_elements$Style_Color$background(
+																	A3(_elm_lang$core$Color$rgb, 233, 30, 99)),
 																_1: {
 																	ctor: '::',
 																	_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$white),
@@ -26090,7 +26119,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 															ctor: '::',
 															_0: A2(
 																_mdgriffith$style_elements$Style$style,
-																_user$project$UI_Style$Button(_user$project$UI_Style$Perhaps),
+																_user$project$UI_Style$Button(_user$project$UI_Style$Right),
 																{
 																	ctor: '::',
 																	_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$selected),
@@ -26117,24 +26146,25 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																ctor: '::',
 																_0: A2(
 																	_mdgriffith$style_elements$Style$style,
-																	_user$project$UI_Style$Button(_user$project$UI_Style$Irrelevant),
+																	_user$project$UI_Style$Button(_user$project$UI_Style$Perhaps),
 																	{
 																		ctor: '::',
-																		_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$white),
+																		_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$selected),
 																		_1: {
 																			ctor: '::',
-																			_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
+																			_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$white),
 																			_1: {
 																				ctor: '::',
-																				_0: _mdgriffith$style_elements$Style_Border$all(1),
+																				_0: _mdgriffith$style_elements$Style$hover(
+																					{
+																						ctor: '::',
+																						_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																						_1: {ctor: '[]'}
+																					}),
 																				_1: {
 																					ctor: '::',
-																					_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$primary),
-																					_1: {
-																						ctor: '::',
-																						_0: _user$project$UI_Style$fontMono,
-																						_1: {ctor: '[]'}
-																					}
+																					_0: _user$project$UI_Style$fontSerif,
+																					_1: {ctor: '[]'}
 																				}
 																			}
 																		}
@@ -26143,45 +26173,24 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																	ctor: '::',
 																	_0: A2(
 																		_mdgriffith$style_elements$Style$style,
-																		_user$project$UI_Style$Button(_user$project$UI_Style$Potential),
+																		_user$project$UI_Style$Button(_user$project$UI_Style$Irrelevant),
 																		{
 																			ctor: '::',
-																			_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
+																			_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$white),
 																			_1: {
 																				ctor: '::',
-																				_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$primaryText),
+																				_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
 																				_1: {
 																					ctor: '::',
-																					_0: _mdgriffith$style_elements$Style$hover(
-																						{
-																							ctor: '::',
-																							_0: _mdgriffith$style_elements$Style$cursor('pointer'),
-																							_1: {
-																								ctor: '::',
-																								_0: _mdgriffith$style_elements$Style_Border$all(2),
-																								_1: {
-																									ctor: '::',
-																									_0: _mdgriffith$style_elements$Style_Border$solid,
-																									_1: {
-																										ctor: '::',
-																										_0: _mdgriffith$style_elements$Style_Color$border(_elm_lang$core$Color$black),
-																										_1: {
-																											ctor: '::',
-																											_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$white),
-																											_1: {
-																												ctor: '::',
-																												_0: _mdgriffith$style_elements$Style_Color$text(_elm_lang$core$Color$black),
-																												_1: {ctor: '[]'}
-																											}
-																										}
-																									}
-																								}
-																							}
-																						}),
+																					_0: _mdgriffith$style_elements$Style_Border$all(1),
 																					_1: {
 																						ctor: '::',
-																						_0: _user$project$UI_Style$fontSerif,
-																						_1: {ctor: '[]'}
+																						_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$primary),
+																						_1: {
+																							ctor: '::',
+																							_0: _user$project$UI_Style$fontMono,
+																							_1: {ctor: '[]'}
+																						}
 																					}
 																				}
 																			}
@@ -26190,45 +26199,45 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																		ctor: '::',
 																		_0: A2(
 																			_mdgriffith$style_elements$Style$style,
-																			_user$project$UI_Style$Button(_user$project$UI_Style$Selected),
+																			_user$project$UI_Style$Button(_user$project$UI_Style$Potential),
 																			{
 																				ctor: '::',
-																				_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$selected),
+																				_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
 																				_1: {
 																					ctor: '::',
-																					_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$white),
+																					_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$primaryText),
 																					_1: {
 																						ctor: '::',
-																						_0: _mdgriffith$style_elements$Style_Border$all(2),
-																						_1: {
-																							ctor: '::',
-																							_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$selected),
-																							_1: {
+																						_0: _mdgriffith$style_elements$Style$hover(
+																							{
 																								ctor: '::',
-																								_0: _mdgriffith$style_elements$Style$hover(
-																									{
+																								_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																								_1: {
+																									ctor: '::',
+																									_0: _mdgriffith$style_elements$Style_Border$all(2),
+																									_1: {
 																										ctor: '::',
-																										_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																										_0: _mdgriffith$style_elements$Style_Border$solid,
 																										_1: {
 																											ctor: '::',
-																											_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$orange),
+																											_0: _mdgriffith$style_elements$Style_Color$border(_elm_lang$core$Color$black),
 																											_1: {
 																												ctor: '::',
-																												_0: _mdgriffith$style_elements$Style_Color$text(_elm_lang$core$Color$black),
+																												_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$white),
 																												_1: {
 																													ctor: '::',
-																													_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$orange),
+																													_0: _mdgriffith$style_elements$Style_Color$text(_elm_lang$core$Color$black),
 																													_1: {ctor: '[]'}
 																												}
 																											}
 																										}
-																									}),
-																								_1: {
-																									ctor: '::',
-																									_0: _user$project$UI_Style$fontSerif,
-																									_1: {ctor: '[]'}
+																									}
 																								}
-																							}
+																							}),
+																						_1: {
+																							ctor: '::',
+																							_0: _user$project$UI_Style$fontSerif,
+																							_1: {ctor: '[]'}
 																						}
 																					}
 																				}
@@ -26237,29 +26246,45 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																			ctor: '::',
 																			_0: A2(
 																				_mdgriffith$style_elements$Style$style,
-																				_user$project$UI_Style$Button(_user$project$UI_Style$Trap),
+																				_user$project$UI_Style$Button(_user$project$UI_Style$Selected),
 																				{
 																					ctor: '::',
-																					_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
+																					_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$selected),
 																					_1: {
 																						ctor: '::',
-																						_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
+																						_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$white),
 																						_1: {
 																							ctor: '::',
-																							_0: _mdgriffith$style_elements$Style_Font$alignLeft,
+																							_0: _mdgriffith$style_elements$Style_Border$all(2),
 																							_1: {
 																								ctor: '::',
-																								_0: _mdgriffith$style_elements$Style$hover(
-																									{
-																										ctor: '::',
-																										_0: _mdgriffith$style_elements$Style$cursor('cursor'),
-																										_1: {
+																								_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$selected),
+																								_1: {
+																									ctor: '::',
+																									_0: _mdgriffith$style_elements$Style$hover(
+																										{
 																											ctor: '::',
-																											_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondary),
-																											_1: {ctor: '[]'}
-																										}
-																									}),
-																								_1: {ctor: '[]'}
+																											_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																											_1: {
+																												ctor: '::',
+																												_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$orange),
+																												_1: {
+																													ctor: '::',
+																													_0: _mdgriffith$style_elements$Style_Color$text(_elm_lang$core$Color$black),
+																													_1: {
+																														ctor: '::',
+																														_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$orange),
+																														_1: {ctor: '[]'}
+																													}
+																												}
+																											}
+																										}),
+																									_1: {
+																										ctor: '::',
+																										_0: _user$project$UI_Style$fontSerif,
+																										_1: {ctor: '[]'}
+																									}
+																								}
 																							}
 																						}
 																					}
@@ -26268,7 +26293,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																				ctor: '::',
 																				_0: A2(
 																					_mdgriffith$style_elements$Style$style,
-																					_user$project$UI_Style$TeamButton(_user$project$UI_Style$NotYet),
+																					_user$project$UI_Style$Button(_user$project$UI_Style$Trap),
 																					{
 																						ctor: '::',
 																						_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
@@ -26277,36 +26302,20 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																							_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
 																							_1: {
 																								ctor: '::',
-																								_0: _mdgriffith$style_elements$Style_Border$all(2),
+																								_0: _mdgriffith$style_elements$Style_Font$alignLeft,
 																								_1: {
 																									ctor: '::',
-																									_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondaryLight),
-																									_1: {
-																										ctor: '::',
-																										_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.0),
-																										_1: {
+																									_0: _mdgriffith$style_elements$Style$hover(
+																										{
 																											ctor: '::',
-																											_0: _mdgriffith$style_elements$Style_Font$center,
+																											_0: _mdgriffith$style_elements$Style$cursor('cursor'),
 																											_1: {
 																												ctor: '::',
-																												_0: _mdgriffith$style_elements$Style_Font$size(15),
-																												_1: {
-																													ctor: '::',
-																													_0: _mdgriffith$style_elements$Style$hover(
-																														{
-																															ctor: '::',
-																															_0: _mdgriffith$style_elements$Style$cursor('pointer'),
-																															_1: {ctor: '[]'}
-																														}),
-																													_1: {
-																														ctor: '::',
-																														_0: _user$project$UI_Style$fontMono,
-																														_1: {ctor: '[]'}
-																													}
-																												}
+																												_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondary),
+																												_1: {ctor: '[]'}
 																											}
-																										}
-																									}
+																										}),
+																									_1: {ctor: '[]'}
 																								}
 																							}
 																						}
@@ -26315,7 +26324,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																					ctor: '::',
 																					_0: A2(
 																						_mdgriffith$style_elements$Style$style,
-																						_user$project$UI_Style$TeamButton(_user$project$UI_Style$Did),
+																						_user$project$UI_Style$TeamButton(_user$project$UI_Style$NotYet),
 																						{
 																							ctor: '::',
 																							_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
@@ -26327,7 +26336,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																									_0: _mdgriffith$style_elements$Style_Border$all(2),
 																									_1: {
 																										ctor: '::',
-																										_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$right),
+																										_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondaryLight),
 																										_1: {
 																											ctor: '::',
 																											_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.0),
@@ -26362,7 +26371,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																						ctor: '::',
 																						_0: A2(
 																							_mdgriffith$style_elements$Style$style,
-																							_user$project$UI_Style$TeamButton(_user$project$UI_Style$DidNot),
+																							_user$project$UI_Style$TeamButton(_user$project$UI_Style$Did),
 																							{
 																								ctor: '::',
 																								_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
@@ -26374,7 +26383,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																										_0: _mdgriffith$style_elements$Style_Border$all(2),
 																										_1: {
 																											ctor: '::',
-																											_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$wrong),
+																											_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$right),
 																											_1: {
 																												ctor: '::',
 																												_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.0),
@@ -26409,7 +26418,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																							ctor: '::',
 																							_0: A2(
 																								_mdgriffith$style_elements$Style$style,
-																								_user$project$UI_Style$MatchRow(_elm_lang$core$Maybe$Nothing),
+																								_user$project$UI_Style$TeamButton(_user$project$UI_Style$DidNot),
 																								{
 																									ctor: '::',
 																									_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
@@ -26418,29 +26427,32 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																										_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
 																										_1: {
 																											ctor: '::',
-																											_0: _mdgriffith$style_elements$Style_Font$size(
-																												_user$project$UI_Style$scale(1)),
+																											_0: _mdgriffith$style_elements$Style_Border$all(2),
 																											_1: {
 																												ctor: '::',
-																												_0: _mdgriffith$style_elements$Style_Font$center,
+																												_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$wrong),
 																												_1: {
 																													ctor: '::',
-																													_0: _mdgriffith$style_elements$Style_Border$all(5),
+																													_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.0),
 																													_1: {
 																														ctor: '::',
-																														_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondaryLight),
+																														_0: _mdgriffith$style_elements$Style_Font$center,
 																														_1: {
 																															ctor: '::',
-																															_0: _mdgriffith$style_elements$Style$hover(
-																																{
-																																	ctor: '::',
-																																	_0: _mdgriffith$style_elements$Style$cursor('pointer'),
-																																	_1: {ctor: '[]'}
-																																}),
+																															_0: _mdgriffith$style_elements$Style_Font$size(15),
 																															_1: {
 																																ctor: '::',
-																																_0: _user$project$UI_Style$fontMono,
-																																_1: {ctor: '[]'}
+																																_0: _mdgriffith$style_elements$Style$hover(
+																																	{
+																																		ctor: '::',
+																																		_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																																		_1: {ctor: '[]'}
+																																	}),
+																																_1: {
+																																	ctor: '::',
+																																	_0: _user$project$UI_Style$fontMono,
+																																	_1: {ctor: '[]'}
+																																}
 																															}
 																														}
 																													}
@@ -26453,8 +26465,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																								ctor: '::',
 																								_0: A2(
 																									_mdgriffith$style_elements$Style$style,
-																									_user$project$UI_Style$MatchRow(
-																										_elm_lang$core$Maybe$Just(1)),
+																									_user$project$UI_Style$MatchRow(_elm_lang$core$Maybe$Nothing),
 																									{
 																										ctor: '::',
 																										_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
@@ -26473,23 +26484,19 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																														_0: _mdgriffith$style_elements$Style_Border$all(5),
 																														_1: {
 																															ctor: '::',
-																															_0: _mdgriffith$style_elements$Style_Border$dashed,
+																															_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondaryLight),
 																															_1: {
 																																ctor: '::',
-																																_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$right),
+																																_0: _mdgriffith$style_elements$Style$hover(
+																																	{
+																																		ctor: '::',
+																																		_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																																		_1: {ctor: '[]'}
+																																	}),
 																																_1: {
 																																	ctor: '::',
-																																	_0: _mdgriffith$style_elements$Style$hover(
-																																		{
-																																			ctor: '::',
-																																			_0: _mdgriffith$style_elements$Style$cursor('pointer'),
-																																			_1: {ctor: '[]'}
-																																		}),
-																																	_1: {
-																																		ctor: '::',
-																																		_0: _user$project$UI_Style$fontMono,
-																																		_1: {ctor: '[]'}
-																																	}
+																																	_0: _user$project$UI_Style$fontMono,
+																																	_1: {ctor: '[]'}
 																																}
 																															}
 																														}
@@ -26503,7 +26510,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																									_0: A2(
 																										_mdgriffith$style_elements$Style$style,
 																										_user$project$UI_Style$MatchRow(
-																											_elm_lang$core$Maybe$Just(3)),
+																											_elm_lang$core$Maybe$Just(1)),
 																										{
 																											ctor: '::',
 																											_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
@@ -26522,19 +26529,23 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																															_0: _mdgriffith$style_elements$Style_Border$all(5),
 																															_1: {
 																																ctor: '::',
-																																_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$right),
+																																_0: _mdgriffith$style_elements$Style_Border$dashed,
 																																_1: {
 																																	ctor: '::',
-																																	_0: _mdgriffith$style_elements$Style$hover(
-																																		{
-																																			ctor: '::',
-																																			_0: _mdgriffith$style_elements$Style$cursor('pointer'),
-																																			_1: {ctor: '[]'}
-																																		}),
+																																	_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$right),
 																																	_1: {
 																																		ctor: '::',
-																																		_0: _user$project$UI_Style$fontMono,
-																																		_1: {ctor: '[]'}
+																																		_0: _mdgriffith$style_elements$Style$hover(
+																																			{
+																																				ctor: '::',
+																																				_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																																				_1: {ctor: '[]'}
+																																			}),
+																																		_1: {
+																																			ctor: '::',
+																																			_0: _user$project$UI_Style$fontMono,
+																																			_1: {ctor: '[]'}
+																																		}
 																																	}
 																																}
 																															}
@@ -26548,7 +26559,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																										_0: A2(
 																											_mdgriffith$style_elements$Style$style,
 																											_user$project$UI_Style$MatchRow(
-																												_elm_lang$core$Maybe$Just(0)),
+																												_elm_lang$core$Maybe$Just(3)),
 																											{
 																												ctor: '::',
 																												_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
@@ -26567,7 +26578,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																_0: _mdgriffith$style_elements$Style_Border$all(5),
 																																_1: {
 																																	ctor: '::',
-																																	_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$wrong),
+																																	_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$right),
 																																	_1: {
 																																		ctor: '::',
 																																		_0: _mdgriffith$style_elements$Style$hover(
@@ -26592,147 +26603,170 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																											ctor: '::',
 																											_0: A2(
 																												_mdgriffith$style_elements$Style$style,
-																												_user$project$UI_Style$Emphasis,
+																												_user$project$UI_Style$MatchRow(
+																													_elm_lang$core$Maybe$Just(0)),
 																												{
 																													ctor: '::',
-																													_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$orange),
+																													_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
 																													_1: {
 																														ctor: '::',
-																														_0: _mdgriffith$style_elements$Style_Font$weight(700),
-																														_1: {ctor: '[]'}
+																														_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
+																														_1: {
+																															ctor: '::',
+																															_0: _mdgriffith$style_elements$Style_Font$size(
+																																_user$project$UI_Style$scale(1)),
+																															_1: {
+																																ctor: '::',
+																																_0: _mdgriffith$style_elements$Style_Font$center,
+																																_1: {
+																																	ctor: '::',
+																																	_0: _mdgriffith$style_elements$Style_Border$all(5),
+																																	_1: {
+																																		ctor: '::',
+																																		_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$wrong),
+																																		_1: {
+																																			ctor: '::',
+																																			_0: _mdgriffith$style_elements$Style$hover(
+																																				{
+																																					ctor: '::',
+																																					_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																																					_1: {ctor: '[]'}
+																																				}),
+																																			_1: {
+																																				ctor: '::',
+																																				_0: _user$project$UI_Style$fontMono,
+																																				_1: {ctor: '[]'}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
 																													}
 																												}),
 																											_1: {
 																												ctor: '::',
 																												_0: A2(
 																													_mdgriffith$style_elements$Style$style,
-																													_user$project$UI_Style$Flag,
-																													{ctor: '[]'}),
+																													_user$project$UI_Style$Emphasis,
+																													{
+																														ctor: '::',
+																														_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$orange),
+																														_1: {
+																															ctor: '::',
+																															_0: _mdgriffith$style_elements$Style_Font$weight(700),
+																															_1: {ctor: '[]'}
+																														}
+																													}),
 																												_1: {
 																													ctor: '::',
 																													_0: A2(
 																														_mdgriffith$style_elements$Style$style,
-																														_user$project$UI_Style$FlagImage,
+																														_user$project$UI_Style$Flag,
 																														{ctor: '[]'}),
 																													_1: {
 																														ctor: '::',
 																														_0: A2(
 																															_mdgriffith$style_elements$Style$style,
-																															_user$project$UI_Style$TeamName,
-																															{
-																																ctor: '::',
-																																_0: _mdgriffith$style_elements$Style_Font$center,
-																																_1: {ctor: '[]'}
-																															}),
+																															_user$project$UI_Style$FlagImage,
+																															{ctor: '[]'}),
 																														_1: {
 																															ctor: '::',
 																															_0: A2(
 																																_mdgriffith$style_elements$Style$style,
-																																_user$project$UI_Style$TeamBox,
-																																{ctor: '[]'}),
+																																_user$project$UI_Style$TeamName,
+																																{
+																																	ctor: '::',
+																																	_0: _mdgriffith$style_elements$Style_Font$center,
+																																	_1: {ctor: '[]'}
+																																}),
 																															_1: {
 																																ctor: '::',
 																																_0: A2(
 																																	_mdgriffith$style_elements$Style$style,
-																																	_user$project$UI_Style$Matches,
+																																	_user$project$UI_Style$TeamBox,
 																																	{ctor: '[]'}),
 																																_1: {
 																																	ctor: '::',
 																																	_0: A2(
 																																		_mdgriffith$style_elements$Style$style,
-																																		_user$project$UI_Style$ScoreRow,
-																																		{
-																																			ctor: '::',
-																																			_0: _mdgriffith$style_elements$Style_Border$bottom(1),
-																																			_1: {
-																																				ctor: '::',
-																																				_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondary),
-																																				_1: {
-																																					ctor: '::',
-																																					_0: _user$project$UI_Style$fontMono,
-																																					_1: {ctor: '[]'}
-																																				}
-																																			}
-																																		}),
+																																		_user$project$UI_Style$Matches,
+																																		{ctor: '[]'}),
 																																	_1: {
 																																		ctor: '::',
 																																		_0: A2(
 																																			_mdgriffith$style_elements$Style$style,
-																																			_user$project$UI_Style$ScoreColumn,
-																																			{ctor: '[]'}),
+																																			_user$project$UI_Style$ScoreRow,
+																																			{
+																																				ctor: '::',
+																																				_0: _mdgriffith$style_elements$Style_Border$bottom(1),
+																																				_1: {
+																																					ctor: '::',
+																																					_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondary),
+																																					_1: {
+																																						ctor: '::',
+																																						_0: _user$project$UI_Style$fontMono,
+																																						_1: {ctor: '[]'}
+																																					}
+																																				}
+																																			}),
 																																		_1: {
 																																			ctor: '::',
 																																			_0: A2(
 																																				_mdgriffith$style_elements$Style$style,
-																																				_user$project$UI_Style$ScoreInput,
+																																				_user$project$UI_Style$ScoreColumn,
 																																				{ctor: '[]'}),
 																																			_1: {
 																																				ctor: '::',
 																																				_0: A2(
 																																					_mdgriffith$style_elements$Style$style,
-																																					_user$project$UI_Style$Score,
-																																					{
-																																						ctor: '::',
-																																						_0: _mdgriffith$style_elements$Style_Font$center,
-																																						_1: {
-																																							ctor: '::',
-																																							_0: _user$project$UI_Style$fontMono,
-																																							_1: {ctor: '[]'}
-																																						}
-																																					}),
+																																					_user$project$UI_Style$ScoreInput,
+																																					{ctor: '[]'}),
 																																				_1: {
 																																					ctor: '::',
 																																					_0: A2(
 																																						_mdgriffith$style_elements$Style$style,
-																																						_user$project$UI_Style$None,
-																																						{ctor: '[]'}),
+																																						_user$project$UI_Style$Score,
+																																						{
+																																							ctor: '::',
+																																							_0: _mdgriffith$style_elements$Style_Font$center,
+																																							_1: {
+																																								ctor: '::',
+																																								_0: _user$project$UI_Style$fontMono,
+																																								_1: {ctor: '[]'}
+																																							}
+																																						}),
 																																					_1: {
 																																						ctor: '::',
 																																						_0: A2(
 																																							_mdgriffith$style_elements$Style$style,
-																																							_user$project$UI_Style$Centered,
-																																							{
-																																								ctor: '::',
-																																								_0: _mdgriffith$style_elements$Style_Font$center,
-																																								_1: {ctor: '[]'}
-																																							}),
+																																							_user$project$UI_Style$None,
+																																							{ctor: '[]'}),
 																																						_1: {
 																																							ctor: '::',
 																																							_0: A2(
 																																								_mdgriffith$style_elements$Style$style,
-																																								_user$project$UI_Style$Bullet,
+																																								_user$project$UI_Style$Centered,
 																																								{
 																																									ctor: '::',
-																																									_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$orange),
+																																									_0: _mdgriffith$style_elements$Style_Font$center,
 																																									_1: {ctor: '[]'}
 																																								}),
 																																							_1: {
 																																								ctor: '::',
 																																								_0: A2(
 																																									_mdgriffith$style_elements$Style$style,
-																																									_user$project$UI_Style$TextInput,
+																																									_user$project$UI_Style$Bullet,
 																																									{
 																																										ctor: '::',
-																																										_0: _mdgriffith$style_elements$Style_Border$all(2),
-																																										_1: {
-																																											ctor: '::',
-																																											_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondaryLight),
-																																											_1: {
-																																												ctor: '::',
-																																												_0: _mdgriffith$style_elements$Style_Color$placeholder(_user$project$UI_Color$secondaryDark),
-																																												_1: {
-																																													ctor: '::',
-																																													_0: _mdgriffith$style_elements$Style_Font$size(20),
-																																													_1: {ctor: '[]'}
-																																												}
-																																											}
-																																										}
+																																										_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$orange),
+																																										_1: {ctor: '[]'}
 																																									}),
 																																								_1: {
 																																									ctor: '::',
 																																									_0: A2(
 																																										_mdgriffith$style_elements$Style$style,
-																																										_user$project$UI_Style$TrapInput,
+																																										_user$project$UI_Style$TextInput,
 																																										{
 																																											ctor: '::',
 																																											_0: _mdgriffith$style_elements$Style_Border$all(2),
@@ -26754,33 +26788,20 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																										ctor: '::',
 																																										_0: A2(
 																																											_mdgriffith$style_elements$Style$style,
-																																											_user$project$UI_Style$Link,
+																																											_user$project$UI_Style$TrapInput,
 																																											{
 																																												ctor: '::',
-																																												_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
+																																												_0: _mdgriffith$style_elements$Style_Border$all(2),
 																																												_1: {
 																																													ctor: '::',
-																																													_0: _user$project$UI_Style$fontSerif,
+																																													_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondaryLight),
 																																													_1: {
 																																														ctor: '::',
-																																														_0: _mdgriffith$style_elements$Style_Font$size(20),
+																																														_0: _mdgriffith$style_elements$Style_Color$placeholder(_user$project$UI_Color$secondaryDark),
 																																														_1: {
 																																															ctor: '::',
-																																															_0: _mdgriffith$style_elements$Style_Font$underline,
-																																															_1: {
-																																																ctor: '::',
-																																																_0: _mdgriffith$style_elements$Style$hover(
-																																																	{
-																																																		ctor: '::',
-																																																		_0: _mdgriffith$style_elements$Style$cursor('pointer'),
-																																																		_1: {
-																																																			ctor: '::',
-																																																			_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
-																																																			_1: {ctor: '[]'}
-																																																		}
-																																																	}),
-																																																_1: {ctor: '[]'}
-																																															}
+																																															_0: _mdgriffith$style_elements$Style_Font$size(20),
+																																															_1: {ctor: '[]'}
 																																														}
 																																													}
 																																												}
@@ -26789,20 +26810,33 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																											ctor: '::',
 																																											_0: A2(
 																																												_mdgriffith$style_elements$Style$style,
-																																												_user$project$UI_Style$CommentBox,
+																																												_user$project$UI_Style$Link,
 																																												{
 																																													ctor: '::',
-																																													_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondaryLight),
+																																													_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
 																																													_1: {
 																																														ctor: '::',
-																																														_0: _mdgriffith$style_elements$Style_Border$bottom(1),
+																																														_0: _user$project$UI_Style$fontSerif,
 																																														_1: {
 																																															ctor: '::',
-																																															_0: _user$project$UI_Style$fontSerif,
+																																															_0: _mdgriffith$style_elements$Style_Font$size(20),
 																																															_1: {
 																																																ctor: '::',
-																																																_0: _mdgriffith$style_elements$Style_Font$size(20),
-																																																_1: {ctor: '[]'}
+																																																_0: _mdgriffith$style_elements$Style_Font$underline,
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: _mdgriffith$style_elements$Style$hover(
+																																																		{
+																																																			ctor: '::',
+																																																			_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																																																			_1: {
+																																																				ctor: '::',
+																																																				_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
+																																																				_1: {ctor: '[]'}
+																																																			}
+																																																		}),
+																																																	_1: {ctor: '[]'}
+																																																}
 																																															}
 																																														}
 																																													}
@@ -26811,17 +26845,21 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																												ctor: '::',
 																																												_0: A2(
 																																													_mdgriffith$style_elements$Style$style,
-																																													_user$project$UI_Style$PostBox,
+																																													_user$project$UI_Style$CommentBox,
 																																													{
 																																														ctor: '::',
-																																														_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
+																																														_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondaryLight),
 																																														_1: {
 																																															ctor: '::',
-																																															_0: _user$project$UI_Style$fontSerif,
+																																															_0: _mdgriffith$style_elements$Style_Border$bottom(1),
 																																															_1: {
 																																																ctor: '::',
-																																																_0: _mdgriffith$style_elements$Style_Font$size(20),
-																																																_1: {ctor: '[]'}
+																																																_0: _user$project$UI_Style$fontSerif,
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: _mdgriffith$style_elements$Style_Font$size(20),
+																																																	_1: {ctor: '[]'}
+																																																}
 																																															}
 																																														}
 																																													}),
@@ -26829,21 +26867,17 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																													ctor: '::',
 																																													_0: A2(
 																																														_mdgriffith$style_elements$Style$style,
-																																														_user$project$UI_Style$CommentInputBox,
+																																														_user$project$UI_Style$PostBox,
 																																														{
 																																															ctor: '::',
 																																															_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
 																																															_1: {
 																																																ctor: '::',
-																																																_0: _mdgriffith$style_elements$Style_Color$placeholder(_user$project$UI_Color$secondary),
+																																																_0: _user$project$UI_Style$fontSerif,
 																																																_1: {
 																																																	ctor: '::',
-																																																	_0: _user$project$UI_Style$fontSerif,
-																																																	_1: {
-																																																		ctor: '::',
-																																																		_0: _mdgriffith$style_elements$Style_Font$size(20),
-																																																		_1: {ctor: '[]'}
-																																																	}
+																																																	_0: _mdgriffith$style_elements$Style_Font$size(20),
+																																																	_1: {ctor: '[]'}
 																																																}
 																																															}
 																																														}),
@@ -26851,10 +26885,10 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																														ctor: '::',
 																																														_0: A2(
 																																															_mdgriffith$style_elements$Style$style,
-																																															_user$project$UI_Style$PostInputBox,
+																																															_user$project$UI_Style$CommentInputBox,
 																																															{
 																																																ctor: '::',
-																																																_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryDark),
+																																																_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
 																																																_1: {
 																																																	ctor: '::',
 																																																	_0: _mdgriffith$style_elements$Style_Color$placeholder(_user$project$UI_Color$secondary),
@@ -26873,26 +26907,21 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																															ctor: '::',
 																																															_0: A2(
 																																																_mdgriffith$style_elements$Style$style,
-																																																_user$project$UI_Style$NavLink(_user$project$UI_Style$Selected),
+																																																_user$project$UI_Style$PostInputBox,
 																																																{
 																																																	ctor: '::',
-																																																	_0: _mdgriffith$style_elements$Style_Border$bottom(8),
+																																																	_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryDark),
 																																																	_1: {
 																																																		ctor: '::',
-																																																		_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondary),
+																																																		_0: _mdgriffith$style_elements$Style_Color$placeholder(_user$project$UI_Color$secondary),
 																																																		_1: {
 																																																			ctor: '::',
-																																																			_0: _mdgriffith$style_elements$Style$hover(
-																																																				{
-																																																					ctor: '::',
-																																																					_0: _mdgriffith$style_elements$Style_Border$bottom(8),
-																																																					_1: {
-																																																						ctor: '::',
-																																																						_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$primary),
-																																																						_1: {ctor: '[]'}
-																																																					}
-																																																				}),
-																																																			_1: {ctor: '[]'}
+																																																			_0: _user$project$UI_Style$fontSerif,
+																																																			_1: {
+																																																				ctor: '::',
+																																																				_0: _mdgriffith$style_elements$Style_Font$size(20),
+																																																				_1: {ctor: '[]'}
+																																																			}
 																																																		}
 																																																	}
 																																																}),
@@ -26900,13 +26929,13 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																																ctor: '::',
 																																																_0: A2(
 																																																	_mdgriffith$style_elements$Style$style,
-																																																	_user$project$UI_Style$NavLink(_user$project$UI_Style$Potential),
+																																																	_user$project$UI_Style$NavLink(_user$project$UI_Style$Selected),
 																																																	{
 																																																		ctor: '::',
 																																																		_0: _mdgriffith$style_elements$Style_Border$bottom(8),
 																																																		_1: {
 																																																			ctor: '::',
-																																																			_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$primary),
+																																																			_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondary),
 																																																			_1: {
 																																																				ctor: '::',
 																																																				_0: _mdgriffith$style_elements$Style$hover(
@@ -26915,7 +26944,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																																						_0: _mdgriffith$style_elements$Style_Border$bottom(8),
 																																																						_1: {
 																																																							ctor: '::',
-																																																							_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondary),
+																																																							_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$primary),
 																																																							_1: {ctor: '[]'}
 																																																						}
 																																																					}),
@@ -26927,21 +26956,26 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																																	ctor: '::',
 																																																	_0: A2(
 																																																		_mdgriffith$style_elements$Style$style,
-																																																		_user$project$UI_Style$Clickable,
+																																																		_user$project$UI_Style$NavLink(_user$project$UI_Style$Potential),
 																																																		{
 																																																			ctor: '::',
-																																																			_0: _mdgriffith$style_elements$Style_Font$underline,
+																																																			_0: _mdgriffith$style_elements$Style_Border$bottom(8),
 																																																			_1: {
 																																																				ctor: '::',
-																																																				_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
+																																																				_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$primary),
 																																																				_1: {
 																																																					ctor: '::',
-																																																					_0: _mdgriffith$style_elements$Style_Font$weight(700),
-																																																					_1: {
-																																																						ctor: '::',
-																																																						_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$primaryDark),
-																																																						_1: {ctor: '[]'}
-																																																					}
+																																																					_0: _mdgriffith$style_elements$Style$hover(
+																																																						{
+																																																							ctor: '::',
+																																																							_0: _mdgriffith$style_elements$Style_Border$bottom(8),
+																																																							_1: {
+																																																								ctor: '::',
+																																																								_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondary),
+																																																								_1: {ctor: '[]'}
+																																																							}
+																																																						}),
+																																																					_1: {ctor: '[]'}
 																																																				}
 																																																			}
 																																																		}),
@@ -26949,19 +26983,19 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																																		ctor: '::',
 																																																		_0: A2(
 																																																			_mdgriffith$style_elements$Style$style,
-																																																			_user$project$UI_Style$AuthorText,
+																																																			_user$project$UI_Style$Clickable,
 																																																			{
 																																																				ctor: '::',
-																																																				_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
+																																																				_0: _mdgriffith$style_elements$Style_Font$underline,
 																																																				_1: {
 																																																					ctor: '::',
-																																																					_0: _mdgriffith$style_elements$Style_Font$size(12),
+																																																					_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
 																																																					_1: {
 																																																						ctor: '::',
-																																																						_0: _mdgriffith$style_elements$Style_Font$center,
+																																																						_0: _mdgriffith$style_elements$Style_Font$weight(700),
 																																																						_1: {
 																																																							ctor: '::',
-																																																							_0: _user$project$UI_Style$fontSansSerif,
+																																																							_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$primaryDark),
 																																																							_1: {ctor: '[]'}
 																																																						}
 																																																					}
@@ -26971,24 +27005,20 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																																			ctor: '::',
 																																																			_0: A2(
 																																																				_mdgriffith$style_elements$Style$style,
-																																																				_user$project$UI_Style$PostText,
+																																																				_user$project$UI_Style$AuthorText,
 																																																				{
 																																																					ctor: '::',
 																																																					_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
 																																																					_1: {
 																																																						ctor: '::',
-																																																						_0: _mdgriffith$style_elements$Style_Font$size(26),
+																																																						_0: _mdgriffith$style_elements$Style_Font$size(12),
 																																																						_1: {
 																																																							ctor: '::',
-																																																							_0: _mdgriffith$style_elements$Style_Font$alignLeft,
+																																																							_0: _mdgriffith$style_elements$Style_Font$center,
 																																																							_1: {
 																																																								ctor: '::',
-																																																								_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.4),
-																																																								_1: {
-																																																									ctor: '::',
-																																																									_0: _user$project$UI_Style$fontSerif,
-																																																									_1: {ctor: '[]'}
-																																																								}
+																																																								_0: _user$project$UI_Style$fontSansSerif,
+																																																								_1: {ctor: '[]'}
 																																																							}
 																																																						}
 																																																					}
@@ -26997,20 +27027,24 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																																				ctor: '::',
 																																																				_0: A2(
 																																																					_mdgriffith$style_elements$Style$style,
-																																																					_user$project$UI_Style$PostTitle,
+																																																					_user$project$UI_Style$PostText,
 																																																					{
 																																																						ctor: '::',
 																																																						_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
 																																																						_1: {
 																																																							ctor: '::',
-																																																							_0: _mdgriffith$style_elements$Style_Font$size(32),
+																																																							_0: _mdgriffith$style_elements$Style_Font$size(26),
 																																																							_1: {
 																																																								ctor: '::',
 																																																								_0: _mdgriffith$style_elements$Style_Font$alignLeft,
 																																																								_1: {
 																																																									ctor: '::',
-																																																									_0: _user$project$UI_Style$fontSansSerif,
-																																																									_1: {ctor: '[]'}
+																																																									_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.4),
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: _user$project$UI_Style$fontSerif,
+																																																										_1: {ctor: '[]'}
+																																																									}
 																																																								}
 																																																							}
 																																																						}
@@ -27019,24 +27053,20 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																																					ctor: '::',
 																																																					_0: A2(
 																																																						_mdgriffith$style_elements$Style$style,
-																																																						_user$project$UI_Style$CommentText,
+																																																						_user$project$UI_Style$PostTitle,
 																																																						{
 																																																							ctor: '::',
 																																																							_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
 																																																							_1: {
 																																																								ctor: '::',
-																																																								_0: _mdgriffith$style_elements$Style_Font$size(26),
+																																																								_0: _mdgriffith$style_elements$Style_Font$size(32),
 																																																								_1: {
 																																																									ctor: '::',
-																																																									_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.4),
+																																																									_0: _mdgriffith$style_elements$Style_Font$alignLeft,
 																																																									_1: {
 																																																										ctor: '::',
-																																																										_0: _mdgriffith$style_elements$Style_Font$alignLeft,
-																																																										_1: {
-																																																											ctor: '::',
-																																																											_0: _user$project$UI_Style$fontSerif,
-																																																											_1: {ctor: '[]'}
-																																																										}
+																																																										_0: _user$project$UI_Style$fontSansSerif,
+																																																										_1: {ctor: '[]'}
 																																																									}
 																																																								}
 																																																							}
@@ -27045,20 +27075,24 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																																						ctor: '::',
 																																																						_0: A2(
 																																																							_mdgriffith$style_elements$Style$style,
-																																																							_user$project$UI_Style$DateText,
+																																																							_user$project$UI_Style$CommentText,
 																																																							{
 																																																								ctor: '::',
 																																																								_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
 																																																								_1: {
 																																																									ctor: '::',
-																																																									_0: _mdgriffith$style_elements$Style_Font$size(12),
+																																																									_0: _mdgriffith$style_elements$Style_Font$size(26),
 																																																									_1: {
 																																																										ctor: '::',
-																																																										_0: _mdgriffith$style_elements$Style_Font$center,
+																																																										_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.4),
 																																																										_1: {
 																																																											ctor: '::',
-																																																											_0: _user$project$UI_Style$fontSansSerif,
-																																																											_1: {ctor: '[]'}
+																																																											_0: _mdgriffith$style_elements$Style_Font$alignLeft,
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: _user$project$UI_Style$fontSerif,
+																																																												_1: {ctor: '[]'}
+																																																											}
 																																																										}
 																																																									}
 																																																								}
@@ -27067,17 +27101,21 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																																							ctor: '::',
 																																																							_0: A2(
 																																																								_mdgriffith$style_elements$Style$style,
-																																																								_user$project$UI_Style$RankingGroup,
+																																																								_user$project$UI_Style$DateText,
 																																																								{
 																																																									ctor: '::',
-																																																									_0: _mdgriffith$style_elements$Style_Border$bottom(1),
+																																																									_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
 																																																									_1: {
 																																																										ctor: '::',
-																																																										_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondary),
+																																																										_0: _mdgriffith$style_elements$Style_Font$size(12),
 																																																										_1: {
 																																																											ctor: '::',
-																																																											_0: _user$project$UI_Style$fontMono,
-																																																											_1: {ctor: '[]'}
+																																																											_0: _mdgriffith$style_elements$Style_Font$center,
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: _user$project$UI_Style$fontSansSerif,
+																																																												_1: {ctor: '[]'}
+																																																											}
 																																																										}
 																																																									}
 																																																								}),
@@ -27085,10 +27123,10 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																																								ctor: '::',
 																																																								_0: A2(
 																																																									_mdgriffith$style_elements$Style$style,
-																																																									_user$project$UI_Style$RankingHeader,
+																																																									_user$project$UI_Style$RankingGroup,
 																																																									{
 																																																										ctor: '::',
-																																																										_0: _mdgriffith$style_elements$Style_Border$bottom(2),
+																																																										_0: _mdgriffith$style_elements$Style_Border$bottom(1),
 																																																										_1: {
 																																																											ctor: '::',
 																																																											_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondary),
@@ -27103,21 +27141,25 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																																									ctor: '::',
 																																																									_0: A2(
 																																																										_mdgriffith$style_elements$Style$style,
-																																																										_user$project$UI_Style$RankingPoints,
+																																																										_user$project$UI_Style$RankingHeader,
 																																																										{
 																																																											ctor: '::',
-																																																											_0: _user$project$UI_Style$fontMono,
+																																																											_0: _mdgriffith$style_elements$Style_Border$bottom(2),
 																																																											_1: {
 																																																												ctor: '::',
-																																																												_0: _mdgriffith$style_elements$Style_Font$alignRight,
-																																																												_1: {ctor: '[]'}
+																																																												_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondary),
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: _user$project$UI_Style$fontMono,
+																																																													_1: {ctor: '[]'}
+																																																												}
 																																																											}
 																																																										}),
 																																																									_1: {
 																																																										ctor: '::',
 																																																										_0: A2(
 																																																											_mdgriffith$style_elements$Style$style,
-																																																											_user$project$UI_Style$RankingPos,
+																																																											_user$project$UI_Style$RankingPoints,
 																																																											{
 																																																												ctor: '::',
 																																																												_0: _user$project$UI_Style$fontMono,
@@ -27131,51 +27173,47 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																																											ctor: '::',
 																																																											_0: A2(
 																																																												_mdgriffith$style_elements$Style$style,
-																																																												_user$project$UI_Style$RankingName,
+																																																												_user$project$UI_Style$RankingPos,
 																																																												{
 																																																													ctor: '::',
 																																																													_0: _user$project$UI_Style$fontMono,
 																																																													_1: {
 																																																														ctor: '::',
-																																																														_0: _mdgriffith$style_elements$Style_Font$alignLeft,
-																																																														_1: {
-																																																															ctor: '::',
-																																																															_0: _mdgriffith$style_elements$Style$hover(
-																																																																{
-																																																																	ctor: '::',
-																																																																	_0: _mdgriffith$style_elements$Style$cursor('pointer'),
-																																																																	_1: {
-																																																																		ctor: '::',
-																																																																		_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
-																																																																		_1: {
-																																																																			ctor: '::',
-																																																																			_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$orange),
-																																																																			_1: {
-																																																																				ctor: '::',
-																																																																				_0: _mdgriffith$style_elements$Style_Font$weight(700),
-																																																																				_1: {ctor: '[]'}
-																																																																			}
-																																																																		}
-																																																																	}
-																																																																}),
-																																																															_1: {ctor: '[]'}
-																																																														}
+																																																														_0: _mdgriffith$style_elements$Style_Font$alignRight,
+																																																														_1: {ctor: '[]'}
 																																																													}
 																																																												}),
 																																																											_1: {
 																																																												ctor: '::',
 																																																												_0: A2(
 																																																													_mdgriffith$style_elements$Style$style,
-																																																													_user$project$UI_Style$RankingPosH,
+																																																													_user$project$UI_Style$RankingName,
 																																																													{
 																																																														ctor: '::',
 																																																														_0: _user$project$UI_Style$fontMono,
 																																																														_1: {
 																																																															ctor: '::',
-																																																															_0: _mdgriffith$style_elements$Style_Font$alignRight,
+																																																															_0: _mdgriffith$style_elements$Style_Font$alignLeft,
 																																																															_1: {
 																																																																ctor: '::',
-																																																																_0: _mdgriffith$style_elements$Style_Font$weight(700),
+																																																																_0: _mdgriffith$style_elements$Style$hover(
+																																																																	{
+																																																																		ctor: '::',
+																																																																		_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$orange),
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: _mdgriffith$style_elements$Style_Font$weight(700),
+																																																																					_1: {ctor: '[]'}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}),
 																																																																_1: {ctor: '[]'}
 																																																															}
 																																																														}
@@ -27184,13 +27222,13 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																																													ctor: '::',
 																																																													_0: A2(
 																																																														_mdgriffith$style_elements$Style$style,
-																																																														_user$project$UI_Style$RankingNameH,
+																																																														_user$project$UI_Style$RankingPosH,
 																																																														{
 																																																															ctor: '::',
 																																																															_0: _user$project$UI_Style$fontMono,
 																																																															_1: {
 																																																																ctor: '::',
-																																																																_0: _mdgriffith$style_elements$Style_Font$alignLeft,
+																																																																_0: _mdgriffith$style_elements$Style_Font$alignRight,
 																																																																_1: {
 																																																																	ctor: '::',
 																																																																	_0: _mdgriffith$style_elements$Style_Font$weight(700),
@@ -27202,13 +27240,13 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																																														ctor: '::',
 																																																														_0: A2(
 																																																															_mdgriffith$style_elements$Style$style,
-																																																															_user$project$UI_Style$RankingPointsH,
+																																																															_user$project$UI_Style$RankingNameH,
 																																																															{
 																																																																ctor: '::',
 																																																																_0: _user$project$UI_Style$fontMono,
 																																																																_1: {
 																																																																	ctor: '::',
-																																																																	_0: _mdgriffith$style_elements$Style_Font$alignRight,
+																																																																	_0: _mdgriffith$style_elements$Style_Font$alignLeft,
 																																																																	_1: {
 																																																																		ctor: '::',
 																																																																		_0: _mdgriffith$style_elements$Style_Font$weight(700),
@@ -27220,51 +27258,17 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																																															ctor: '::',
 																																																															_0: A2(
 																																																																_mdgriffith$style_elements$Style$style,
-																																																																_user$project$UI_Style$ScoreButton(_user$project$UI_Style$SBPotential),
+																																																																_user$project$UI_Style$RankingPointsH,
 																																																																{
 																																																																	ctor: '::',
-																																																																	_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondary),
+																																																																	_0: _user$project$UI_Style$fontMono,
 																																																																	_1: {
 																																																																		ctor: '::',
-																																																																		_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
+																																																																		_0: _mdgriffith$style_elements$Style_Font$alignRight,
 																																																																		_1: {
 																																																																			ctor: '::',
-																																																																			_0: _mdgriffith$style_elements$Style_Border$all(1),
-																																																																			_1: {
-																																																																				ctor: '::',
-																																																																				_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondary),
-																																																																				_1: {
-																																																																					ctor: '::',
-																																																																					_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.0),
-																																																																					_1: {
-																																																																						ctor: '::',
-																																																																						_0: _mdgriffith$style_elements$Style_Font$center,
-																																																																						_1: {
-																																																																							ctor: '::',
-																																																																							_0: _mdgriffith$style_elements$Style_Font$size(15),
-																																																																							_1: {
-																																																																								ctor: '::',
-																																																																								_0: _mdgriffith$style_elements$Style$hover(
-																																																																									{
-																																																																										ctor: '::',
-																																																																										_0: _mdgriffith$style_elements$Style$cursor('pointer'),
-																																																																										_1: {ctor: '[]'}
-																																																																									}),
-																																																																								_1: {
-																																																																									ctor: '::',
-																																																																									_0: _mdgriffith$style_elements$Style_Font$typeface(
-																																																																										{
-																																																																											ctor: '::',
-																																																																											_0: _mdgriffith$style_elements$Style_Font$font('Roboto Mono'),
-																																																																											_1: {ctor: '[]'}
-																																																																										}),
-																																																																									_1: {ctor: '[]'}
-																																																																								}
-																																																																							}
-																																																																						}
-																																																																					}
-																																																																				}
-																																																																			}
+																																																																			_0: _mdgriffith$style_elements$Style_Font$weight(700),
+																																																																			_1: {ctor: '[]'}
 																																																																		}
 																																																																	}
 																																																																}),
@@ -27272,10 +27276,10 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																																																ctor: '::',
 																																																																_0: A2(
 																																																																	_mdgriffith$style_elements$Style$style,
-																																																																	_user$project$UI_Style$ScoreButton(_user$project$UI_Style$SBSelected),
+																																																																	_user$project$UI_Style$ScoreButton(_user$project$UI_Style$SBPotential),
 																																																																	{
 																																																																		ctor: '::',
-																																																																		_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
+																																																																		_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondary),
 																																																																		_1: {
 																																																																			ctor: '::',
 																																																																			_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
@@ -27320,7 +27324,60 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																																																																			}
 																																																																		}
 																																																																	}),
-																																																																_1: {ctor: '[]'}
+																																																																_1: {
+																																																																	ctor: '::',
+																																																																	_0: A2(
+																																																																		_mdgriffith$style_elements$Style$style,
+																																																																		_user$project$UI_Style$ScoreButton(_user$project$UI_Style$SBSelected),
+																																																																		{
+																																																																			ctor: '::',
+																																																																			_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: _mdgriffith$style_elements$Style_Border$all(1),
+																																																																					_1: {
+																																																																						ctor: '::',
+																																																																						_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondary),
+																																																																						_1: {
+																																																																							ctor: '::',
+																																																																							_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.0),
+																																																																							_1: {
+																																																																								ctor: '::',
+																																																																								_0: _mdgriffith$style_elements$Style_Font$center,
+																																																																								_1: {
+																																																																									ctor: '::',
+																																																																									_0: _mdgriffith$style_elements$Style_Font$size(15),
+																																																																									_1: {
+																																																																										ctor: '::',
+																																																																										_0: _mdgriffith$style_elements$Style$hover(
+																																																																											{
+																																																																												ctor: '::',
+																																																																												_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																																																																												_1: {ctor: '[]'}
+																																																																											}),
+																																																																										_1: {
+																																																																											ctor: '::',
+																																																																											_0: _mdgriffith$style_elements$Style_Font$typeface(
+																																																																												{
+																																																																													ctor: '::',
+																																																																													_0: _mdgriffith$style_elements$Style_Font$font('Roboto Mono'),
+																																																																													_1: {ctor: '[]'}
+																																																																												}),
+																																																																											_1: {ctor: '[]'}
+																																																																										}
+																																																																									}
+																																																																								}
+																																																																							}
+																																																																						}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}),
+																																																																	_1: {ctor: '[]'}
+																																																																}
 																																																															}
 																																																														}
 																																																													}
@@ -29578,6 +29635,49 @@ var _user$project$UI_Team$viewTeamEl = function (team) {
 			}
 		});
 };
+var _user$project$UI_Team$button = F3(
+	function (semantics, team, msg) {
+		var textElement = A3(
+			_mdgriffith$style_elements$Element$el,
+			_user$project$UI_Style$TeamName,
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Events$onClick(msg),
+				_1: {ctor: '[]'}
+			},
+			_user$project$UI_Team$viewTeamEl(
+				_elm_lang$core$Maybe$Just(team)));
+		var h = _mdgriffith$style_elements$Element_Attributes$height(
+			_mdgriffith$style_elements$Element_Attributes$px(76));
+		var w = _mdgriffith$style_elements$Element_Attributes$width(
+			_mdgriffith$style_elements$Element_Attributes$px(64));
+		var buttonLayout = {
+			ctor: '::',
+			_0: w,
+			_1: {
+				ctor: '::',
+				_0: h,
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$center,
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		};
+		return A3(
+			_mdgriffith$style_elements$Element$column,
+			_user$project$UI_Style$TeamButton(semantics),
+			buttonLayout,
+			{
+				ctor: '::',
+				_0: textElement,
+				_1: {ctor: '[]'}
+			});
+	});
 var _user$project$UI_Team$viewTeam = function (mTeam) {
 	return A2(
 		_mdgriffith$style_elements$Element$layout,
@@ -30054,6 +30154,38 @@ var _user$project$UI_Text$simpleText = function (txt) {
 		_user$project$UI_Style$Text,
 		{ctor: '[]'},
 		_mdgriffith$style_elements$Element$text(txt));
+};
+var _user$project$UI_Text$header3 = function (txt) {
+	return A3(
+		_mdgriffith$style_elements$Element$header,
+		_user$project$UI_Style$None,
+		{
+			ctor: '::',
+			_0: _mdgriffith$style_elements$Element_Attributes$maxWidth(
+				_mdgriffith$style_elements$Element_Attributes$px(600)),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$spacing(7),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$paddingTop(50),
+					_1: {ctor: '[]'}
+				}
+			}
+		},
+		A3(
+			_mdgriffith$style_elements$Element$paragraph,
+			_user$project$UI_Style$Header3,
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$width(_mdgriffith$style_elements$Element_Attributes$fill),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element$text(txt),
+				_1: {ctor: '[]'}
+			}));
 };
 var _user$project$UI_Text$header2 = function (txt) {
 	return A3(
@@ -34744,6 +34876,555 @@ var _user$project$Bets_View$isWinner = F2(
 		}
 	});
 
+var _user$project$DataStatus$update = F2(
+	function (data, status) {
+		return _user$project$Types$Fresh(data);
+	});
+var _user$project$DataStatus$map = F2(
+	function (f, status) {
+		var _p0 = status;
+		switch (_p0.ctor) {
+			case 'Fresh':
+				return _user$project$Types$Dirty(
+					f(_p0._0));
+			case 'Stale':
+				return _user$project$Types$Stale(
+					f(_p0._0));
+			default:
+				return _user$project$Types$Dirty(
+					f(_p0._0));
+		}
+	});
+
+var _user$project$Knockouts$decodeTeamsList = _elm_lang$core$Json_Decode$list(_user$project$Bets_Types_Team$decode);
+var _user$project$Knockouts$decodeKnockouts = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_user$project$Types$Knockouts,
+	A2(_elm_lang$core$Json_Decode$field, 'teamsIn', _user$project$Knockouts$decodeTeamsList),
+	A2(_elm_lang$core$Json_Decode$field, 'teamsOut', _user$project$Knockouts$decodeTeamsList));
+var _user$project$Knockouts$decode = A7(
+	_elm_lang$core$Json_Decode$map6,
+	_user$project$Types$KnockoutsResults,
+	A2(_elm_lang$core$Json_Decode$field, 'i', _user$project$Knockouts$decodeKnockouts),
+	A2(_elm_lang$core$Json_Decode$field, 'ii', _user$project$Knockouts$decodeKnockouts),
+	A2(_elm_lang$core$Json_Decode$field, 'iii', _user$project$Knockouts$decodeKnockouts),
+	A2(_elm_lang$core$Json_Decode$field, 'iv', _user$project$Knockouts$decodeKnockouts),
+	A2(_elm_lang$core$Json_Decode$field, 'v', _user$project$Knockouts$decodeKnockouts),
+	A2(_elm_lang$core$Json_Decode$field, 'vi', _user$project$Knockouts$decodeKnockouts));
+var _user$project$Knockouts$teamsEncode = function (teams) {
+	return _elm_lang$core$Json_Encode$list(
+		A2(_elm_lang$core$List$map, _user$project$Bets_Types_Team$encode, teams));
+};
+var _user$project$Knockouts$encodeKnockouts = function (kos) {
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'teamsIn',
+				_1: _user$project$Knockouts$teamsEncode(kos.teamsIn)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'teamsOut',
+					_1: _user$project$Knockouts$teamsEncode(kos.teamsOut)
+				},
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Knockouts$encode = function (results) {
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'i',
+				_1: _user$project$Knockouts$encodeKnockouts(results.i)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'ii',
+					_1: _user$project$Knockouts$encodeKnockouts(results.ii)
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'iii',
+						_1: _user$project$Knockouts$encodeKnockouts(results.iii)
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'iv',
+							_1: _user$project$Knockouts$encodeKnockouts(results.iv)
+						},
+						_1: {
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'v',
+								_1: _user$project$Knockouts$encodeKnockouts(results.v)
+							},
+							_1: {
+								ctor: '::',
+								_0: {
+									ctor: '_Tuple2',
+									_0: 'vi',
+									_1: _user$project$Knockouts$encodeKnockouts(results.vi)
+								},
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$Knockouts$mkTeamButton = F3(
+	function (sem, msg, team) {
+		return A3(
+			_user$project$UI_Team$button,
+			sem,
+			team,
+			msg(team));
+	});
+var _user$project$Knockouts$viewKnockouts = F3(
+	function (auth, results, rnd) {
+		var roundHeader = _user$project$UI_Text$header2(
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'Ronde ',
+				_elm_lang$core$Basics$toString(rnd)));
+		var action = function (q) {
+			var _p0 = auth;
+			if (_p0.ctor === 'Unauthorised') {
+				return function (_p1) {
+					return _user$project$Types$None;
+				};
+			} else {
+				return A2(_user$project$Types$Qualify, rnd, q);
+			}
+		};
+		var _p2 = function () {
+			var _p3 = rnd;
+			switch (_p3.ctor) {
+				case 'II':
+					return {ctor: '_Tuple3', _0: results.i.teamsIn, _1: results.ii.teamsIn, _2: results.ii.teamsOut};
+				case 'III':
+					return {ctor: '_Tuple3', _0: results.ii.teamsIn, _1: results.iii.teamsIn, _2: results.iii.teamsOut};
+				case 'IV':
+					return {ctor: '_Tuple3', _0: results.iii.teamsIn, _1: results.iv.teamsIn, _2: results.iv.teamsOut};
+				case 'V':
+					return {ctor: '_Tuple3', _0: results.iv.teamsIn, _1: results.v.teamsIn, _2: results.v.teamsOut};
+				case 'VI':
+					return {ctor: '_Tuple3', _0: results.v.teamsIn, _1: results.vi.teamsIn, _2: results.vi.teamsOut};
+				default:
+					return {
+						ctor: '_Tuple3',
+						_0: {ctor: '[]'},
+						_1: results.i.teamsIn,
+						_2: results.i.teamsOut
+					};
+			}
+		}();
+		var candidatesFull = _p2._0;
+		var teamsIn = _p2._1;
+		var teamsOut = _p2._2;
+		var candidates = function () {
+			var checked = A2(
+				_elm_lang$core$Basics_ops['++'],
+				A2(
+					_elm_lang$core$List$map,
+					function (_) {
+						return _.teamID;
+					},
+					teamsIn),
+				A2(
+					_elm_lang$core$List$map,
+					function (_) {
+						return _.teamID;
+					},
+					teamsOut));
+			return A2(
+				_elm_lang$core$List$filter,
+				function (t) {
+					return !A2(_elm_lang$core$List$member, t.teamID, checked);
+				},
+				candidatesFull);
+		}();
+		var cands = A3(
+			_mdgriffith$style_elements$Element$wrappedRow,
+			_user$project$UI_Style$None,
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$spacing(10),
+				_1: {ctor: '[]'}
+			},
+			A2(
+				_elm_lang$core$List$map,
+				A2(
+					_user$project$Knockouts$mkTeamButton,
+					_user$project$UI_Style$NotYet,
+					action(_user$project$Bets_Types$In)),
+				candidates));
+		var ins = A3(
+			_mdgriffith$style_elements$Element$wrappedRow,
+			_user$project$UI_Style$None,
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$spacing(10),
+				_1: {ctor: '[]'}
+			},
+			A2(
+				_elm_lang$core$List$map,
+				A2(
+					_user$project$Knockouts$mkTeamButton,
+					_user$project$UI_Style$Did,
+					action(_user$project$Bets_Types$Out)),
+				teamsIn));
+		var outs = A3(
+			_mdgriffith$style_elements$Element$wrappedRow,
+			_user$project$UI_Style$None,
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$spacing(10),
+				_1: {ctor: '[]'}
+			},
+			A2(
+				_elm_lang$core$List$map,
+				A2(
+					_user$project$Knockouts$mkTeamButton,
+					_user$project$UI_Style$DidNot,
+					action(_user$project$Bets_Types$TBD)),
+				teamsOut));
+		var _p4 = auth;
+		if (_p4.ctor === 'Authorised') {
+			return A3(
+				_mdgriffith$style_elements$Element$column,
+				_user$project$UI_Style$None,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: roundHeader,
+					_1: {
+						ctor: '::',
+						_0: _user$project$UI_Text$header3('Kandidaten'),
+						_1: {
+							ctor: '::',
+							_0: cands,
+							_1: {
+								ctor: '::',
+								_0: _user$project$UI_Text$header3('Gekwalificeerd'),
+								_1: {
+									ctor: '::',
+									_0: ins,
+									_1: {
+										ctor: '::',
+										_0: _user$project$UI_Text$header3('Uitgeschakeld'),
+										_1: {
+											ctor: '::',
+											_0: outs,
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
+					}
+				});
+		} else {
+			return A3(
+				_mdgriffith$style_elements$Element$column,
+				_user$project$UI_Style$None,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: roundHeader,
+					_1: {
+						ctor: '::',
+						_0: _user$project$UI_Text$header3('Gekwalificeerd'),
+						_1: {
+							ctor: '::',
+							_0: ins,
+							_1: {
+								ctor: '::',
+								_0: _user$project$UI_Text$header3('Uitgeschakeld'),
+								_1: {
+									ctor: '::',
+									_0: outs,
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				});
+		}
+	});
+var _user$project$Knockouts$viewKnockoutsResults = F2(
+	function (auth, results) {
+		var rounds = {
+			ctor: '::',
+			_0: _user$project$Bets_Types$II,
+			_1: {
+				ctor: '::',
+				_0: _user$project$Bets_Types$III,
+				_1: {
+					ctor: '::',
+					_0: _user$project$Bets_Types$IV,
+					_1: {
+						ctor: '::',
+						_0: _user$project$Bets_Types$V,
+						_1: {
+							ctor: '::',
+							_0: _user$project$Bets_Types$VI,
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		};
+		var roundViews = A2(
+			_elm_lang$core$List$map,
+			A2(_user$project$Knockouts$viewKnockouts, auth, results),
+			rounds);
+		return A3(
+			_mdgriffith$style_elements$Element$column,
+			_user$project$UI_Style$None,
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$spacing(10),
+				_1: {ctor: '[]'}
+			},
+			roundViews);
+	});
+var _user$project$Knockouts$view = function (model) {
+	var auth = function () {
+		var _p5 = model.token;
+		if (_p5.ctor === 'Success') {
+			return _user$project$Types$Authorised;
+		} else {
+			return _user$project$Types$Unauthorised;
+		}
+	}();
+	var items = function () {
+		var _p6 = {ctor: '_Tuple2', _0: auth, _1: model.knockoutsResults};
+		_v4_2:
+		do {
+			if (_p6._0.ctor === 'Authorised') {
+				switch (_p6._1.ctor) {
+					case 'Fresh':
+						if (_p6._1._0.ctor === 'Success') {
+							return {
+								ctor: '::',
+								_0: A2(_user$project$Knockouts$viewKnockoutsResults, auth, _p6._1._0._0),
+								_1: {
+									ctor: '::',
+									_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Active, _user$project$Types$InitialiseKnockoutsResults, 'Update'),
+									_1: {ctor: '[]'}
+								}
+							};
+						} else {
+							break _v4_2;
+						}
+					case 'Dirty':
+						if (_p6._1._0.ctor === 'Success') {
+							return {
+								ctor: '::',
+								_0: A2(_user$project$Knockouts$viewKnockoutsResults, auth, _p6._1._0._0),
+								_1: {
+									ctor: '::',
+									_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Active, _user$project$Types$UpdateKnockoutsResults, 'Update'),
+									_1: {
+										ctor: '::',
+										_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Active, _user$project$Types$InitialiseKnockoutsResults, 'Update'),
+										_1: {ctor: '[]'}
+									}
+								}
+							};
+						} else {
+							break _v4_2;
+						}
+					default:
+						break _v4_2;
+				}
+			} else {
+				if ((_p6._1.ctor === 'Fresh') && (_p6._1._0.ctor === 'Success')) {
+					return {
+						ctor: '::',
+						_0: A2(_user$project$Knockouts$viewKnockoutsResults, auth, _p6._1._0._0),
+						_1: {ctor: '[]'}
+					};
+				} else {
+					return {
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element$text('...'),
+						_1: {ctor: '[]'}
+					};
+				}
+			}
+		} while(false);
+		return {
+			ctor: '::',
+			_0: _mdgriffith$style_elements$Element$text('Nog niet bekend'),
+			_1: {
+				ctor: '::',
+				_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Active, _user$project$Types$InitialiseKnockoutsResults, 'Update'),
+				_1: {ctor: '[]'}
+			}
+		};
+	}();
+	return A3(
+		_mdgriffith$style_elements$Element$column,
+		_user$project$UI_Style$None,
+		{
+			ctor: '::',
+			_0: A2(_mdgriffith$style_elements$Element_Attributes$spacingXY, 0, 14),
+			_1: {ctor: '[]'}
+		},
+		items);
+};
+var _user$project$Knockouts$addTeam = F2(
+	function (teams, team) {
+		return {
+			ctor: '::',
+			_0: A2(_elm_lang$core$Debug$log, 'team', team),
+			_1: A2(_elm_lang$core$Debug$log, 'teams', teams)
+		};
+	});
+var _user$project$Knockouts$removeTeam = F2(
+	function (teams, team) {
+		return A2(
+			_elm_lang$core$List$filter,
+			function (t) {
+				return !_elm_lang$core$Native_Utils.eq(t.teamID, team.teamID);
+			},
+			teams);
+	});
+var _user$project$Knockouts$updateRound = F3(
+	function (kos, q, team) {
+		var _p7 = q;
+		switch (_p7.ctor) {
+			case 'In':
+				var teamsOut = A2(_user$project$Knockouts$removeTeam, kos.teamsOut, team);
+				var teamsIn = A2(_user$project$Knockouts$addTeam, kos.teamsIn, team);
+				return _elm_lang$core$Native_Utils.update(
+					kos,
+					{teamsIn: teamsIn, teamsOut: teamsOut});
+			case 'Out':
+				var teamsOut = A2(_user$project$Knockouts$addTeam, kos.teamsOut, team);
+				var teamsIn = A2(_user$project$Knockouts$removeTeam, kos.teamsIn, team);
+				return _elm_lang$core$Native_Utils.update(
+					kos,
+					{
+						teamsIn: A2(_elm_lang$core$Debug$log, 'teamsIn', teamsIn),
+						teamsOut: A2(_elm_lang$core$Debug$log, 'teamsOut', teamsOut)
+					});
+			default:
+				var teamsOut = A2(_user$project$Knockouts$removeTeam, kos.teamsOut, team);
+				var teamsIn = A2(_user$project$Knockouts$removeTeam, kos.teamsIn, team);
+				return _elm_lang$core$Native_Utils.update(
+					kos,
+					{teamsIn: teamsIn, teamsOut: teamsOut});
+		}
+	});
+var _user$project$Knockouts$updateRes = F4(
+	function (rnd, q, team, res) {
+		var _p8 = rnd;
+		switch (_p8.ctor) {
+			case 'I':
+				return res;
+			case 'II':
+				return _elm_lang$core$Native_Utils.update(
+					res,
+					{
+						ii: A3(_user$project$Knockouts$updateRound, res.ii, q, team)
+					});
+			case 'III':
+				return _elm_lang$core$Native_Utils.update(
+					res,
+					{
+						iii: A3(_user$project$Knockouts$updateRound, res.iii, q, team)
+					});
+			case 'IV':
+				return _elm_lang$core$Native_Utils.update(
+					res,
+					{
+						iv: A3(_user$project$Knockouts$updateRound, res.iv, q, team)
+					});
+			case 'V':
+				return _elm_lang$core$Native_Utils.update(
+					res,
+					{
+						v: A3(_user$project$Knockouts$updateRound, res.v, q, team)
+					});
+			default:
+				return _elm_lang$core$Native_Utils.update(
+					res,
+					{
+						vi: A3(_user$project$Knockouts$updateRound, res.vi, q, team)
+					});
+		}
+	});
+var _user$project$Knockouts$update = F4(
+	function (rnd, q, team, res) {
+		var _p9 = res;
+		if (_p9.ctor === 'Success') {
+			return _krisajenkins$remotedata$RemoteData$succeed(
+				A4(
+					_user$project$Knockouts$updateRes,
+					rnd,
+					q,
+					team,
+					A2(_elm_lang$core$Debug$log, 'res', _p9._0)));
+		} else {
+			return res;
+		}
+	});
+var _user$project$Knockouts$updateKnockoutsResults = F2(
+	function (_p10, results) {
+		var _p11 = _p10;
+		var json = _user$project$Knockouts$encode(results);
+		var url = '/bets/results/knockouts/';
+		var bearer = A2(_elm_lang$core$Basics_ops['++'], 'Bearer ', _p11._0);
+		var header = A2(_elm_lang$http$Http$header, 'Authorization', bearer);
+		var config = {
+			headers: {
+				ctor: '::',
+				_0: header,
+				_1: {ctor: '[]'}
+			},
+			withCredentials: true,
+			timeout: _elm_lang$core$Maybe$Nothing
+		};
+		return A5(_ohanhi$remotedata_http$RemoteData_Http$postWithConfig, config, url, _user$project$Types$StoredKnockoutsResults, _user$project$Knockouts$decode, json);
+	});
+var _user$project$Knockouts$inititaliseKnockoutsResults = function (_p12) {
+	var _p13 = _p12;
+	var json = _elm_lang$core$Json_Encode$object(
+		{ctor: '[]'});
+	var url = '/bets/results/knockouts/initial/';
+	var bearer = A2(_elm_lang$core$Basics_ops['++'], 'Bearer ', _p13._0);
+	var header = A2(_elm_lang$http$Http$header, 'Authorization', bearer);
+	var config = {
+		headers: {
+			ctor: '::',
+			_0: header,
+			_1: {ctor: '[]'}
+		},
+		withCredentials: true,
+		timeout: _elm_lang$core$Maybe$Nothing
+	};
+	return A5(_ohanhi$remotedata_http$RemoteData_Http$postWithConfig, config, url, _user$project$Types$FetchedKnockoutsResults, _user$project$Knockouts$decode, json);
+};
+var _user$project$Knockouts$fetchKnockoutsResults = A3(_ohanhi$remotedata_http$RemoteData_Http$get, '/bets/results/knockouts/', _user$project$Types$FetchedKnockoutsResults, _user$project$Knockouts$decode);
+
 var _user$project$Ranking$decodeDate = A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Date$fromTime, _elm_lang$core$Json_Decode$float);
 var _user$project$Ranking$decodeRoundScore = A3(
 	_elm_lang$core$Json_Decode$map2,
@@ -35833,7 +36514,7 @@ var _user$project$Main$unauthenticatedOptions = F2(
 				_0: A3(pageLink, _user$project$Types$Ranking, '/voetbalpool/#stand', 'stand'),
 				_1: {
 					ctor: '::',
-					_0: A3(pageLink, _user$project$Types$Results, '/voetbalpool/#resultaten', 'resultaten'),
+					_0: A3(pageLink, _user$project$Types$Results, '/voetbalpool/#wedstrijden', 'wedstrijden'),
 					_1: {ctor: '[]'}
 				}
 			}
@@ -35857,11 +36538,15 @@ var _user$project$Main$authenticatedOptions = F2(
 				_0: A3(pageLink, _user$project$Types$Ranking, '/voetbalpool/#stand', 'stand'),
 				_1: {
 					ctor: '::',
-					_0: A3(pageLink, _user$project$Types$Results, '/voetbalpool/#resultaten', 'resultaten'),
+					_0: A3(pageLink, _user$project$Types$Results, '/voetbalpool/#wedstrijden', 'wedstrijden'),
 					_1: {
 						ctor: '::',
-						_0: A3(pageLink, _user$project$Types$Blog, '/voetbalpool/#blog', 'blog'),
-						_1: {ctor: '[]'}
+						_0: A3(pageLink, _user$project$Types$KOResults, '/voetbalpool/#knockouts', 'knockouts'),
+						_1: {
+							ctor: '::',
+							_0: A3(pageLink, _user$project$Types$Blog, '/voetbalpool/#blog', 'blog'),
+							_1: {ctor: '[]'}
+						}
 					}
 				}
 			}
@@ -35980,6 +36665,8 @@ var _user$project$Main$view = function (model) {
 				return _user$project$Results$view(model);
 			case 'EditMatchResult':
 				return _user$project$Results$edit(model);
+			case 'KOResults':
+				return _user$project$Knockouts$view(model);
 			case 'Bets':
 				return A2(_user$project$Main$viewBet, model, _p3._0);
 			case 'Form':
@@ -36034,7 +36721,7 @@ var _user$project$Main$getPage = function (hash) {
 	};
 	var locs = A2(_elm_lang$core$String$split, '/', hash);
 	var _p5 = locs;
-	_v4_10:
+	_v4_11:
 	do {
 		if (_p5.ctor === '::') {
 			switch (_p5._0) {
@@ -36066,23 +36753,29 @@ var _user$project$Main$getPage = function (hash) {
 					} else {
 						return {ctor: '_Tuple2', _0: _user$project$Types$Ranking, _1: _user$project$Types$RefreshRanking};
 					}
-				case '#resultaten':
+				case '#wedstrijden':
 					if (_p5._1.ctor === '::') {
 						if (_p5._1._0 === 'wedstrijd') {
 							return {ctor: '_Tuple2', _0: _user$project$Types$EditMatchResult, _1: _user$project$Types$None};
 						} else {
-							break _v4_10;
+							break _v4_11;
 						}
 					} else {
 						return {ctor: '_Tuple2', _0: _user$project$Types$Results, _1: _user$project$Types$RefreshResults};
 					}
+				case '#knockouts':
+					if (_p5._1.ctor === '[]') {
+						return {ctor: '_Tuple2', _0: _user$project$Types$KOResults, _1: _user$project$Types$RefreshKnockoutsResults};
+					} else {
+						break _v4_11;
+					}
 				case '#login':
 					return {ctor: '_Tuple2', _0: _user$project$Types$Login, _1: _user$project$Types$None};
 				default:
-					break _v4_10;
+					break _v4_11;
 			}
 		} else {
-			break _v4_10;
+			break _v4_11;
 		}
 	} while(false);
 	var page = A2(_elm_lang$core$Debug$log, 'page', locs);
@@ -36112,6 +36805,7 @@ var _user$project$Main$newModel = {
 	rankingDetails: _krisajenkins$remotedata$RemoteData$NotAsked,
 	matchResults: _krisajenkins$remotedata$RemoteData$NotAsked,
 	matchResult: _krisajenkins$remotedata$RemoteData$NotAsked,
+	knockoutsResults: _user$project$Types$Fresh(_krisajenkins$remotedata$RemoteData$NotAsked),
 	screenSize: _user$project$Types$Small
 };
 var _user$project$Main$update = F2(
@@ -36488,7 +37182,7 @@ var _user$project$Main$update = F2(
 					} else {
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 					}
-				default:
+				case 'CancelMatchResult':
 					var _p27 = model.token;
 					if (_p27.ctor === 'Success') {
 						var canceledMatch = _elm_lang$core$Native_Utils.update(
@@ -36499,6 +37193,61 @@ var _user$project$Main$update = F2(
 					} else {
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 					}
+				case 'FetchedKnockoutsResults':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								knockoutsResults: _user$project$Types$Fresh(_p8._0)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				case 'StoredKnockoutsResults':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								knockoutsResults: _user$project$Types$Fresh(_p8._0)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				case 'Qualify':
+					var kos = A2(
+						_user$project$DataStatus$map,
+						A3(_user$project$Knockouts$update, _p8._0, _p8._1, _p8._2),
+						model.knockoutsResults);
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{knockoutsResults: kos}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				case 'UpdateKnockoutsResults':
+					var cmd = function () {
+						var _p28 = {ctor: '_Tuple2', _0: model.knockoutsResults, _1: model.token};
+						if ((((_p28.ctor === '_Tuple2') && (_p28._0.ctor === 'Dirty')) && (_p28._0._0.ctor === 'Success')) && (_p28._1.ctor === 'Success')) {
+							return A2(_user$project$Knockouts$updateKnockoutsResults, _p28._1._0, _p28._0._0._0);
+						} else {
+							return _elm_lang$core$Platform_Cmd$none;
+						}
+					}();
+					return {ctor: '_Tuple2', _0: model, _1: cmd};
+				case 'InitialiseKnockoutsResults':
+					var cmd = function () {
+						var _p29 = model.token;
+						if (_p29.ctor === 'Success') {
+							return _user$project$Knockouts$inititaliseKnockoutsResults(_p29._0);
+						} else {
+							return _elm_lang$core$Platform_Cmd$none;
+						}
+					}();
+					return {ctor: '_Tuple2', _0: model, _1: cmd};
+				default:
+					var cmd = _user$project$Knockouts$fetchKnockoutsResults;
+					return {ctor: '_Tuple2', _0: model, _1: cmd};
 			}
 		}
 	});
@@ -36506,9 +37255,9 @@ var _user$project$Main$init = F2(
 	function (flags, loc) {
 		var screenSize = _user$project$UI_Size$classifyDevice(
 			{width: flags.width, height: 0});
-		var _p28 = _user$project$Main$getPage(loc.hash);
-		var page = _p28._0;
-		var msg = _p28._1;
+		var _p30 = _user$project$Main$getPage(loc.hash);
+		var page = _p30._0;
+		var msg = _p30._1;
 		var model = _elm_lang$core$Native_Utils.update(
 			_user$project$Main$newModel,
 			{page: page, screenSize: screenSize});

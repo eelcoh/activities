@@ -1,11 +1,13 @@
-module UI.Team exposing (viewTeam, viewTeamEl, viewTeamHome, viewTeamAway)
+module UI.Team exposing (viewTeam, viewTeamEl, viewTeamHome, viewTeamAway, button)
 
 import Bets.Types exposing (Team)
 import Bets.Types.Team as T
 import Element exposing (Element, column, el, image, layout, row)
+import Element.Events exposing (onClick)
 import Element.Attributes exposing (center, height, width, fill, padding, px, verticalCenter, verticalSpread, spread)
 import Html exposing (Html, div, span, text)
 import UI.Style exposing (..)
+import Types exposing (Msg)
 
 
 viewTeam : Maybe Team -> Html msg
@@ -86,6 +88,28 @@ viewTeamRows team =
             [ center ]
             [ Element.el UI.Style.TeamName [ center ] (Element.text (teamName)) ]
         )
+
+
+button :
+    UI.Style.Qualified
+    -> Bets.Types.Team
+    -> Msg
+    -> Element Style variation Msg
+button semantics team msg =
+    let
+        w =
+            width (px 64)
+
+        h =
+            height (px 76)
+
+        buttonLayout =
+            [ w, h, center, verticalCenter ]
+
+        textElement =
+            Element.el UI.Style.TeamName [ onClick msg ] (viewTeamEl (Just team))
+    in
+        Element.column (UI.Style.TeamButton semantics) buttonLayout [ textElement ]
 
 
 

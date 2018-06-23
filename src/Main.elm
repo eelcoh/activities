@@ -14,6 +14,8 @@ import Activities
 import Authentication
 import Ranking
 import Results
+import Knockouts
+import DataStatus
 import Bets.Api exposing (retrieveBet)
 import Bets.View
 import RemoteData exposing (RemoteData(..), WebData)
@@ -47,6 +49,7 @@ newModel =
     , rankingDetails = NotAsked
     , matchResults = NotAsked
     , matchResult = NotAsked
+    , knockoutsResults = Fresh NotAsked
     , screenSize = Small
     }
 
@@ -366,6 +369,50 @@ update action model =
                 _ ->
                     ( model, Cmd.none )
 
+        FetchedKnockoutsResults results ->
+            ( { model | knockoutsResults = Fresh results }, Cmd.none )
+
+        StoredKnockoutsResults results ->
+            ( { model | knockoutsResults = Fresh results }, Cmd.none )
+
+        Qualify rnd q team ->
+            let
+                kos =
+                    DataStatus.map (Knockouts.update rnd q team) model.knockoutsResults
+            in
+                ( { model | knockoutsResults = kos }, Cmd.none )
+
+        UpdateKnockoutsResults ->
+            let
+                cmd =
+                    case ( model.knockoutsResults, model.token ) of
+                        ( Dirty (Success res), Success token ) ->
+                            Knockouts.updateKnockoutsResults token res
+
+                        _ ->
+                            Cmd.none
+            in
+                ( model, cmd )
+
+        InitialiseKnockoutsResults ->
+            let
+                cmd =
+                    case (model.token) of
+                        Success token ->
+                            Knockouts.inititaliseKnockoutsResults token
+
+                        _ ->
+                            Cmd.none
+            in
+                ( model, cmd )
+
+        RefreshKnockoutsResults ->
+            let
+                cmd =
+                    Knockouts.fetchKnockoutsResults
+            in
+                ( model, cmd )
+
 
 getPage : String -> ( Page, Msg )
 getPage hash =
@@ -404,11 +451,14 @@ getPage hash =
             "#stand" :: _ ->
                 ( Ranking, RefreshRanking )
 
-            "#resultaten" :: "wedstrijd" :: _ ->
+            "#wedstrijden" :: "wedstrijd" :: _ ->
                 ( EditMatchResult, None )
 
-            "#resultaten" :: [] ->
+            "#wedstrijden" :: [] ->
                 ( Results, RefreshResults )
+
+            "#knockouts" :: [] ->
+                ( KOResults, RefreshKnockoutsResults )
 
             "#login" :: _ ->
                 ( Login, None )
@@ -443,6 +493,9 @@ view model =
 
                 EditMatchResult ->
                     Results.edit model
+
+                KOResults ->
+                    Knockouts.view model
 
                 Bets uuid ->
                     viewBet model uuid
@@ -570,7 +623,7 @@ unauthenticatedOptions page screenSize =
     in
         [ pageLink Home "/voetbalpool/#home" "home"
         , pageLink Ranking "/voetbalpool/#stand" "stand"
-        , pageLink Results "/voetbalpool/#resultaten" "resultaten"
+        , pageLink Results "/voetbalpool/#wedstrijden" "wedstrijden"
           --, pageLink Form "/voetbalpool/#formulier" "formulier"
         ]
 
@@ -583,7 +636,8 @@ authenticatedOptions page screenSize =
     in
         [ pageLink Home "/voetbalpool/#home" "home"
         , pageLink Ranking "/voetbalpool/#stand" "stand"
-        , pageLink Results "/voetbalpool/#resultaten" "resultaten"
+        , pageLink Results "/voetbalpool/#wedstrijden" "wedstrijden"
+        , pageLink KOResults "/voetbalpool/#knockouts" "knockouts"
           -- , pageLink Form "/voetbalpool/#formulier" "formulier"
         , pageLink Blog "/voetbalpool/#blog" "blog"
         ]

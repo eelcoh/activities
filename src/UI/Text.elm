@@ -26,6 +26,17 @@ header2 txt =
         )
 
 
+header3 : String -> Element.Element UI.Style.Style variation msg
+header3 txt =
+    Element.header UI.Style.None
+        [ maxWidth (px 600), spacing 7, paddingTop 50 ]
+        (Element.paragraph
+            UI.Style.Header3
+            [ width Element.Attributes.fill ]
+            [ (Element.text txt) ]
+        )
+
+
 simpleText : String -> Element.Element UI.Style.Style variation msg
 simpleText txt =
     Element.el UI.Style.Text [] (Element.text txt)

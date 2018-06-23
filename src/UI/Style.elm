@@ -17,6 +17,7 @@ type Style
     | Title ScreenSize
     | Header1
     | Header2
+    | Header3
     | Error
     | ErrorText
     | Page
@@ -149,6 +150,12 @@ stylesheet =
             [ Font.size 28
             , Color.text secondaryText
             , fontSansSerif
+            ]
+        , style Header3
+            [ Font.size 20
+            , Color.text secondaryText
+            , fontSerif
+            , Font.weight 600
             ]
         , style Menu
             [ Font.size 20
