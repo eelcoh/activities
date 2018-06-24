@@ -335,7 +335,7 @@ update action model =
         EditMatch match ->
             let
                 url =
-                    "#resultaten/wedstrijd/" ++ match.match
+                    "#wedstrijden/wedstrijd/" ++ match.match
 
                 cmd =
                     Navigation.newUrl url
