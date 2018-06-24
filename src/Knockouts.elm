@@ -170,18 +170,20 @@ view model =
             case ( auth, model.knockoutsResults ) of
                 ( Authorised, Fresh (Success results) ) ->
                     [ viewKnockoutsResults auth results
-                    , UI.Button.pill UI.Style.Active InitialiseKnockoutsResults "Update"
+                    , UI.Button.pill UI.Style.Inactive UpdateKnockoutsResults "Update"
+                    , UI.Button.pill UI.Style.Potential InitialiseKnockoutsResults "Initialiseer"
                     ]
 
                 ( Authorised, Dirty (Success results) ) ->
                     [ viewKnockoutsResults auth results
                     , UI.Button.pill UI.Style.Active UpdateKnockoutsResults "Update"
-                    , UI.Button.pill UI.Style.Active InitialiseKnockoutsResults "Update"
+                    , UI.Button.pill UI.Style.Potential InitialiseKnockoutsResults "Initialiseer"
                     ]
 
                 ( Authorised, _ ) ->
                     [ Element.text "Nog niet bekend"
-                    , UI.Button.pill UI.Style.Active InitialiseKnockoutsResults "Update"
+                    , UI.Button.pill UI.Style.Inactive UpdateKnockoutsResults "Update"
+                    , UI.Button.pill UI.Style.Potential InitialiseKnockoutsResults "Initialiseer"
                     ]
 
                 ( Unauthorised, Fresh (Success results) ) ->

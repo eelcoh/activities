@@ -35226,8 +35226,12 @@ var _user$project$Knockouts$view = function (model) {
 								_0: A2(_user$project$Knockouts$viewKnockoutsResults, auth, _p6._1._0._0),
 								_1: {
 									ctor: '::',
-									_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Active, _user$project$Types$InitialiseKnockoutsResults, 'Update'),
-									_1: {ctor: '[]'}
+									_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Inactive, _user$project$Types$UpdateKnockoutsResults, 'Update'),
+									_1: {
+										ctor: '::',
+										_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Potential, _user$project$Types$InitialiseKnockoutsResults, 'Initialiseer'),
+										_1: {ctor: '[]'}
+									}
 								}
 							};
 						} else {
@@ -35243,7 +35247,7 @@ var _user$project$Knockouts$view = function (model) {
 									_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Active, _user$project$Types$UpdateKnockoutsResults, 'Update'),
 									_1: {
 										ctor: '::',
-										_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Active, _user$project$Types$InitialiseKnockoutsResults, 'Update'),
+										_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Potential, _user$project$Types$InitialiseKnockoutsResults, 'Initialiseer'),
 										_1: {ctor: '[]'}
 									}
 								}
@@ -35275,8 +35279,12 @@ var _user$project$Knockouts$view = function (model) {
 			_0: _mdgriffith$style_elements$Element$text('Nog niet bekend'),
 			_1: {
 				ctor: '::',
-				_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Active, _user$project$Types$InitialiseKnockoutsResults, 'Update'),
-				_1: {ctor: '[]'}
+				_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Inactive, _user$project$Types$UpdateKnockoutsResults, 'Update'),
+				_1: {
+					ctor: '::',
+					_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Potential, _user$project$Types$InitialiseKnockoutsResults, 'Initialiseer'),
+					_1: {ctor: '[]'}
+				}
 			}
 		};
 	}();
