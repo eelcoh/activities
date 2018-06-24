@@ -111,6 +111,61 @@ row5 =
     ]
 
 
+row6 : List ( Int, Int )
+row6 =
+    [ ( 6, 0 )
+    , ( 6, 1 )
+    , ( 6, 2 )
+    , ( 2, 6 )
+    , ( 1, 6 )
+    , ( 0, 6 )
+    ]
+
+
+row7 : List ( Int, Int )
+row7 =
+    [ ( 7, 0 )
+    , ( 7, 1 )
+    , ( 7, 2 )
+    , ( 2, 7 )
+    , ( 1, 7 )
+    , ( 0, 7 )
+    ]
+
+
+row8 : List ( Int, Int )
+row8 =
+    [ ( 8, 0 )
+    , ( 8, 1 )
+    , ( 8, 2 )
+    , ( 2, 8 )
+    , ( 1, 8 )
+    , ( 0, 8 )
+    ]
+
+
+row9 : List ( Int, Int )
+row9 =
+    [ ( 9, 0 )
+    , ( 9, 1 )
+    , ( 9, 2 )
+    , ( 2, 9 )
+    , ( 1, 9 )
+    , ( 0, 9 )
+    ]
+
+
+row10 : List ( Int, Int )
+row10 =
+    [ ( 10, 0 )
+    , ( 10, 1 )
+    , ( 10, 2 )
+    , ( 2, 10 )
+    , ( 1, 10 )
+    , ( 0, 10 )
+    ]
+
+
 scores : List (List ( Int, ( Int, Int, String ) ))
 scores =
     [ row0
@@ -119,6 +174,11 @@ scores =
     , row3
     , row4
     , row5
+    , row6
+    , row7
+    , row8
+    , row9
+    , row10
     ]
         |> List.map indexedScores
 

@@ -35761,6 +35761,131 @@ var _user$project$Ranking$fetchRankingDetails = function (uuid) {
 };
 var _user$project$Ranking$fetchRanking = A3(_ohanhi$remotedata_http$RemoteData_Http$get, '/bets/ranking/', _user$project$Types$FetchedRanking, _user$project$Ranking$decode);
 
+var _user$project$Score$row10 = {
+	ctor: '::',
+	_0: {ctor: '_Tuple2', _0: 10, _1: 0},
+	_1: {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 10, _1: 1},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 10, _1: 2},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 2, _1: 10},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 1, _1: 10},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 0, _1: 10},
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		}
+	}
+};
+var _user$project$Score$row9 = {
+	ctor: '::',
+	_0: {ctor: '_Tuple2', _0: 9, _1: 0},
+	_1: {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 9, _1: 1},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 9, _1: 2},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 2, _1: 9},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 1, _1: 9},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 0, _1: 9},
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		}
+	}
+};
+var _user$project$Score$row8 = {
+	ctor: '::',
+	_0: {ctor: '_Tuple2', _0: 8, _1: 0},
+	_1: {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 8, _1: 1},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 8, _1: 2},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 2, _1: 8},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 1, _1: 8},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 0, _1: 8},
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		}
+	}
+};
+var _user$project$Score$row7 = {
+	ctor: '::',
+	_0: {ctor: '_Tuple2', _0: 7, _1: 0},
+	_1: {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 7, _1: 1},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 7, _1: 2},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 2, _1: 7},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 1, _1: 7},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 0, _1: 7},
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		}
+	}
+};
+var _user$project$Score$row6 = {
+	ctor: '::',
+	_0: {ctor: '_Tuple2', _0: 6, _1: 0},
+	_1: {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 6, _1: 1},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 6, _1: 2},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 2, _1: 6},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 1, _1: 6},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 0, _1: 6},
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		}
+	}
+};
 var _user$project$Score$row5 = {
 	ctor: '::',
 	_0: {ctor: '_Tuple2', _0: 5, _1: 5},
@@ -36003,7 +36128,27 @@ var _user$project$Score$scores = A2(
 						_1: {
 							ctor: '::',
 							_0: _user$project$Score$row5,
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: _user$project$Score$row6,
+								_1: {
+									ctor: '::',
+									_0: _user$project$Score$row7,
+									_1: {
+										ctor: '::',
+										_0: _user$project$Score$row8,
+										_1: {
+											ctor: '::',
+											_0: _user$project$Score$row9,
+											_1: {
+												ctor: '::',
+												_0: _user$project$Score$row10,
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -37170,7 +37315,7 @@ var _user$project$Main$update = F2(
 					}
 				case 'EditMatch':
 					var _p25 = _p8._0;
-					var url = A2(_elm_lang$core$Basics_ops['++'], '#resultaten/wedstrijd/', _p25.match);
+					var url = A2(_elm_lang$core$Basics_ops['++'], '#wedstrijden/wedstrijd/', _p25.match);
 					var cmd = _elm_lang$navigation$Navigation$newUrl(url);
 					return {
 						ctor: '_Tuple2',
