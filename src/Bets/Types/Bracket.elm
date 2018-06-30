@@ -13,6 +13,7 @@ module Bets.Types.Bracket
         , isComplete
         , encode
         , decode
+        , decodeHasQualified
         , decodeWinner
         )
 

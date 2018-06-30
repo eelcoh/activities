@@ -1,4 +1,4 @@
-module UI.Team exposing (viewTeam, viewTeamEl, viewTeamHome, viewTeamAway, button)
+module UI.Team exposing (viewTeam, viewTeamEl, viewTeamHome, viewMaybeTeamEl, viewTeamAway, button, badge)
 
 import Bets.Types exposing (Team)
 import Bets.Types.Team as T
@@ -12,11 +12,16 @@ import Types exposing (Msg)
 
 viewTeam : Maybe Team -> Html msg
 viewTeam mTeam =
-    layout stylesheet <| viewTeamEl mTeam
+    layout stylesheet <| viewMaybeTeamEl mTeam
 
 
-viewTeamEl : Maybe Team -> Element Style variation msg
+viewTeamEl : Team -> Element Style variation msg
 viewTeamEl team =
+    viewMaybeTeamEl (Just team)
+
+
+viewMaybeTeamEl : Maybe Team -> Element Style variation msg
+viewMaybeTeamEl team =
     let
         teamName =
             Maybe.map T.display team
@@ -91,7 +96,7 @@ viewTeamRows team =
 
 
 button :
-    UI.Style.Qualified
+    Types.Qualified
     -> Bets.Types.Team
     -> Msg
     -> Element Style variation Msg
@@ -107,7 +112,28 @@ button semantics team msg =
             [ w, h, center, verticalCenter ]
 
         textElement =
-            Element.el UI.Style.TeamName [ onClick msg ] (viewTeamEl (Just team))
+            Element.el UI.Style.TeamName [ onClick msg ] (viewTeamEl team)
+    in
+        Element.column (UI.Style.TeamButton semantics) buttonLayout [ textElement ]
+
+
+badge :
+    Types.Qualified
+    -> Bets.Types.Team
+    -> Element Style variation msg
+badge semantics team =
+    let
+        w =
+            width (px 64)
+
+        h =
+            height (px 76)
+
+        buttonLayout =
+            [ w, h, center, verticalCenter ]
+
+        textElement =
+            Element.el UI.Style.TeamName [] (viewTeamEl (team))
     in
         Element.column (UI.Style.TeamButton semantics) buttonLayout [ textElement ]
 

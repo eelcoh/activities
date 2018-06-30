@@ -100,6 +100,13 @@ type Msg
     | UpdateKnockoutsResults
     | InitialiseKnockoutsResults
     | RefreshKnockoutsResults
+    | ChangeQualify Bets.Types.Round Bets.Types.HasQualified Bets.Types.Team
+
+
+type Qualified
+    = Did
+    | DidNot
+    | NotYet
 
 
 type alias Model =
@@ -214,20 +221,33 @@ type Access
     | Authorised
 
 
+
+-- type KnockoutsResults struct {
+-- 	Teams map[string]TeamRounds `json:"team"`
+-- }
+-- type TeamRounds struct {
+-- 	Team            Team            `json:"team"`
+-- 	RoundsQualified RoundsQualified `json:"roundsQualified"`
+-- }
+-- type RoundsQualified map[string]string
+
+
 type alias KnockoutsResults =
-    { i : Knockouts
-    , ii : Knockouts
-    , iii : Knockouts
-    , iv : Knockouts
-    , v : Knockouts
-    , vi : Knockouts
+    { teams : List ( String, TeamRounds )
     }
 
 
-type alias Knockouts =
-    { teamsIn : List Bets.Types.Team
-    , teamsOut : List Bets.Types.Team
+type alias TeamRounds =
+    { team : Bets.Types.Team
+    , roundsQualified : List ( Bets.Types.Round, Bets.Types.HasQualified )
     }
+
+
+
+-- type alias Knockouts =
+--     { teamsIn : List Bets.Types.Team
+--     , teamsOut : List Bets.Types.Team
+--     }
 
 
 type DataStatus a

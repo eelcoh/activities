@@ -25516,13 +25516,12 @@ var _user$project$Types$MatchResult = F5(
 	function (a, b, c, d, e) {
 		return {matchResultId: a, match: b, homeTeam: c, awayTeam: d, score: e};
 	});
-var _user$project$Types$KnockoutsResults = F6(
-	function (a, b, c, d, e, f) {
-		return {i: a, ii: b, iii: c, iv: d, v: e, vi: f};
-	});
-var _user$project$Types$Knockouts = F2(
+var _user$project$Types$KnockoutsResults = function (a) {
+	return {teams: a};
+};
+var _user$project$Types$TeamRounds = F2(
 	function (a, b) {
-		return {teamsIn: a, teamsOut: b};
+		return {team: a, roundsQualified: b};
 	});
 var _user$project$Types$KOResults = {ctor: 'KOResults'};
 var _user$project$Types$EditMatchResult = {ctor: 'EditMatchResult'};
@@ -25550,6 +25549,10 @@ var _user$project$Types$AComment = F3(
 var _user$project$Types$ANewBet = F3(
 	function (a, b, c) {
 		return {ctor: 'ANewBet', _0: a, _1: b, _2: c};
+	});
+var _user$project$Types$ChangeQualify = F3(
+	function (a, b, c) {
+		return {ctor: 'ChangeQualify', _0: a, _1: b, _2: c};
 	});
 var _user$project$Types$RefreshKnockoutsResults = {ctor: 'RefreshKnockoutsResults'};
 var _user$project$Types$InitialiseKnockoutsResults = {ctor: 'InitialiseKnockoutsResults'};
@@ -25652,6 +25655,9 @@ var _user$project$Types$FetchedBet = function (a) {
 var _user$project$Types$FetchedActivities = function (a) {
 	return {ctor: 'FetchedActivities', _0: a};
 };
+var _user$project$Types$NotYet = {ctor: 'NotYet'};
+var _user$project$Types$DidNot = {ctor: 'DidNot'};
+var _user$project$Types$Did = {ctor: 'Did'};
 var _user$project$Types$Big = {ctor: 'Big'};
 var _user$project$Types$Small = {ctor: 'Small'};
 var _user$project$Types$Submittable = F2(
@@ -25808,9 +25814,6 @@ var _user$project$UI_Style$SBPotential = {ctor: 'SBPotential'};
 var _user$project$UI_Style$TBInactive = {ctor: 'TBInactive'};
 var _user$project$UI_Style$TBSelected = {ctor: 'TBSelected'};
 var _user$project$UI_Style$TBPotential = {ctor: 'TBPotential'};
-var _user$project$UI_Style$NotYet = {ctor: 'NotYet'};
-var _user$project$UI_Style$DidNot = {ctor: 'DidNot'};
-var _user$project$UI_Style$Did = {ctor: 'Did'};
 var _user$project$UI_Style$Trap = {ctor: 'Trap'};
 var _user$project$UI_Style$Selected = {ctor: 'Selected'};
 var _user$project$UI_Style$Potential = {ctor: 'Potential'};
@@ -26034,24 +26037,28 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 															_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$primaryText),
 															_1: {
 																ctor: '::',
-																_0: _mdgriffith$style_elements$Style$hover(
-																	{
-																		ctor: '::',
-																		_0: _mdgriffith$style_elements$Style$cursor('pointer'),
-																		_1: {
-																			ctor: '::',
-																			_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$orange),
-																			_1: {
-																				ctor: '::',
-																				_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$white),
-																				_1: {ctor: '[]'}
-																			}
-																		}
-																	}),
+																_0: _mdgriffith$style_elements$Style_Border$all(2),
 																_1: {
 																	ctor: '::',
-																	_0: _user$project$UI_Style$fontSerif,
-																	_1: {ctor: '[]'}
+																	_0: _mdgriffith$style_elements$Style$hover(
+																		{
+																			ctor: '::',
+																			_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																			_1: {
+																				ctor: '::',
+																				_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$orange),
+																				_1: {
+																					ctor: '::',
+																					_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$white),
+																					_1: {ctor: '[]'}
+																				}
+																			}
+																		}),
+																	_1: {
+																		ctor: '::',
+																		_0: _user$project$UI_Style$fontMono,
+																		_1: {ctor: '[]'}
+																	}
 																}
 															}
 														}
@@ -26072,16 +26079,20 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																	_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.0),
 																	_1: {
 																		ctor: '::',
-																		_0: _mdgriffith$style_elements$Style$hover(
-																			{
-																				ctor: '::',
-																				_0: _mdgriffith$style_elements$Style$cursor('not-allowed'),
-																				_1: {ctor: '[]'}
-																			}),
+																		_0: _mdgriffith$style_elements$Style_Border$all(2),
 																		_1: {
 																			ctor: '::',
-																			_0: _user$project$UI_Style$fontSerif,
-																			_1: {ctor: '[]'}
+																			_0: _mdgriffith$style_elements$Style$hover(
+																				{
+																					ctor: '::',
+																					_0: _mdgriffith$style_elements$Style$cursor('not-allowed'),
+																					_1: {ctor: '[]'}
+																				}),
+																			_1: {
+																				ctor: '::',
+																				_0: _user$project$UI_Style$fontMono,
+																				_1: {ctor: '[]'}
+																			}
 																		}
 																	}
 																}
@@ -26101,16 +26112,20 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																	_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$white),
 																	_1: {
 																		ctor: '::',
-																		_0: _mdgriffith$style_elements$Style$hover(
-																			{
-																				ctor: '::',
-																				_0: _mdgriffith$style_elements$Style$cursor('pointer'),
-																				_1: {ctor: '[]'}
-																			}),
+																		_0: _mdgriffith$style_elements$Style_Border$all(2),
 																		_1: {
 																			ctor: '::',
-																			_0: _user$project$UI_Style$fontSerif,
-																			_1: {ctor: '[]'}
+																			_0: _mdgriffith$style_elements$Style$hover(
+																				{
+																					ctor: '::',
+																					_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																					_1: {ctor: '[]'}
+																				}),
+																			_1: {
+																				ctor: '::',
+																				_0: _user$project$UI_Style$fontMono,
+																				_1: {ctor: '[]'}
+																			}
 																		}
 																	}
 																}
@@ -26128,16 +26143,20 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																		_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$white),
 																		_1: {
 																			ctor: '::',
-																			_0: _mdgriffith$style_elements$Style$hover(
-																				{
-																					ctor: '::',
-																					_0: _mdgriffith$style_elements$Style$cursor('pointer'),
-																					_1: {ctor: '[]'}
-																				}),
+																			_0: _mdgriffith$style_elements$Style_Border$all(2),
 																			_1: {
 																				ctor: '::',
-																				_0: _user$project$UI_Style$fontSerif,
-																				_1: {ctor: '[]'}
+																				_0: _mdgriffith$style_elements$Style$hover(
+																					{
+																						ctor: '::',
+																						_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																						_1: {ctor: '[]'}
+																					}),
+																				_1: {
+																					ctor: '::',
+																					_0: _user$project$UI_Style$fontMono,
+																					_1: {ctor: '[]'}
+																				}
 																			}
 																		}
 																	}
@@ -26155,16 +26174,20 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																			_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$white),
 																			_1: {
 																				ctor: '::',
-																				_0: _mdgriffith$style_elements$Style$hover(
-																					{
-																						ctor: '::',
-																						_0: _mdgriffith$style_elements$Style$cursor('pointer'),
-																						_1: {ctor: '[]'}
-																					}),
+																				_0: _mdgriffith$style_elements$Style_Border$all(2),
 																				_1: {
 																					ctor: '::',
-																					_0: _user$project$UI_Style$fontSerif,
-																					_1: {ctor: '[]'}
+																					_0: _mdgriffith$style_elements$Style$hover(
+																						{
+																							ctor: '::',
+																							_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																							_1: {ctor: '[]'}
+																						}),
+																					_1: {
+																						ctor: '::',
+																						_0: _user$project$UI_Style$fontMono,
+																						_1: {ctor: '[]'}
+																					}
 																				}
 																			}
 																		}
@@ -26182,7 +26205,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																				_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
 																				_1: {
 																					ctor: '::',
-																					_0: _mdgriffith$style_elements$Style_Border$all(1),
+																					_0: _mdgriffith$style_elements$Style_Border$all(2),
 																					_1: {
 																						ctor: '::',
 																						_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$primary),
@@ -26205,39 +26228,47 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																				_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
 																				_1: {
 																					ctor: '::',
-																					_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$primaryText),
+																					_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
 																					_1: {
 																						ctor: '::',
-																						_0: _mdgriffith$style_elements$Style$hover(
-																							{
+																						_0: _mdgriffith$style_elements$Style_Border$all(2),
+																						_1: {
+																							ctor: '::',
+																							_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondaryLight),
+																							_1: {
 																								ctor: '::',
-																								_0: _mdgriffith$style_elements$Style$cursor('pointer'),
-																								_1: {
-																									ctor: '::',
-																									_0: _mdgriffith$style_elements$Style_Border$all(2),
-																									_1: {
+																								_0: _mdgriffith$style_elements$Style$hover(
+																									{
 																										ctor: '::',
-																										_0: _mdgriffith$style_elements$Style_Border$solid,
+																										_0: _mdgriffith$style_elements$Style$cursor('pointer'),
 																										_1: {
 																											ctor: '::',
-																											_0: _mdgriffith$style_elements$Style_Color$border(_elm_lang$core$Color$black),
+																											_0: _mdgriffith$style_elements$Style_Border$all(2),
 																											_1: {
 																												ctor: '::',
-																												_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$white),
+																												_0: _mdgriffith$style_elements$Style_Border$solid,
 																												_1: {
 																													ctor: '::',
-																													_0: _mdgriffith$style_elements$Style_Color$text(_elm_lang$core$Color$black),
-																													_1: {ctor: '[]'}
+																													_0: _mdgriffith$style_elements$Style_Color$border(_elm_lang$core$Color$black),
+																													_1: {
+																														ctor: '::',
+																														_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$white),
+																														_1: {
+																															ctor: '::',
+																															_0: _mdgriffith$style_elements$Style_Color$text(_elm_lang$core$Color$black),
+																															_1: {ctor: '[]'}
+																														}
+																													}
 																												}
 																											}
 																										}
-																									}
+																									}),
+																								_1: {
+																									ctor: '::',
+																									_0: _user$project$UI_Style$fontMono,
+																									_1: {ctor: '[]'}
 																								}
-																							}),
-																						_1: {
-																							ctor: '::',
-																							_0: _user$project$UI_Style$fontSerif,
-																							_1: {ctor: '[]'}
+																							}
 																						}
 																					}
 																				}
@@ -26281,7 +26312,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																										}),
 																									_1: {
 																										ctor: '::',
-																										_0: _user$project$UI_Style$fontSerif,
+																										_0: _user$project$UI_Style$fontMono,
 																										_1: {ctor: '[]'}
 																									}
 																								}
@@ -26305,17 +26336,21 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																								_0: _mdgriffith$style_elements$Style_Font$alignLeft,
 																								_1: {
 																									ctor: '::',
-																									_0: _mdgriffith$style_elements$Style$hover(
-																										{
-																											ctor: '::',
-																											_0: _mdgriffith$style_elements$Style$cursor('cursor'),
-																											_1: {
+																									_0: _mdgriffith$style_elements$Style_Border$all(2),
+																									_1: {
+																										ctor: '::',
+																										_0: _mdgriffith$style_elements$Style$hover(
+																											{
 																												ctor: '::',
-																												_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondary),
-																												_1: {ctor: '[]'}
-																											}
-																										}),
-																									_1: {ctor: '[]'}
+																												_0: _mdgriffith$style_elements$Style$cursor('cursor'),
+																												_1: {
+																													ctor: '::',
+																													_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondary),
+																													_1: {ctor: '[]'}
+																												}
+																											}),
+																										_1: {ctor: '[]'}
+																									}
 																								}
 																							}
 																						}
@@ -26324,7 +26359,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																					ctor: '::',
 																					_0: A2(
 																						_mdgriffith$style_elements$Style$style,
-																						_user$project$UI_Style$TeamButton(_user$project$UI_Style$NotYet),
+																						_user$project$UI_Style$TeamButton(_user$project$Types$Did),
 																						{
 																							ctor: '::',
 																							_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
@@ -26333,10 +26368,10 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																								_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
 																								_1: {
 																									ctor: '::',
-																									_0: _mdgriffith$style_elements$Style_Border$all(2),
+																									_0: _mdgriffith$style_elements$Style_Border$all(5),
 																									_1: {
 																										ctor: '::',
-																										_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondaryLight),
+																										_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$right),
 																										_1: {
 																											ctor: '::',
 																											_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.0),
@@ -26371,7 +26406,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																						ctor: '::',
 																						_0: A2(
 																							_mdgriffith$style_elements$Style$style,
-																							_user$project$UI_Style$TeamButton(_user$project$UI_Style$Did),
+																							_user$project$UI_Style$TeamButton(_user$project$Types$DidNot),
 																							{
 																								ctor: '::',
 																								_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
@@ -26380,10 +26415,10 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																									_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
 																									_1: {
 																										ctor: '::',
-																										_0: _mdgriffith$style_elements$Style_Border$all(2),
+																										_0: _mdgriffith$style_elements$Style_Border$all(5),
 																										_1: {
 																											ctor: '::',
-																											_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$right),
+																											_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$wrong),
 																											_1: {
 																												ctor: '::',
 																												_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.0),
@@ -26418,7 +26453,7 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																							ctor: '::',
 																							_0: A2(
 																								_mdgriffith$style_elements$Style$style,
-																								_user$project$UI_Style$TeamButton(_user$project$UI_Style$DidNot),
+																								_user$project$UI_Style$TeamButton(_user$project$Types$NotYet),
 																								{
 																									ctor: '::',
 																									_0: _mdgriffith$style_elements$Style_Color$background(_user$project$UI_Color$secondaryLight),
@@ -26427,10 +26462,10 @@ var _user$project$UI_Style$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																										_0: _mdgriffith$style_elements$Style_Color$text(_user$project$UI_Color$secondaryText),
 																										_1: {
 																											ctor: '::',
-																											_0: _mdgriffith$style_elements$Style_Border$all(2),
+																											_0: _mdgriffith$style_elements$Style_Border$all(5),
 																											_1: {
 																												ctor: '::',
-																												_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$wrong),
+																												_0: _mdgriffith$style_elements$Style_Color$border(_user$project$UI_Color$secondaryLight),
 																												_1: {
 																													ctor: '::',
 																													_0: _mdgriffith$style_elements$Style_Font$lineHeight(1.0),
@@ -29472,6 +29507,12 @@ var _user$project$Bets_Types_Team$initTeamData = {
 		}
 	}
 };
+var _user$project$Bets_Types_Team$allTeams = A2(
+	_elm_lang$core$List$map,
+	function (_) {
+		return _.team;
+	},
+	_user$project$Bets_Types_Team$initTeamData);
 
 var _user$project$UI_Team$viewTeamRows = function (team) {
 	var teamName = A2(
@@ -29566,7 +29607,7 @@ var _user$project$UI_Team$viewTeamHome = function (mTeam) {
 	var team = _p1._1;
 	return A2(_user$project$UI_Team$viewTeamBox, team, flag);
 };
-var _user$project$UI_Team$viewTeamEl = function (team) {
+var _user$project$UI_Team$viewMaybeTeamEl = function (team) {
 	var teamName = A2(
 		_elm_lang$core$Maybe$withDefault,
 		'...',
@@ -29635,6 +29676,10 @@ var _user$project$UI_Team$viewTeamEl = function (team) {
 			}
 		});
 };
+var _user$project$UI_Team$viewTeamEl = function (team) {
+	return _user$project$UI_Team$viewMaybeTeamEl(
+		_elm_lang$core$Maybe$Just(team));
+};
 var _user$project$UI_Team$button = F3(
 	function (semantics, team, msg) {
 		var textElement = A3(
@@ -29645,8 +29690,45 @@ var _user$project$UI_Team$button = F3(
 				_0: _mdgriffith$style_elements$Element_Events$onClick(msg),
 				_1: {ctor: '[]'}
 			},
-			_user$project$UI_Team$viewTeamEl(
-				_elm_lang$core$Maybe$Just(team)));
+			_user$project$UI_Team$viewTeamEl(team));
+		var h = _mdgriffith$style_elements$Element_Attributes$height(
+			_mdgriffith$style_elements$Element_Attributes$px(76));
+		var w = _mdgriffith$style_elements$Element_Attributes$width(
+			_mdgriffith$style_elements$Element_Attributes$px(64));
+		var buttonLayout = {
+			ctor: '::',
+			_0: w,
+			_1: {
+				ctor: '::',
+				_0: h,
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$center,
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		};
+		return A3(
+			_mdgriffith$style_elements$Element$column,
+			_user$project$UI_Style$TeamButton(semantics),
+			buttonLayout,
+			{
+				ctor: '::',
+				_0: textElement,
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$UI_Team$badge = F2(
+	function (semantics, team) {
+		var textElement = A3(
+			_mdgriffith$style_elements$Element$el,
+			_user$project$UI_Style$TeamName,
+			{ctor: '[]'},
+			_user$project$UI_Team$viewTeamEl(team));
 		var h = _mdgriffith$style_elements$Element_Attributes$height(
 			_mdgriffith$style_elements$Element_Attributes$px(76));
 		var w = _mdgriffith$style_elements$Element_Attributes$width(
@@ -29682,7 +29764,7 @@ var _user$project$UI_Team$viewTeam = function (mTeam) {
 	return A2(
 		_mdgriffith$style_elements$Element$layout,
 		_user$project$UI_Style$stylesheet,
-		_user$project$UI_Team$viewTeamEl(mTeam));
+		_user$project$UI_Team$viewMaybeTeamEl(mTeam));
 };
 
 var _user$project$UI_Button$scoreButton = F3(
@@ -29733,7 +29815,7 @@ var _user$project$UI_Button$maybeTeamBadge = F2(
 			_mdgriffith$style_elements$Element$el,
 			_user$project$UI_Style$TeamName,
 			{ctor: '[]'},
-			_user$project$UI_Team$viewTeamEl(team));
+			_user$project$UI_Team$viewMaybeTeamEl(team));
 		var h = _mdgriffith$style_elements$Element_Attributes$height(
 			_mdgriffith$style_elements$Element_Attributes$px(76));
 		var w = _mdgriffith$style_elements$Element_Attributes$width(
@@ -29940,6 +30022,50 @@ var _user$project$UI_Button$navLink = F3(
 		return A3(
 			_mdgriffith$style_elements$Element$column,
 			_user$project$UI_Style$NavLink(semantics),
+			buttonLayout,
+			{
+				ctor: '::',
+				_0: textElement,
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$UI_Button$fixedWidthPill = F4(
+	function (w, semantics, msg, buttonText) {
+		var textElement = A3(
+			_mdgriffith$style_elements$Element$el,
+			_user$project$UI_Style$Centered,
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
+				_1: {ctor: '[]'}
+			},
+			_mdgriffith$style_elements$Element$text(buttonText));
+		var buttonLayout = {
+			ctor: '::',
+			_0: _mdgriffith$style_elements$Element_Attributes$width(
+				_mdgriffith$style_elements$Element_Attributes$px(w)),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$height(
+					_mdgriffith$style_elements$Element_Attributes$px(36)),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Events$onClick(msg),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$center,
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		};
+		return A3(
+			_mdgriffith$style_elements$Element$column,
+			_user$project$UI_Style$Button(semantics),
 			buttonLayout,
 			{
 				ctor: '::',
@@ -31292,9 +31418,35 @@ var _user$project$Bets_Types_Round$isSameOrANextRound = F2(
 			_user$project$Bets_Types_Round$toInt(r1),
 			_user$project$Bets_Types_Round$toInt(r2)) > -1;
 	});
+var _user$project$Bets_Types_Round$compareRounds = F2(
+	function (r1, r2) {
+		return A2(
+			_elm_lang$core$Basics$compare,
+			_user$project$Bets_Types_Round$toInt(r1),
+			_user$project$Bets_Types_Round$toInt(r2));
+	});
 var _user$project$Bets_Types_Round$encode = function (r) {
 	return _elm_lang$core$Json_Encode$int(
 		_user$project$Bets_Types_Round$toInt(r));
+};
+var _user$project$Bets_Types_Round$stringToRound = function (r) {
+	var _p3 = r;
+	switch (_p3) {
+		case 'I':
+			return _elm_lang$core$Maybe$Just(_user$project$Bets_Types$I);
+		case 'II':
+			return _elm_lang$core$Maybe$Just(_user$project$Bets_Types$II);
+		case 'III':
+			return _elm_lang$core$Maybe$Just(_user$project$Bets_Types$III);
+		case 'IV':
+			return _elm_lang$core$Maybe$Just(_user$project$Bets_Types$IV);
+		case 'V':
+			return _elm_lang$core$Maybe$Just(_user$project$Bets_Types$V);
+		case 'VI':
+			return _elm_lang$core$Maybe$Just(_user$project$Bets_Types$VI);
+		default:
+			return _elm_lang$core$Maybe$Nothing;
+	}
 };
 
 var _user$project$Bets_Types_Draw$encode = function (_p0) {
@@ -34331,7 +34483,7 @@ var _user$project$Bets_View$displayTopscorer = function (bet) {
 				ctor: '::',
 				_0: A2(
 					_user$project$UI_Button$maybeTeamBadge,
-					_user$project$UI_Style$NotYet,
+					_user$project$Types$NotYet,
 					_elm_lang$core$Tuple$second(_p3)),
 				_1: {
 					ctor: '::',
@@ -34344,11 +34496,6 @@ var _user$project$Bets_View$displayTopscorer = function (bet) {
 		return _mdgriffith$style_elements$Element$empty;
 	}
 };
-var _user$project$Bets_View$mkButtonChamp = function (mBracket) {
-	var attrs = {ctor: '[]'};
-	var mTeam = A2(_elm_lang$core$Maybe$andThen, _user$project$Bets_Types_Bracket$winner, mBracket);
-	return A2(_user$project$UI_Button$maybeTeamBadge, _user$project$UI_Style$NotYet, mTeam);
-};
 var _user$project$Bets_View$mkButton = F5(
 	function (answer, wnnr, slot, hasQualified, bracket) {
 		var team = _user$project$Bets_Types_Bracket$qualifier(bracket);
@@ -34358,24 +34505,58 @@ var _user$project$Bets_View$mkButton = F5(
 			var _p4 = hasQualified;
 			switch (_p4.ctor) {
 				case 'In':
-					return _user$project$UI_Style$Did;
+					return _user$project$Types$Did;
 				case 'Out':
-					return _user$project$UI_Style$DidNot;
+					return _user$project$Types$DidNot;
 				default:
-					return _user$project$UI_Style$NotYet;
+					return _user$project$Types$NotYet;
 			}
 		}();
 		return A2(_user$project$UI_Button$maybeTeamBadge, s, team);
 	});
+var _user$project$Bets_View$didQualify = function (b) {
+	var _p5 = b;
+	if (_p5.ctor === 'MatchNode') {
+		return _p5._5;
+	} else {
+		return _p5._2;
+	}
+};
+var _user$project$Bets_View$mkButtonChamp = function (mBracket) {
+	var attrs = {ctor: '[]'};
+	var toQualified = function (h) {
+		var _p6 = h;
+		switch (_p6.ctor) {
+			case 'In':
+				return _user$project$Types$Did;
+			case 'Out':
+				return _user$project$Types$DidNot;
+			default:
+				return _user$project$Types$NotYet;
+		}
+	};
+	var qualified = A2(
+		_elm_lang$core$Maybe$withDefault,
+		_user$project$Types$NotYet,
+		A2(
+			_elm_lang$core$Maybe$map,
+			toQualified,
+			A2(_elm_lang$core$Maybe$map, _user$project$Bets_View$didQualify, mBracket)));
+	var mTeam = A2(_elm_lang$core$Maybe$andThen, _user$project$Bets_Types_Bracket$winner, mBracket);
+	return A2(_user$project$UI_Button$maybeTeamBadge, qualified, mTeam);
+};
 var _user$project$Bets_View$viewMatchWinner = F3(
 	function (bet, answer, mBracket) {
-		var _p5 = mBracket;
-		if ((_p5.ctor === 'Just') && (_p5._0.ctor === 'MatchNode')) {
-			var _p7 = _p5._0._0;
-			var _p6 = _p5._0._5;
+		var _p7 = mBracket;
+		if ((_p7.ctor === 'Just') && (_p7._0.ctor === 'MatchNode')) {
+			var _p10 = _p7._0._0;
+			var _p9 = _p7._0._2;
+			var _p8 = _p7._0._3;
 			var dash = _elm_lang$html$Html$text(' - ');
-			var awayButton = A5(_user$project$Bets_View$mkButton, answer, _user$project$Bets_Types$AwayTeam, _p7, _p6, _p5._0._3);
-			var homeButton = A5(_user$project$Bets_View$mkButton, answer, _user$project$Bets_Types$HomeTeam, _p7, _p6, _p5._0._2);
+			var awayHasQ = _user$project$Bets_View$didQualify(_p8);
+			var awayButton = A5(_user$project$Bets_View$mkButton, answer, _user$project$Bets_Types$AwayTeam, _p10, awayHasQ, _p8);
+			var homeHasQ = _user$project$Bets_View$didQualify(_p9);
+			var homeButton = A5(_user$project$Bets_View$mkButton, answer, _user$project$Bets_Types$HomeTeam, _p10, homeHasQ, _p9);
 			return A3(
 				_mdgriffith$style_elements$Element$row,
 				_user$project$UI_Style$None,
@@ -34621,8 +34802,8 @@ var _user$project$Bets_View$displayBracket = function (bet) {
 			_1: {ctor: '[]'}
 		});
 	var mAnswer = A2(_user$project$Bets_Bet$getAnswer, bet, 'br');
-	var _p8 = mAnswer;
-	if (((_p8.ctor === 'Just') && (_p8._0.ctor === '_Tuple2')) && (_p8._0._1.ctor === 'AnswerBracket')) {
+	var _p11 = mAnswer;
+	if (((_p11.ctor === 'Just') && (_p11._0.ctor === '_Tuple2')) && (_p11._0._1.ctor === 'AnswerBracket')) {
 		return A3(
 			_mdgriffith$style_elements$Element$column,
 			_user$project$UI_Style$None,
@@ -34636,7 +34817,7 @@ var _user$project$Bets_View$displayBracket = function (bet) {
 				_0: introduction,
 				_1: {
 					ctor: '::',
-					_0: A3(_user$project$Bets_View$viewBracket, bet, _p8._0, _p8._0._1._0),
+					_0: A3(_user$project$Bets_View$viewBracket, bet, _p11._0, _p11._0._1._0),
 					_1: {ctor: '[]'}
 				}
 			});
@@ -34646,9 +34827,9 @@ var _user$project$Bets_View$displayBracket = function (bet) {
 };
 var _user$project$Bets_View$displayScore = function (mScore) {
 	var txt = function () {
-		var _p9 = mScore;
-		if (_p9.ctor === 'Just') {
-			return _user$project$Bets_Types_Score$asString(_p9._0);
+		var _p12 = mScore;
+		if (_p12.ctor === 'Just') {
+			return _user$project$Bets_Types_Score$asString(_p12._0);
 		} else {
 			return ' _-_ ';
 		}
@@ -34694,14 +34875,14 @@ var _user$project$Bets_View$scoreString = F2(
 				}
 			});
 	});
-var _user$project$Bets_View$displayMatch = function (_p10) {
-	var _p11 = _p10;
+var _user$project$Bets_View$displayMatch = function (_p13) {
+	var _p14 = _p13;
 	var disp = F3(
 		function (match, mScore, pts) {
 			var sc = _user$project$Bets_View$displayScore(mScore);
-			var away = _user$project$UI_Team$viewTeamEl(
+			var away = _user$project$UI_Team$viewMaybeTeamEl(
 				_user$project$Bets_Types_Match$awayTeam(match));
-			var home = _user$project$UI_Team$viewTeamEl(
+			var home = _user$project$UI_Team$viewMaybeTeamEl(
 				_user$project$Bets_Types_Match$homeTeam(match));
 			return A3(
 				_mdgriffith$style_elements$Element$row,
@@ -34747,10 +34928,10 @@ var _user$project$Bets_View$displayMatch = function (_p10) {
 					}
 				});
 		});
-	var _p12 = _p11._1;
-	if (_p12.ctor === 'AnswerGroupMatch') {
+	var _p15 = _p14._1;
+	if (_p15.ctor === 'AnswerGroupMatch') {
 		return _elm_lang$core$Maybe$Just(
-			A3(disp, _p12._1, _p12._2, _p12._3));
+			A3(disp, _p15._1, _p15._2, _p15._3));
 	} else {
 		return _elm_lang$core$Maybe$Nothing;
 	}
@@ -34830,28 +35011,28 @@ var _user$project$Bets_View$viewBet = F2(
 				_0: _user$project$Bets_View$displayParticipant(bet),
 				_1: {
 					ctor: '::',
-					_0: _user$project$UI_Text$header2('De wedstrijden'),
+					_0: _user$project$UI_Text$header2('Het Schema'),
 					_1: {
 						ctor: '::',
-						_0: _user$project$Bets_View$matchesIntro,
+						_0: _user$project$Bets_View$displayBracket(bet),
 						_1: {
 							ctor: '::',
-							_0: _user$project$Bets_View$displayMatches(bet.answers),
+							_0: _user$project$UI_Text$header2('De Topscorer'),
 							_1: {
 								ctor: '::',
-								_0: _user$project$UI_Text$header2('Het Schema'),
+								_0: _user$project$Bets_View$topscorerIntro,
 								_1: {
 									ctor: '::',
-									_0: _user$project$Bets_View$displayBracket(bet),
+									_0: _user$project$Bets_View$displayTopscorer(bet),
 									_1: {
 										ctor: '::',
-										_0: _user$project$UI_Text$header2('De Topscorer'),
+										_0: _user$project$UI_Text$header2('De wedstrijden'),
 										_1: {
 											ctor: '::',
-											_0: _user$project$Bets_View$topscorerIntro,
+											_0: _user$project$Bets_View$matchesIntro,
 											_1: {
 												ctor: '::',
-												_0: _user$project$Bets_View$displayTopscorer(bet),
+												_0: _user$project$Bets_View$displayMatches(bet.answers),
 												_1: {ctor: '[]'}
 											}
 										}
@@ -34868,8 +35049,8 @@ var _user$project$Bets_View$No = {ctor: 'No'};
 var _user$project$Bets_View$Yes = {ctor: 'Yes'};
 var _user$project$Bets_View$isWinner = F2(
 	function (bracketWinner, homeOrAway) {
-		var _p13 = bracketWinner;
-		if (_p13.ctor === 'None') {
+		var _p16 = bracketWinner;
+		if (_p16.ctor === 'None') {
 			return _user$project$Bets_View$Undecided;
 		} else {
 			return _elm_lang$core$Native_Utils.eq(homeOrAway, bracketWinner) ? _user$project$Bets_View$Yes : _user$project$Bets_View$No;
@@ -34896,44 +35077,94 @@ var _user$project$DataStatus$map = F2(
 		}
 	});
 
-var _user$project$Knockouts$decodeTeamsList = _elm_lang$core$Json_Decode$list(_user$project$Bets_Types_Team$decode);
-var _user$project$Knockouts$decodeKnockouts = A3(
-	_elm_lang$core$Json_Decode$map2,
-	_user$project$Types$Knockouts,
-	A2(_elm_lang$core$Json_Decode$field, 'teamsIn', _user$project$Knockouts$decodeTeamsList),
-	A2(_elm_lang$core$Json_Decode$field, 'teamsOut', _user$project$Knockouts$decodeTeamsList));
-var _user$project$Knockouts$decode = A7(
-	_elm_lang$core$Json_Decode$map6,
-	_user$project$Types$KnockoutsResults,
-	A2(_elm_lang$core$Json_Decode$field, 'i', _user$project$Knockouts$decodeKnockouts),
-	A2(_elm_lang$core$Json_Decode$field, 'ii', _user$project$Knockouts$decodeKnockouts),
-	A2(_elm_lang$core$Json_Decode$field, 'iii', _user$project$Knockouts$decodeKnockouts),
-	A2(_elm_lang$core$Json_Decode$field, 'iv', _user$project$Knockouts$decodeKnockouts),
-	A2(_elm_lang$core$Json_Decode$field, 'v', _user$project$Knockouts$decodeKnockouts),
-	A2(_elm_lang$core$Json_Decode$field, 'vi', _user$project$Knockouts$decodeKnockouts));
-var _user$project$Knockouts$teamsEncode = function (teams) {
-	return _elm_lang$core$Json_Encode$list(
-		A2(_elm_lang$core$List$map, _user$project$Bets_Types_Team$encode, teams));
+var _user$project$Knockouts$decodeRound = function (str) {
+	var _p0 = str;
+	switch (_p0) {
+		case 'I':
+			return _elm_lang$core$Json_Decode$succeed(_user$project$Bets_Types$I);
+		case 'II':
+			return _elm_lang$core$Json_Decode$succeed(_user$project$Bets_Types$II);
+		case 'III':
+			return _elm_lang$core$Json_Decode$succeed(_user$project$Bets_Types$III);
+		case 'IV':
+			return _elm_lang$core$Json_Decode$succeed(_user$project$Bets_Types$IV);
+		case 'V':
+			return _elm_lang$core$Json_Decode$succeed(_user$project$Bets_Types$V);
+		case 'VI':
+			return _elm_lang$core$Json_Decode$succeed(_user$project$Bets_Types$VI);
+		default:
+			return _elm_lang$core$Json_Decode$fail(
+				A2(_elm_lang$core$Basics_ops['++'], 'Expected a Round, got : ', _p0));
+	}
 };
-var _user$project$Knockouts$encodeKnockouts = function (kos) {
+var _user$project$Knockouts$parseRoundQualifiedPair = function (_p1) {
+	var _p2 = _p1;
+	return A2(
+		_elm_lang$core$Maybe$map,
+		function (r) {
+			return {ctor: '_Tuple2', _0: r, _1: _p2._1};
+		},
+		_user$project$Bets_Types_Round$stringToRound(_p2._0));
+};
+var _user$project$Knockouts$mkRoundsQualified = function (list) {
+	return A2(_elm_lang$core$List$filterMap, _user$project$Knockouts$parseRoundQualifiedPair, list);
+};
+var _user$project$Knockouts$decodeRoundsQualified = A2(
+	_elm_lang$core$Json_Decode$map,
+	_user$project$Knockouts$mkRoundsQualified,
+	_elm_lang$core$Json_Decode$keyValuePairs(_user$project$Bets_Types_Bracket$decodeHasQualified));
+var _user$project$Knockouts$decodeTeamRounds = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_user$project$Types$TeamRounds,
+	A2(_elm_lang$core$Json_Decode$field, 'team', _user$project$Bets_Types_Team$decode),
+	A2(_elm_lang$core$Json_Decode$field, 'roundsQualified', _user$project$Knockouts$decodeRoundsQualified));
+var _user$project$Knockouts$decode = A2(
+	_elm_lang$core$Json_Decode$map,
+	_user$project$Types$KnockoutsResults,
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'teams',
+		_elm_lang$core$Json_Decode$keyValuePairs(_user$project$Knockouts$decodeTeamRounds)));
+var _user$project$Knockouts$roundQualifiedToString = function (_p3) {
+	var _p4 = _p3;
+	return {
+		ctor: '_Tuple2',
+		_0: _elm_lang$core$Basics$toString(_p4._0),
+		_1: _elm_lang$core$Json_Encode$string(
+			_elm_lang$core$Basics$toString(_p4._1))
+	};
+};
+var _user$project$Knockouts$encodeRoundSQualified = function (teamrounds) {
+	return _elm_lang$core$Json_Encode$object(
+		A2(_elm_lang$core$List$map, _user$project$Knockouts$roundQualifiedToString, teamrounds));
+};
+var _user$project$Knockouts$encodeTeamRounds = function (teamrounds) {
 	return _elm_lang$core$Json_Encode$object(
 		{
 			ctor: '::',
 			_0: {
 				ctor: '_Tuple2',
-				_0: 'teamsIn',
-				_1: _user$project$Knockouts$teamsEncode(kos.teamsIn)
+				_0: 'team',
+				_1: _user$project$Bets_Types_Team$encode(teamrounds.team)
 			},
 			_1: {
 				ctor: '::',
 				_0: {
 					ctor: '_Tuple2',
-					_0: 'teamsOut',
-					_1: _user$project$Knockouts$teamsEncode(kos.teamsOut)
+					_0: 'roundsQualified',
+					_1: _user$project$Knockouts$encodeRoundSQualified(teamrounds.roundsQualified)
 				},
 				_1: {ctor: '[]'}
 			}
 		});
+};
+var _user$project$Knockouts$encodeTeamQ = function (_p5) {
+	var _p6 = _p5;
+	return {
+		ctor: '_Tuple2',
+		_0: _p6._0,
+		_1: _user$project$Knockouts$encodeTeamRounds(_p6._1)
+	};
 };
 var _user$project$Knockouts$encode = function (results) {
 	return _elm_lang$core$Json_Encode$object(
@@ -34941,50 +35172,11 @@ var _user$project$Knockouts$encode = function (results) {
 			ctor: '::',
 			_0: {
 				ctor: '_Tuple2',
-				_0: 'i',
-				_1: _user$project$Knockouts$encodeKnockouts(results.i)
+				_0: 'teams',
+				_1: _elm_lang$core$Json_Encode$object(
+					A2(_elm_lang$core$List$map, _user$project$Knockouts$encodeTeamQ, results.teams))
 			},
-			_1: {
-				ctor: '::',
-				_0: {
-					ctor: '_Tuple2',
-					_0: 'ii',
-					_1: _user$project$Knockouts$encodeKnockouts(results.ii)
-				},
-				_1: {
-					ctor: '::',
-					_0: {
-						ctor: '_Tuple2',
-						_0: 'iii',
-						_1: _user$project$Knockouts$encodeKnockouts(results.iii)
-					},
-					_1: {
-						ctor: '::',
-						_0: {
-							ctor: '_Tuple2',
-							_0: 'iv',
-							_1: _user$project$Knockouts$encodeKnockouts(results.iv)
-						},
-						_1: {
-							ctor: '::',
-							_0: {
-								ctor: '_Tuple2',
-								_0: 'v',
-								_1: _user$project$Knockouts$encodeKnockouts(results.v)
-							},
-							_1: {
-								ctor: '::',
-								_0: {
-									ctor: '_Tuple2',
-									_0: 'vi',
-									_1: _user$project$Knockouts$encodeKnockouts(results.vi)
-								},
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				}
-			}
+			_1: {ctor: '[]'}
 		});
 };
 var _user$project$Knockouts$mkTeamButton = F3(
@@ -34995,235 +35187,140 @@ var _user$project$Knockouts$mkTeamButton = F3(
 			team,
 			msg(team));
 	});
-var _user$project$Knockouts$viewKnockouts = F3(
-	function (auth, results, rnd) {
-		var roundHeader = _user$project$UI_Text$header2(
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				'Ronde ',
-				_elm_lang$core$Basics$toString(rnd)));
-		var action = function (q) {
-			var _p0 = auth;
-			if (_p0.ctor === 'Unauthorised') {
-				return function (_p1) {
-					return _user$project$Types$None;
-				};
-			} else {
-				return A2(_user$project$Types$Qualify, rnd, q);
-			}
-		};
-		var _p2 = function () {
-			var _p3 = rnd;
-			switch (_p3.ctor) {
-				case 'II':
-					return {ctor: '_Tuple3', _0: results.i.teamsIn, _1: results.ii.teamsIn, _2: results.ii.teamsOut};
-				case 'III':
-					return {ctor: '_Tuple3', _0: results.ii.teamsIn, _1: results.iii.teamsIn, _2: results.iii.teamsOut};
-				case 'IV':
-					return {ctor: '_Tuple3', _0: results.iii.teamsIn, _1: results.iv.teamsIn, _2: results.iv.teamsOut};
-				case 'V':
-					return {ctor: '_Tuple3', _0: results.iv.teamsIn, _1: results.v.teamsIn, _2: results.v.teamsOut};
-				case 'VI':
-					return {ctor: '_Tuple3', _0: results.v.teamsIn, _1: results.vi.teamsIn, _2: results.vi.teamsOut};
+var _user$project$Knockouts$viewRoundButtons = F2(
+	function (team, _p7) {
+		var _p8 = _p7;
+		var _p10 = _p8._0;
+		var toHasQualified = function (q) {
+			var _p9 = q;
+			switch (_p9.ctor) {
+				case 'In':
+					return _user$project$Types$Did;
+				case 'Out':
+					return _user$project$Types$DidNot;
 				default:
-					return {
-						ctor: '_Tuple3',
-						_0: {ctor: '[]'},
-						_1: results.i.teamsIn,
-						_2: results.i.teamsOut
-					};
-			}
-		}();
-		var candidatesFull = _p2._0;
-		var teamsIn = _p2._1;
-		var teamsOut = _p2._2;
-		var candidates = function () {
-			var checked = A2(
-				_elm_lang$core$Basics_ops['++'],
-				A2(
-					_elm_lang$core$List$map,
-					function (_) {
-						return _.teamID;
-					},
-					teamsIn),
-				A2(
-					_elm_lang$core$List$map,
-					function (_) {
-						return _.teamID;
-					},
-					teamsOut));
-			return A2(
-				_elm_lang$core$List$filter,
-				function (t) {
-					return !A2(_elm_lang$core$List$member, t.teamID, checked);
-				},
-				candidatesFull);
-		}();
-		var cands = A3(
-			_mdgriffith$style_elements$Element$wrappedRow,
-			_user$project$UI_Style$None,
-			{
-				ctor: '::',
-				_0: _mdgriffith$style_elements$Element_Attributes$spacing(10),
-				_1: {ctor: '[]'}
-			},
-			A2(
-				_elm_lang$core$List$map,
-				A2(
-					_user$project$Knockouts$mkTeamButton,
-					_user$project$UI_Style$NotYet,
-					action(_user$project$Bets_Types$In)),
-				candidates));
-		var ins = A3(
-			_mdgriffith$style_elements$Element$wrappedRow,
-			_user$project$UI_Style$None,
-			{
-				ctor: '::',
-				_0: _mdgriffith$style_elements$Element_Attributes$spacing(10),
-				_1: {ctor: '[]'}
-			},
-			A2(
-				_elm_lang$core$List$map,
-				A2(
-					_user$project$Knockouts$mkTeamButton,
-					_user$project$UI_Style$Did,
-					action(_user$project$Bets_Types$Out)),
-				teamsIn));
-		var outs = A3(
-			_mdgriffith$style_elements$Element$wrappedRow,
-			_user$project$UI_Style$None,
-			{
-				ctor: '::',
-				_0: _mdgriffith$style_elements$Element_Attributes$spacing(10),
-				_1: {ctor: '[]'}
-			},
-			A2(
-				_elm_lang$core$List$map,
-				A2(
-					_user$project$Knockouts$mkTeamButton,
-					_user$project$UI_Style$DidNot,
-					action(_user$project$Bets_Types$TBD)),
-				teamsOut));
-		var _p4 = auth;
-		if (_p4.ctor === 'Authorised') {
-			return A3(
-				_mdgriffith$style_elements$Element$column,
-				_user$project$UI_Style$None,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: roundHeader,
-					_1: {
-						ctor: '::',
-						_0: _user$project$UI_Text$header3('Kandidaten'),
-						_1: {
-							ctor: '::',
-							_0: cands,
-							_1: {
-								ctor: '::',
-								_0: _user$project$UI_Text$header3('Gekwalificeerd'),
-								_1: {
-									ctor: '::',
-									_0: ins,
-									_1: {
-										ctor: '::',
-										_0: _user$project$UI_Text$header3('Uitgeschakeld'),
-										_1: {
-											ctor: '::',
-											_0: outs,
-											_1: {ctor: '[]'}
-										}
-									}
-								}
-							}
-						}
-					}
-				});
-		} else {
-			return A3(
-				_mdgriffith$style_elements$Element$column,
-				_user$project$UI_Style$None,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: roundHeader,
-					_1: {
-						ctor: '::',
-						_0: _user$project$UI_Text$header3('Gekwalificeerd'),
-						_1: {
-							ctor: '::',
-							_0: ins,
-							_1: {
-								ctor: '::',
-								_0: _user$project$UI_Text$header3('Uitgeschakeld'),
-								_1: {
-									ctor: '::',
-									_0: outs,
-									_1: {ctor: '[]'}
-								}
-							}
-						}
-					}
-				});
-		}
-	});
-var _user$project$Knockouts$viewKnockoutsResults = F2(
-	function (auth, results) {
-		var rounds = {
-			ctor: '::',
-			_0: _user$project$Bets_Types$II,
-			_1: {
-				ctor: '::',
-				_0: _user$project$Bets_Types$III,
-				_1: {
-					ctor: '::',
-					_0: _user$project$Bets_Types$IV,
-					_1: {
-						ctor: '::',
-						_0: _user$project$Bets_Types$V,
-						_1: {
-							ctor: '::',
-							_0: _user$project$Bets_Types$VI,
-							_1: {ctor: '[]'}
-						}
-					}
-				}
+					return _user$project$Types$NotYet;
 			}
 		};
-		var roundViews = A2(
-			_elm_lang$core$List$map,
-			A2(_user$project$Knockouts$viewKnockouts, auth, results),
-			rounds);
+		var btnSemantic = function (q) {
+			var h = toHasQualified(_p8._1);
+			return _elm_lang$core$Native_Utils.eq(q, h) ? _user$project$UI_Style$Selected : _user$project$UI_Style$Potential;
+		};
+		var unknown = A3(_user$project$Types$ChangeQualify, _p10, _user$project$Bets_Types$TBD, team);
+		var failed = A3(_user$project$Types$ChangeQualify, _p10, _user$project$Bets_Types$Out, team);
+		var succeeded = A3(_user$project$Types$ChangeQualify, _p10, _user$project$Bets_Types$In, team);
 		return A3(
 			_mdgriffith$style_elements$Element$column,
 			_user$project$UI_Style$None,
 			{
 				ctor: '::',
-				_0: _mdgriffith$style_elements$Element_Attributes$spacing(10),
+				_0: _mdgriffith$style_elements$Element_Attributes$spacing(20),
 				_1: {ctor: '[]'}
 			},
-			roundViews);
+			{
+				ctor: '::',
+				_0: A3(
+					_mdgriffith$style_elements$Element$el,
+					_user$project$UI_Style$RankingHeader,
+					{
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$width(
+							_mdgriffith$style_elements$Element_Attributes$px(40)),
+						_1: {ctor: '[]'}
+					},
+					_mdgriffith$style_elements$Element$text(
+						_elm_lang$core$Basics$toString(_p10))),
+				_1: {
+					ctor: '::',
+					_0: A3(
+						_user$project$UI_Button$pill,
+						btnSemantic(_user$project$Types$Did),
+						succeeded,
+						'In'),
+					_1: {
+						ctor: '::',
+						_0: A3(
+							_user$project$UI_Button$pill,
+							btnSemantic(_user$project$Types$NotYet),
+							unknown,
+							'TBD'),
+						_1: {
+							ctor: '::',
+							_0: A3(
+								_user$project$UI_Button$pill,
+								btnSemantic(_user$project$Types$DidNot),
+								failed,
+								'Out'),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			});
+	});
+var _user$project$Knockouts$viewKnockoutsPerTeam = function (_p11) {
+	var _p12 = _p11;
+	var _p13 = _p12.team;
+	var roundButtons = A2(
+		_elm_lang$core$List$map,
+		_user$project$Knockouts$viewRoundButtons(_p13),
+		_elm_lang$core$List$reverse(_p12.roundsQualified));
+	var teamBtn = A2(_user$project$UI_Team$badge, _user$project$Types$NotYet, _p13);
+	return A3(
+		_mdgriffith$style_elements$Element$row,
+		_user$project$UI_Style$None,
+		{
+			ctor: '::',
+			_0: _mdgriffith$style_elements$Element_Attributes$padding(20),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$spacing(20),
+				_1: {ctor: '[]'}
+			}
+		},
+		{ctor: '::', _0: teamBtn, _1: roundButtons});
+};
+var _user$project$Knockouts$viewKnockoutsResults = F2(
+	function (auth, results) {
+		var viewTeamRounds = function (_p14) {
+			var _p15 = _p14;
+			return _user$project$Knockouts$viewKnockoutsPerTeam(_p15._1);
+		};
+		return A3(
+			_mdgriffith$style_elements$Element$column,
+			_user$project$UI_Style$None,
+			{
+				ctor: '::',
+				_0: A2(_mdgriffith$style_elements$Element_Attributes$spacingXY, 0, 20),
+				_1: {ctor: '[]'}
+			},
+			A2(
+				_elm_lang$core$List$map,
+				function (_p16) {
+					return _user$project$Knockouts$viewKnockoutsPerTeam(
+						_elm_lang$core$Tuple$second(_p16));
+				},
+				results.teams));
 	});
 var _user$project$Knockouts$view = function (model) {
 	var auth = function () {
-		var _p5 = model.token;
-		if (_p5.ctor === 'Success') {
+		var _p17 = model.token;
+		if (_p17.ctor === 'Success') {
 			return _user$project$Types$Authorised;
 		} else {
 			return _user$project$Types$Unauthorised;
 		}
 	}();
 	var items = function () {
-		var _p6 = {ctor: '_Tuple2', _0: auth, _1: model.knockoutsResults};
-		_v4_2:
+		var _p18 = {ctor: '_Tuple2', _0: auth, _1: model.knockoutsResults};
+		_v9_2:
 		do {
-			if (_p6._0.ctor === 'Authorised') {
-				switch (_p6._1.ctor) {
+			if (_p18._0.ctor === 'Authorised') {
+				switch (_p18._1.ctor) {
 					case 'Fresh':
-						if (_p6._1._0.ctor === 'Success') {
+						if (_p18._1._0.ctor === 'Success') {
 							return {
 								ctor: '::',
-								_0: A2(_user$project$Knockouts$viewKnockoutsResults, auth, _p6._1._0._0),
+								_0: A2(_user$project$Knockouts$viewKnockoutsResults, auth, _p18._1._0._0),
 								_1: {
 									ctor: '::',
 									_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Inactive, _user$project$Types$UpdateKnockoutsResults, 'Update'),
@@ -35235,13 +35332,13 @@ var _user$project$Knockouts$view = function (model) {
 								}
 							};
 						} else {
-							break _v4_2;
+							break _v9_2;
 						}
 					case 'Dirty':
-						if (_p6._1._0.ctor === 'Success') {
+						if (_p18._1._0.ctor === 'Success') {
 							return {
 								ctor: '::',
-								_0: A2(_user$project$Knockouts$viewKnockoutsResults, auth, _p6._1._0._0),
+								_0: A2(_user$project$Knockouts$viewKnockoutsResults, auth, _p18._1._0._0),
 								_1: {
 									ctor: '::',
 									_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Active, _user$project$Types$UpdateKnockoutsResults, 'Update'),
@@ -35253,16 +35350,16 @@ var _user$project$Knockouts$view = function (model) {
 								}
 							};
 						} else {
-							break _v4_2;
+							break _v9_2;
 						}
 					default:
-						break _v4_2;
+						break _v9_2;
 				}
 			} else {
-				if ((_p6._1.ctor === 'Fresh') && (_p6._1._0.ctor === 'Success')) {
+				if ((_p18._1.ctor === 'Fresh') && (_p18._1._0.ctor === 'Success')) {
 					return {
 						ctor: '::',
-						_0: A2(_user$project$Knockouts$viewKnockoutsResults, auth, _p6._1._0._0),
+						_0: A2(_user$project$Knockouts$viewKnockoutsResults, auth, _p18._1._0._0),
 						_1: {ctor: '[]'}
 					};
 				} else {
@@ -35298,109 +35395,87 @@ var _user$project$Knockouts$view = function (model) {
 		},
 		items);
 };
-var _user$project$Knockouts$addTeam = F2(
-	function (teams, team) {
-		return {
-			ctor: '::',
-			_0: A2(_elm_lang$core$Debug$log, 'team', team),
-			_1: A2(_elm_lang$core$Debug$log, 'teams', teams)
-		};
+var _user$project$Knockouts$updateRoundQualified = F3(
+	function (round, qualified, _p19) {
+		var _p20 = _p19;
+		var _p23 = _p20._0;
+		var _p22 = _p20._1;
+		var cmp = A2(_user$project$Bets_Types_Round$compareRounds, round, _p23);
+		var _p21 = {ctor: '_Tuple2', _0: qualified, _1: cmp};
+		switch (_p21._1.ctor) {
+			case 'LT':
+				switch (_p21._0.ctor) {
+					case 'In':
+						return {ctor: '_Tuple2', _0: _p23, _1: _user$project$Bets_Types$TBD};
+					case 'TBD':
+						return {ctor: '_Tuple2', _0: _p23, _1: _user$project$Bets_Types$TBD};
+					default:
+						return {ctor: '_Tuple2', _0: _p23, _1: _user$project$Bets_Types$Out};
+				}
+			case 'GT':
+				switch (_p21._0.ctor) {
+					case 'In':
+						return {ctor: '_Tuple2', _0: _p23, _1: _user$project$Bets_Types$In};
+					case 'TBD':
+						return {ctor: '_Tuple2', _0: _p23, _1: _p22};
+					default:
+						return {ctor: '_Tuple2', _0: _p23, _1: _p22};
+				}
+			default:
+				return {ctor: '_Tuple2', _0: _p23, _1: qualified};
+		}
 	});
-var _user$project$Knockouts$removeTeam = F2(
-	function (teams, team) {
+var _user$project$Knockouts$updateRoundsQualified = F3(
+	function (round, qualified, teamRounds) {
 		return A2(
-			_elm_lang$core$List$filter,
-			function (t) {
-				return !_elm_lang$core$Native_Utils.eq(t.teamID, team.teamID);
-			},
-			teams);
+			_elm_lang$core$List$map,
+			A2(_user$project$Knockouts$updateRoundQualified, round, qualified),
+			teamRounds);
 	});
-var _user$project$Knockouts$updateRound = F3(
-	function (kos, q, team) {
-		var _p7 = q;
-		switch (_p7.ctor) {
-			case 'In':
-				var teamsOut = A2(_user$project$Knockouts$removeTeam, kos.teamsOut, team);
-				var teamsIn = A2(_user$project$Knockouts$addTeam, kos.teamsIn, team);
-				return _elm_lang$core$Native_Utils.update(
-					kos,
-					{teamsIn: teamsIn, teamsOut: teamsOut});
-			case 'Out':
-				var teamsOut = A2(_user$project$Knockouts$addTeam, kos.teamsOut, team);
-				var teamsIn = A2(_user$project$Knockouts$removeTeam, kos.teamsIn, team);
-				return _elm_lang$core$Native_Utils.update(
-					kos,
-					{
-						teamsIn: A2(_elm_lang$core$Debug$log, 'teamsIn', teamsIn),
-						teamsOut: A2(_elm_lang$core$Debug$log, 'teamsOut', teamsOut)
-					});
-			default:
-				var teamsOut = A2(_user$project$Knockouts$removeTeam, kos.teamsOut, team);
-				var teamsIn = A2(_user$project$Knockouts$removeTeam, kos.teamsIn, team);
-				return _elm_lang$core$Native_Utils.update(
-					kos,
-					{teamsIn: teamsIn, teamsOut: teamsOut});
+var _user$project$Knockouts$updateTeamRounds = F4(
+	function (round, qualified, team, _p24) {
+		var _p25 = _p24;
+		var _p27 = _p25._1;
+		var _p26 = _p25._0;
+		if (_elm_lang$core$Native_Utils.eq(team.teamID, _p26)) {
+			var roundsQualified = A3(_user$project$Knockouts$updateRoundsQualified, round, qualified, _p27.roundsQualified);
+			return {
+				ctor: '_Tuple2',
+				_0: _p26,
+				_1: _elm_lang$core$Native_Utils.update(
+					_p27,
+					{roundsQualified: roundsQualified})
+			};
+		} else {
+			return {ctor: '_Tuple2', _0: _p26, _1: _p27};
 		}
 	});
-var _user$project$Knockouts$updateRes = F4(
-	function (rnd, q, team, res) {
-		var _p8 = rnd;
-		switch (_p8.ctor) {
-			case 'I':
-				return res;
-			case 'II':
-				return _elm_lang$core$Native_Utils.update(
-					res,
-					{
-						ii: A3(_user$project$Knockouts$updateRound, res.ii, q, team)
-					});
-			case 'III':
-				return _elm_lang$core$Native_Utils.update(
-					res,
-					{
-						iii: A3(_user$project$Knockouts$updateRound, res.iii, q, team)
-					});
-			case 'IV':
-				return _elm_lang$core$Native_Utils.update(
-					res,
-					{
-						iv: A3(_user$project$Knockouts$updateRound, res.iv, q, team)
-					});
-			case 'V':
-				return _elm_lang$core$Native_Utils.update(
-					res,
-					{
-						v: A3(_user$project$Knockouts$updateRound, res.v, q, team)
-					});
-			default:
-				return _elm_lang$core$Native_Utils.update(
-					res,
-					{
-						vi: A3(_user$project$Knockouts$updateRound, res.vi, q, team)
-					});
-		}
+var _user$project$Knockouts$updateKnockoutsResults = F4(
+	function (round, qualified, team, results) {
+		var teamResults = A2(
+			_elm_lang$core$List$map,
+			A3(_user$project$Knockouts$updateTeamRounds, round, qualified, team),
+			results.teams);
+		return _elm_lang$core$Native_Utils.update(
+			results,
+			{teams: teamResults});
 	});
 var _user$project$Knockouts$update = F4(
-	function (rnd, q, team, res) {
-		var _p9 = res;
-		if (_p9.ctor === 'Success') {
+	function (round, qualified, team, results) {
+		var _p28 = results;
+		if (_p28.ctor === 'Success') {
 			return _krisajenkins$remotedata$RemoteData$succeed(
-				A4(
-					_user$project$Knockouts$updateRes,
-					rnd,
-					q,
-					team,
-					A2(_elm_lang$core$Debug$log, 'res', _p9._0)));
+				A4(_user$project$Knockouts$updateKnockoutsResults, round, qualified, team, _p28._0));
 		} else {
-			return res;
+			return results;
 		}
 	});
-var _user$project$Knockouts$updateKnockoutsResults = F2(
-	function (_p10, results) {
-		var _p11 = _p10;
+var _user$project$Knockouts$storeKnockoutsResults = F2(
+	function (_p29, results) {
+		var _p30 = _p29;
 		var json = _user$project$Knockouts$encode(results);
 		var url = '/bets/results/knockouts/';
-		var bearer = A2(_elm_lang$core$Basics_ops['++'], 'Bearer ', _p11._0);
+		var bearer = A2(_elm_lang$core$Basics_ops['++'], 'Bearer ', _p30._0);
 		var header = A2(_elm_lang$http$Http$header, 'Authorization', bearer);
 		var config = {
 			headers: {
@@ -35413,12 +35488,12 @@ var _user$project$Knockouts$updateKnockoutsResults = F2(
 		};
 		return A5(_ohanhi$remotedata_http$RemoteData_Http$postWithConfig, config, url, _user$project$Types$StoredKnockoutsResults, _user$project$Knockouts$decode, json);
 	});
-var _user$project$Knockouts$inititaliseKnockoutsResults = function (_p12) {
-	var _p13 = _p12;
+var _user$project$Knockouts$inititaliseKnockoutsResults = function (_p31) {
+	var _p32 = _p31;
 	var json = _elm_lang$core$Json_Encode$object(
 		{ctor: '[]'});
 	var url = '/bets/results/knockouts/initial/';
-	var bearer = A2(_elm_lang$core$Basics_ops['++'], 'Bearer ', _p13._0);
+	var bearer = A2(_elm_lang$core$Basics_ops['++'], 'Bearer ', _p32._0);
 	var header = A2(_elm_lang$http$Http$header, 'Authorization', bearer);
 	var config = {
 		headers: {
@@ -36333,10 +36408,8 @@ var _user$project$Results$displayMatch = F2(
 			}
 		}();
 		var sc = _user$project$Bets_View$displayScore(match.score);
-		var away = _user$project$UI_Team$viewTeamEl(
-			_elm_lang$core$Maybe$Just(match.awayTeam));
-		var home = _user$project$UI_Team$viewTeamEl(
-			_elm_lang$core$Maybe$Just(match.homeTeam));
+		var away = _user$project$UI_Team$viewTeamEl(match.awayTeam);
+		var home = _user$project$UI_Team$viewTeamEl(match.homeTeam);
 		return A3(
 			_mdgriffith$style_elements$Element$row,
 			_user$project$UI_Style$MatchRow(pts),
@@ -37382,7 +37455,7 @@ var _user$project$Main$update = F2(
 					var cmd = function () {
 						var _p28 = {ctor: '_Tuple2', _0: model.knockoutsResults, _1: model.token};
 						if ((((_p28.ctor === '_Tuple2') && (_p28._0.ctor === 'Dirty')) && (_p28._0._0.ctor === 'Success')) && (_p28._1.ctor === 'Success')) {
-							return A2(_user$project$Knockouts$updateKnockoutsResults, _p28._1._0, _p28._0._0._0);
+							return A2(_user$project$Knockouts$storeKnockoutsResults, _p28._1._0, _p28._0._0._0);
 						} else {
 							return _elm_lang$core$Platform_Cmd$none;
 						}
@@ -37398,9 +37471,33 @@ var _user$project$Main$update = F2(
 						}
 					}();
 					return {ctor: '_Tuple2', _0: model, _1: cmd};
-				default:
+				case 'RefreshKnockoutsResults':
 					var cmd = _user$project$Knockouts$fetchKnockoutsResults;
 					return {ctor: '_Tuple2', _0: model, _1: cmd};
+				default:
+					var _p33 = _p8._2;
+					var _p32 = _p8._0;
+					var _p31 = _p8._1;
+					var newKnockoutsResults = function () {
+						var _p30 = model.knockoutsResults;
+						switch (_p30.ctor) {
+							case 'Fresh':
+								return _user$project$Types$Dirty(
+									A4(_user$project$Knockouts$update, _p32, _p31, _p33, _p30._0));
+							case 'Dirty':
+								return _user$project$Types$Dirty(
+									A4(_user$project$Knockouts$update, _p32, _p31, _p33, _p30._0));
+							default:
+								return model.knockoutsResults;
+						}
+					}();
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{knockoutsResults: newKnockoutsResults}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
 			}
 		}
 	});
@@ -37408,9 +37505,9 @@ var _user$project$Main$init = F2(
 	function (flags, loc) {
 		var screenSize = _user$project$UI_Size$classifyDevice(
 			{width: flags.width, height: 0});
-		var _p30 = _user$project$Main$getPage(loc.hash);
-		var page = _p30._0;
-		var msg = _p30._1;
+		var _p34 = _user$project$Main$getPage(loc.hash);
+		var page = _p34._0;
+		var msg = _p34._1;
 		var model = _elm_lang$core$Native_Utils.update(
 			_user$project$Main$newModel,
 			{page: page, screenSize: screenSize});

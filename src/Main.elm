@@ -387,7 +387,7 @@ update action model =
                 cmd =
                     case ( model.knockoutsResults, model.token ) of
                         ( Dirty (Success res), Success token ) ->
-                            Knockouts.updateKnockoutsResults token res
+                            Knockouts.storeKnockoutsResults token res
 
                         _ ->
                             Cmd.none
@@ -412,6 +412,23 @@ update action model =
                     Knockouts.fetchKnockoutsResults
             in
                 ( model, cmd )
+
+        ChangeQualify round qualified team ->
+            let
+                newKnockoutsResults =
+                    case model.knockoutsResults of
+                        Fresh knockouts ->
+                            Knockouts.update round qualified team knockouts
+                                |> Dirty
+
+                        Dirty knockouts ->
+                            Knockouts.update round qualified team knockouts
+                                |> Dirty
+
+                        Stale _ ->
+                            model.knockoutsResults
+            in
+                ( { model | knockoutsResults = newKnockoutsResults }, Cmd.none )
 
 
 getPage : String -> ( Page, Msg )

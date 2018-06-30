@@ -1,6 +1,7 @@
 module Bets.Types.Team
     exposing
         ( team
+        , allTeams
         , display
         , displayFull
         , mdisplay
@@ -170,6 +171,11 @@ encode team =
         [ ( "teamID", Json.Encode.string team.teamID )
         , ( "teamName", Json.Encode.string team.teamName )
         ]
+
+
+allTeams : List Team
+allTeams =
+    List.map .team initTeamData
 
 
 

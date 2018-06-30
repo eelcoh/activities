@@ -13,7 +13,7 @@ import Bets.Types.Match as M
 import Bets.Types.Score as S
 import Bets.Types.Bracket as B
 import Bets.Bet
-import Types exposing (Msg, ScreenSize)
+import Types exposing (Msg, ScreenSize, Qualified(..))
 import UI.Size exposing (bodyWidth)
 
 
@@ -27,14 +27,14 @@ viewBet bet screenSize =
             [ spacing 20, w ]
             [ displayParticipant bet
               --, intro
-            , UI.Text.header2 "De wedstrijden"
-            , matchesIntro
-            , displayMatches bet.answers
             , UI.Text.header2 "Het Schema"
             , displayBracket bet
             , UI.Text.header2 "De Topscorer"
             , topscorerIntro
             , displayTopscorer bet
+            , UI.Text.header2 "De wedstrijden"
+            , matchesIntro
+            , displayMatches bet.answers
             ]
 
 
@@ -98,10 +98,10 @@ displayMatch ( answerId, answer ) =
         disp match mScore pts =
             let
                 home =
-                    UI.Team.viewTeamEl (M.homeTeam match)
+                    UI.Team.viewMaybeTeamEl (M.homeTeam match)
 
                 away =
-                    UI.Team.viewTeamEl (M.awayTeam match)
+                    UI.Team.viewMaybeTeamEl (M.awayTeam match)
 
                 sc =
                     displayScore mScore
@@ -298,11 +298,17 @@ viewMatchWinner bet answer mBracket =
     case mBracket of
         Just (MatchNode slot winner home away rd hasQ) ->
             let
+                homeHasQ =
+                    didQualify home
+
+                awayHasQ =
+                    didQualify away
+
                 homeButton =
-                    mkButton answer HomeTeam slot hasQ home
+                    mkButton answer HomeTeam slot homeHasQ home
 
                 awayButton =
-                    mkButton answer AwayTeam slot hasQ away
+                    mkButton answer AwayTeam slot awayHasQ away
 
                 dash =
                     text " - "
@@ -311,6 +317,16 @@ viewMatchWinner bet answer mBracket =
 
         _ ->
             Element.empty
+
+
+didQualify : Bracket -> HasQualified
+didQualify b =
+    case b of
+        MatchNode _ _ _ _ _ hasQ ->
+            hasQ
+
+        TeamNode _ _ hasQ ->
+            hasQ
 
 
 mkButton :
@@ -325,13 +341,13 @@ mkButton answer wnnr slot hasQualified bracket =
         s =
             case hasQualified of
                 In ->
-                    UI.Style.Did
+                    Did
 
                 Out ->
-                    UI.Style.DidNot
+                    DidNot
 
                 TBD ->
-                    UI.Style.NotYet
+                    NotYet
 
         answerId =
             Tuple.first answer
@@ -352,10 +368,27 @@ mkButtonChamp mBracket =
             mBracket
                 |> Maybe.andThen B.winner
 
+        qualified =
+            mBracket
+                |> Maybe.map didQualify
+                |> Maybe.map toQualified
+                |> Maybe.withDefault NotYet
+
+        toQualified h =
+            case h of
+                In ->
+                    Did
+
+                Out ->
+                    DidNot
+
+                TBD ->
+                    NotYet
+
         attrs =
             []
     in
-        UI.Button.maybeTeamBadge UI.Style.NotYet mTeam
+        UI.Button.maybeTeamBadge qualified mTeam
 
 
 displayTopscorer : Bet -> Element.Element UI.Style.Style variation Msg
@@ -372,7 +405,7 @@ displayTopscorer bet =
             Just (( answerId, AnswerTopscorer ts pts ) as answer) ->
                 Element.row UI.Style.None
                     [ spacing 20, verticalCenter ]
-                    [ UI.Button.maybeTeamBadge UI.Style.NotYet (Tuple.second ts)
+                    [ UI.Button.maybeTeamBadge NotYet (Tuple.second ts)
                     , tsName (Tuple.first ts)
                     ]
 

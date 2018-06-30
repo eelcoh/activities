@@ -23,6 +23,18 @@ pill semantics msg buttonText =
         Element.column (UI.Style.Button semantics) buttonLayout [ textElement ]
 
 
+fixedWidthPill : Float -> ButtonSemantics -> msg -> String -> Element Style variation msg
+fixedWidthPill w semantics msg buttonText =
+    let
+        buttonLayout =
+            [ width (px w), height (px 36), onClick msg, center, verticalCenter ]
+
+        textElement =
+            Element.el UI.Style.Centered [ padding 10 ] (text buttonText)
+    in
+        Element.column (UI.Style.Button semantics) buttonLayout [ textElement ]
+
+
 navLink : ButtonSemantics -> msg -> String -> Element Style variation msg
 navLink semantics msg buttonText =
     let
@@ -83,7 +95,7 @@ button sz semantics msg buttonText =
 
 
 maybeTeamBadge :
-    UI.Style.Qualified
+    Types.Qualified
     -> Maybe Bets.Types.Team
     -> Element Style variation msg
 maybeTeamBadge semantics team =
@@ -98,7 +110,7 @@ maybeTeamBadge semantics team =
             [ w, h, center, verticalCenter ]
 
         textElement =
-            Element.el UI.Style.TeamName [] (UI.Team.viewTeamEl (team))
+            Element.el UI.Style.TeamName [] (UI.Team.viewMaybeTeamEl (team))
     in
         Element.column (UI.Style.TeamButton semantics) buttonLayout [ textElement ]
 

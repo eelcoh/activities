@@ -12,6 +12,7 @@ import UI.Style
 import UI.Text
 import UI.Team
 import UI.Button
+import Bets.Types
 import Bets.Types.Team
 import Bets.View
 import Score
@@ -95,10 +96,10 @@ displayMatch : Access -> MatchResult -> Element.Element UI.Style.Style variation
 displayMatch access match =
     let
         home =
-            UI.Team.viewTeamEl (Just match.homeTeam)
+            UI.Team.viewTeamEl match.homeTeam
 
         away =
-            UI.Team.viewTeamEl (Just match.awayTeam)
+            UI.Team.viewTeamEl match.awayTeam
 
         sc =
             Bets.View.displayScore match.score
@@ -205,6 +206,7 @@ decodeMatchResult =
         |> andThen decodeRest
 
 
+decodeScore : Bool -> Decoder (Maybe ( Maybe Int, Maybe Int ))
 decodeScore isSet =
     if isSet then
         Json.Decode.map2 Score.mkScore
@@ -216,6 +218,7 @@ decodeScore isSet =
             (field "awayScore" Json.Decode.int)
 
 
+decodeRest : Maybe Bets.Types.Score -> Decoder MatchResult
 decodeRest score =
     Json.Decode.map4 (\mResId m h a -> MatchResult mResId m h a score)
         (field "matchResultId" Json.Decode.string)

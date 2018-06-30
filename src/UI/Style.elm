@@ -7,7 +7,7 @@ import Style.Color as Color
 import Style.Font as Font
 import Style.Scale as Scale
 import UI.Color exposing (..)
-import Types exposing (ScreenSize(..))
+import Types exposing (ScreenSize(..), Qualified(..))
 
 
 type Style
@@ -74,12 +74,6 @@ type TeamButtonSemantics
     = TBPotential
     | TBSelected
     | TBInactive
-
-
-type Qualified
-    = Did
-    | DidNot
-    | NotYet
 
 
 type ButtonSemantics
@@ -187,50 +181,57 @@ stylesheet =
         , style (Button Active)
             [ Color.background primaryDark
             , Color.text primaryText
+            , Border.all 2
             , hover
                 [ cursor "pointer"
                 , Color.background UI.Color.orange
                 , Color.text UI.Color.white
                 ]
-            , fontSerif
+            , fontMono
             ]
         , style (Button Inactive)
             [ Color.background secondary
             , Color.text secondaryDark
             , Font.lineHeight 1.0
+            , Border.all 2
             , hover
                 [ cursor "not-allowed" ]
-            , fontSerif
+            , fontMono
             ]
         , style (Button Wrong)
             [ Color.background <| rgb 233 30 99
             , Color.text UI.Color.white
+            , Border.all 2
             , hover [ cursor "pointer" ]
-            , fontSerif
+            , fontMono
             ]
         , style (Button Right)
             [ Color.background selected
             , Color.text UI.Color.white
+            , Border.all 2
             , hover [ cursor "pointer" ]
-            , fontSerif
+            , fontMono
             ]
         , style (Button Perhaps)
             [ Color.background selected
             , Color.text UI.Color.white
+            , Border.all 2
             , hover [ cursor "pointer" ]
-            , fontSerif
+            , fontMono
             ]
         , style (Button Irrelevant)
             [ Color.background UI.Color.white
             , Color.text secondaryText
-            , Border.all 1
+            , Border.all 2
             , Color.border primary
             , fontMono
               -- , hover [ cursor "pointer" ]
             ]
         , style (Button Potential)
             [ Color.background secondaryLight
-            , Color.text primaryText
+            , Color.text secondaryText
+            , Border.all 2
+            , Color.border secondaryLight
             , hover
                 [ cursor "pointer"
                 , Border.all 2
@@ -239,7 +240,7 @@ stylesheet =
                 , Color.background UI.Color.white
                 , Color.text black
                 ]
-            , fontSerif
+            , fontMono
             ]
         , style (Button Selected)
             [ Color.background selected
@@ -252,32 +253,22 @@ stylesheet =
                 , Color.text black
                 , Color.border UI.Color.orange
                 ]
-            , fontSerif
+            , fontMono
             ]
         , style (Button Trap)
             [ Color.background secondaryLight
             , Color.text secondaryText
             , Font.alignLeft
+            , Border.all 2
             , hover
                 [ cursor "cursor"
                 , Color.background secondary
                 ]
             ]
-        , style (TeamButton NotYet)
-            [ Color.background secondaryLight
-            , Color.text secondaryText
-            , Border.all 2
-            , Color.border secondaryLight
-            , Font.lineHeight 1.0
-            , Font.center
-            , Font.size 15
-            , hover [ cursor "pointer" ]
-            , fontMono
-            ]
         , style (TeamButton Did)
             [ Color.background secondaryLight
             , Color.text secondaryText
-            , Border.all 2
+            , Border.all 5
             , Color.border UI.Color.right
             , Font.lineHeight 1.0
             , Font.center
@@ -288,8 +279,19 @@ stylesheet =
         , style (TeamButton DidNot)
             [ Color.background secondaryLight
             , Color.text secondaryText
-            , Border.all 2
+            , Border.all 5
             , Color.border UI.Color.wrong
+            , Font.lineHeight 1.0
+            , Font.center
+            , Font.size 15
+            , hover [ cursor "pointer" ]
+            , fontMono
+            ]
+        , style (TeamButton NotYet)
+            [ Color.background secondaryLight
+            , Color.text secondaryText
+            , Border.all 5
+            , Color.border secondaryLight
             , Font.lineHeight 1.0
             , Font.center
             , Font.size 15

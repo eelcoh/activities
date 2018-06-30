@@ -1,8 +1,10 @@
 module Bets.Types.Round
     exposing
         ( toInt
+        , stringToRound
         , nextRound
         , isSameOrANextRound
+        , compareRounds
         , encode
         , decode
         )
@@ -13,6 +15,31 @@ import Json.Decode exposing (Decoder, andThen, succeed)
 
 
 -- MODEL
+
+
+stringToRound : String -> Maybe Round
+stringToRound r =
+    case r of
+        "I" ->
+            Just I
+
+        "II" ->
+            Just II
+
+        "III" ->
+            Just III
+
+        "IV" ->
+            Just IV
+
+        "V" ->
+            Just V
+
+        "VI" ->
+            Just VI
+
+        _ ->
+            Nothing
 
 
 toInt : Round -> Int
@@ -84,6 +111,11 @@ nextRound r =
 
         VI ->
             Nothing
+
+
+compareRounds : Round -> Round -> Order
+compareRounds r1 r2 =
+    compare (toInt r1) (toInt r2)
 
 
 encode : Round -> Json.Encode.Value
