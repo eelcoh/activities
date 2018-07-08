@@ -1,14 +1,14 @@
 module UI.Button exposing (..)
 
 import Element exposing (..)
-import Element.Attributes exposing (center, alignLeft, fill, height, percent, px, verticalCenter, width, padding, center)
+import Element.Attributes exposing (center, alignLeft, fill, height, percent, px, verticalCenter, width, padding, spacing, center)
 import Element.Events exposing (onClick)
 import UI.Grid exposing (Size(..))
 import UI.Style exposing (ButtonSemantics, ScoreButtonSemantics, Style)
 import UI.Team
 import Navigation
-import Bets.Types
-import Types exposing (Msg)
+import Bets.Types exposing (HasQualified(..))
+import Types exposing (Msg, Qualified(..), Topscorer)
 
 
 pill : ButtonSemantics -> msg -> String -> Element Style variation msg
@@ -95,7 +95,7 @@ button sz semantics msg buttonText =
 
 
 maybeTeamBadge :
-    Types.Qualified
+    Qualified
     -> Maybe Bets.Types.Team
     -> Element Style variation msg
 maybeTeamBadge semantics team =
@@ -133,3 +133,27 @@ scoreButton semantics msg buttonText =
             Element.el UI.Style.Score [] (text buttonText)
     in
         Element.column (UI.Style.ScoreButton semantics) buttonLayout [ textElement ]
+
+
+topscorerBadge : HasQualified -> Topscorer -> msg -> Element Style variation msg
+topscorerBadge hasQualified topscorer msg =
+    let
+        teamBadge =
+            UI.Team.badge Types.NotYet topscorer.team
+
+        semantics =
+            case hasQualified of
+                TBD ->
+                    NotYet
+
+                In ->
+                    Did
+
+                Out ->
+                    DidNot
+    in
+        Element.row (UI.Style.TeamButton semantics)
+            [ spacing 20, padding 10, verticalCenter, onClick msg ]
+            [ teamBadge
+            , Element.text topscorer.topscorer
+            ]

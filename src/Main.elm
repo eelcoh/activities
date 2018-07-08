@@ -15,6 +15,7 @@ import Authentication
 import Ranking
 import Results
 import Knockouts
+import Topscorer
 import DataStatus
 import Bets.Api exposing (retrieveBet)
 import Bets.View
@@ -50,6 +51,7 @@ newModel =
     , matchResults = NotAsked
     , matchResult = NotAsked
     , knockoutsResults = Fresh NotAsked
+    , topscorerResults = Fresh NotAsked
     , screenSize = Small
     }
 
@@ -430,6 +432,60 @@ update action model =
             in
                 ( { model | knockoutsResults = newKnockoutsResults }, Cmd.none )
 
+        RefreshTopscorerResults ->
+            let
+                cmd =
+                    Topscorer.fetchTopscorerResults
+            in
+                ( model, cmd )
+
+        ChangeTopscorerResults hasQualified topscorer ->
+            let
+                newTopscorerResults =
+                    case model.topscorerResults of
+                        Fresh topscorerResults ->
+                            Topscorer.update hasQualified topscorer topscorerResults
+                                |> Dirty
+
+                        Dirty topscorerResults ->
+                            Topscorer.update hasQualified topscorer topscorerResults
+                                |> Dirty
+
+                        Stale _ ->
+                            model.topscorerResults
+            in
+                ( { model | topscorerResults = newTopscorerResults }, Cmd.none )
+
+        UpdateTopscorerResults ->
+            let
+                cmd =
+                    case ( model.topscorerResults, model.token ) of
+                        ( Dirty (Success res), Success token ) ->
+                            Topscorer.storeTopscorerResults token res
+
+                        _ ->
+                            Cmd.none
+            in
+                ( model, cmd )
+
+        InitialiseTopscorerResults ->
+            let
+                cmd =
+                    case (model.token) of
+                        Success token ->
+                            Topscorer.inititaliseTopscorerResults token
+
+                        _ ->
+                            Cmd.none
+            in
+                ( model, cmd )
+
+        FetchedTopscorerResults results ->
+            ( { model | topscorerResults = Fresh results }, Cmd.none )
+
+        StoredTopscorerResults results ->
+            ( { model | topscorerResults = Fresh results }, Cmd.none )
+
 
 getPage : String -> ( Page, Msg )
 getPage hash =
@@ -477,6 +533,9 @@ getPage hash =
             "#knockouts" :: [] ->
                 ( KOResults, RefreshKnockoutsResults )
 
+            "#topscorer" :: [] ->
+                ( TSResults, RefreshTopscorerResults )
+
             "#login" :: _ ->
                 ( Login, None )
 
@@ -513,6 +572,9 @@ view model =
 
                 KOResults ->
                     Knockouts.view model
+
+                TSResults ->
+                    Topscorer.view model
 
                 Bets uuid ->
                     viewBet model uuid
@@ -655,6 +717,7 @@ authenticatedOptions page screenSize =
         , pageLink Ranking "/voetbalpool/#stand" "stand"
         , pageLink Results "/voetbalpool/#wedstrijden" "wedstrijden"
         , pageLink KOResults "/voetbalpool/#knockouts" "knockouts"
+        , pageLink TSResults "/voetbalpool/#topscorer" "topscorers"
           -- , pageLink Form "/voetbalpool/#formulier" "formulier"
         , pageLink Blog "/voetbalpool/#blog" "blog"
         ]

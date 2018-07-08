@@ -25460,7 +25460,9 @@ var _user$project$Types$Model = function (a) {
 													return function (n) {
 														return function (o) {
 															return function (p) {
-																return {activities: a, comment: b, post: c, contents: d, showComment: e, showPost: f, page: g, bet: h, credentials: i, token: j, ranking: k, rankingDetails: l, matchResults: m, matchResult: n, knockoutsResults: o, screenSize: p};
+																return function (q) {
+																	return {activities: a, comment: b, post: c, contents: d, showComment: e, showPost: f, page: g, bet: h, credentials: i, token: j, ranking: k, rankingDetails: l, matchResults: m, matchResult: n, knockoutsResults: o, topscorerResults: p, screenSize: q};
+																};
 															};
 														};
 													};
@@ -25523,6 +25525,14 @@ var _user$project$Types$TeamRounds = F2(
 	function (a, b) {
 		return {team: a, roundsQualified: b};
 	});
+var _user$project$Types$TopscorerResults = function (a) {
+	return {topscorers: a};
+};
+var _user$project$Types$Topscorer = F2(
+	function (a, b) {
+		return {team: a, topscorer: b};
+	});
+var _user$project$Types$TSResults = {ctor: 'TSResults'};
 var _user$project$Types$KOResults = {ctor: 'KOResults'};
 var _user$project$Types$EditMatchResult = {ctor: 'EditMatchResult'};
 var _user$project$Types$Results = {ctor: 'Results'};
@@ -25550,6 +25560,19 @@ var _user$project$Types$ANewBet = F3(
 	function (a, b, c) {
 		return {ctor: 'ANewBet', _0: a, _1: b, _2: c};
 	});
+var _user$project$Types$StoredTopscorerResults = function (a) {
+	return {ctor: 'StoredTopscorerResults', _0: a};
+};
+var _user$project$Types$FetchedTopscorerResults = function (a) {
+	return {ctor: 'FetchedTopscorerResults', _0: a};
+};
+var _user$project$Types$InitialiseTopscorerResults = {ctor: 'InitialiseTopscorerResults'};
+var _user$project$Types$UpdateTopscorerResults = {ctor: 'UpdateTopscorerResults'};
+var _user$project$Types$ChangeTopscorerResults = F2(
+	function (a, b) {
+		return {ctor: 'ChangeTopscorerResults', _0: a, _1: b};
+	});
+var _user$project$Types$RefreshTopscorerResults = {ctor: 'RefreshTopscorerResults'};
 var _user$project$Types$ChangeQualify = F3(
 	function (a, b, c) {
 		return {ctor: 'ChangeQualify', _0: a, _1: b, _2: c};
@@ -29767,6 +29790,50 @@ var _user$project$UI_Team$viewTeam = function (mTeam) {
 		_user$project$UI_Team$viewMaybeTeamEl(mTeam));
 };
 
+var _user$project$UI_Button$topscorerBadge = F3(
+	function (hasQualified, topscorer, msg) {
+		var semantics = function () {
+			var _p0 = hasQualified;
+			switch (_p0.ctor) {
+				case 'TBD':
+					return _user$project$Types$NotYet;
+				case 'In':
+					return _user$project$Types$Did;
+				default:
+					return _user$project$Types$DidNot;
+			}
+		}();
+		var teamBadge = A2(_user$project$UI_Team$badge, _user$project$Types$NotYet, topscorer.team);
+		return A3(
+			_mdgriffith$style_elements$Element$row,
+			_user$project$UI_Style$TeamButton(semantics),
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$spacing(20),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$style_elements$Element_Events$onClick(msg),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			},
+			{
+				ctor: '::',
+				_0: teamBadge,
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element$text(topscorer.topscorer),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
 var _user$project$UI_Button$scoreButton = F3(
 	function (semantics, msg, buttonText) {
 		var textElement = A3(
@@ -29849,9 +29916,9 @@ var _user$project$UI_Button$maybeTeamBadge = F2(
 	});
 var _user$project$UI_Button$button = F4(
 	function (sz, semantics, msg, buttonText) {
-		var _p0 = function () {
-			var _p1 = sz;
-			switch (_p1.ctor) {
+		var _p1 = function () {
+			var _p2 = sz;
+			switch (_p2.ctor) {
 				case 'XXL':
 					return {
 						ctor: '_Tuple2',
@@ -29917,8 +29984,8 @@ var _user$project$UI_Button$button = F4(
 					};
 			}
 		}();
-		var w = _p0._0;
-		var h = _p0._1;
+		var w = _p1._0;
+		var h = _p1._1;
 		var buttonLayout = {
 			ctor: '::',
 			_0: w,
@@ -31644,11 +31711,7 @@ var _user$project$Bets_Types_Match$homeTeam = function (_p20) {
 	return _user$project$Bets_Types_Draw$team(_p21._0);
 };
 
-var _user$project$Bets_Types_Bracket$encodeHasQualified = function (hasQ) {
-	return _elm_lang$core$Json_Encode$string(
-		_elm_lang$core$Basics$toString(hasQ));
-};
-var _user$project$Bets_Types_Bracket$toHasQualified = function (hasQStr) {
+var _user$project$Bets_Types_HasQualified$toHasQualified = function (hasQStr) {
 	var _p0 = hasQStr;
 	switch (_p0) {
 		case 'TBD':
@@ -31661,8 +31724,7 @@ var _user$project$Bets_Types_Bracket$toHasQualified = function (hasQStr) {
 			return _user$project$Bets_Types$TBD;
 	}
 };
-var _user$project$Bets_Types_Bracket$decodeHasQualified = A2(_elm_lang$core$Json_Decode$map, _user$project$Bets_Types_Bracket$toHasQualified, _elm_lang$core$Json_Decode$string);
-var _user$project$Bets_Types_Bracket$toStringHasQualified = function (hasQ) {
+var _user$project$Bets_Types_HasQualified$toStringHasQualified = function (hasQ) {
 	var _p1 = hasQ;
 	switch (_p1.ctor) {
 		case 'TBD':
@@ -31673,10 +31735,16 @@ var _user$project$Bets_Types_Bracket$toStringHasQualified = function (hasQ) {
 			return 'Out';
 	}
 };
+var _user$project$Bets_Types_HasQualified$decode = A2(_elm_lang$core$Json_Decode$map, _user$project$Bets_Types_HasQualified$toHasQualified, _elm_lang$core$Json_Decode$string);
+var _user$project$Bets_Types_HasQualified$encode = function (hasQ) {
+	return _elm_lang$core$Json_Encode$string(
+		_elm_lang$core$Basics$toString(hasQ));
+};
+
 var _user$project$Bets_Types_Bracket$decodeWinner = function (w) {
 	var stringToWinner = function (winner) {
-		var _p2 = winner;
-		switch (_p2) {
+		var _p0 = winner;
+		switch (_p0) {
 			case 'HomeTeam':
 				return _user$project$Bets_Types$HomeTeam;
 			case 'AwayTeam':
@@ -31685,19 +31753,19 @@ var _user$project$Bets_Types_Bracket$decodeWinner = function (w) {
 				return _user$project$Bets_Types$None;
 		}
 	};
-	var _p3 = w;
-	if (_p3.ctor === 'Nothing') {
+	var _p1 = w;
+	if (_p1.ctor === 'Nothing') {
 		return _elm_lang$core$Json_Decode$succeed(_user$project$Bets_Types$None);
 	} else {
 		return _elm_lang$core$Json_Decode$succeed(
-			stringToWinner(_p3._0));
+			stringToWinner(_p1._0));
 	}
 };
 var _user$project$Bets_Types_Bracket$decode = A2(
 	_elm_lang$core$Json_Decode$andThen,
 	function (node) {
-		var _p4 = node;
-		switch (_p4) {
+		var _p2 = node;
+		switch (_p2) {
 			case 'team':
 				return A4(
 					_elm_lang$core$Json_Decode$map3,
@@ -31707,7 +31775,7 @@ var _user$project$Bets_Types_Bracket$decode = A2(
 						_elm_lang$core$Json_Decode$field,
 						'qualifier',
 						_elm_lang$core$Json_Decode$maybe(_user$project$Bets_Types_Team$decode)),
-					A2(_elm_lang$core$Json_Decode$field, 'hasQualified', _user$project$Bets_Types_Bracket$decodeHasQualified));
+					A2(_elm_lang$core$Json_Decode$field, 'hasQualified', _user$project$Bets_Types_HasQualified$decode));
 			case 'match':
 				return A7(
 					_elm_lang$core$Json_Decode$map6,
@@ -31724,18 +31792,18 @@ var _user$project$Bets_Types_Bracket$decode = A2(
 						_elm_lang$core$Json_Decode$field,
 						'home',
 						_elm_lang$core$Json_Decode$lazy(
-							function (_p5) {
+							function (_p3) {
 								return _user$project$Bets_Types_Bracket$decode;
 							})),
 					A2(
 						_elm_lang$core$Json_Decode$field,
 						'away',
 						_elm_lang$core$Json_Decode$lazy(
-							function (_p6) {
+							function (_p4) {
 								return _user$project$Bets_Types_Bracket$decode;
 							})),
 					A2(_elm_lang$core$Json_Decode$field, 'round', _user$project$Bets_Types_Round$decode),
-					A2(_elm_lang$core$Json_Decode$field, 'hasQualified', _user$project$Bets_Types_Bracket$decodeHasQualified));
+					A2(_elm_lang$core$Json_Decode$field, 'hasQualified', _user$project$Bets_Types_HasQualified$decode));
 			default:
 				return _elm_lang$core$Json_Decode$fail(
 					A2(_elm_lang$core$Basics_ops['++'], node, ' is not a recognized node for brackets'));
@@ -31743,8 +31811,8 @@ var _user$project$Bets_Types_Bracket$decode = A2(
 	},
 	A2(_elm_lang$core$Json_Decode$field, 'node', _elm_lang$core$Json_Decode$string));
 var _user$project$Bets_Types_Bracket$encodeWinner = function (winner) {
-	var _p7 = winner;
-	switch (_p7.ctor) {
+	var _p5 = winner;
+	switch (_p5.ctor) {
 		case 'HomeTeam':
 			return _elm_lang$core$Json_Encode$string('HomeTeam');
 		case 'AwayTeam':
@@ -31754,8 +31822,8 @@ var _user$project$Bets_Types_Bracket$encodeWinner = function (winner) {
 	}
 };
 var _user$project$Bets_Types_Bracket$encode = function (bracket) {
-	var _p8 = bracket;
-	if (_p8.ctor === 'TeamNode') {
+	var _p6 = bracket;
+	if (_p6.ctor === 'TeamNode') {
 		return _elm_lang$core$Json_Encode$object(
 			{
 				ctor: '::',
@@ -31769,21 +31837,21 @@ var _user$project$Bets_Types_Bracket$encode = function (bracket) {
 					_0: {
 						ctor: '_Tuple2',
 						_0: 'slot',
-						_1: _elm_lang$core$Json_Encode$string(_p8._0)
+						_1: _elm_lang$core$Json_Encode$string(_p6._0)
 					},
 					_1: {
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
 							_0: 'qualifier',
-							_1: _user$project$Bets_Types_Team$encodeMaybe(_p8._1)
+							_1: _user$project$Bets_Types_Team$encodeMaybe(_p6._1)
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
 								_0: 'hasQualified',
-								_1: _user$project$Bets_Types_Bracket$encodeHasQualified(_p8._2)
+								_1: _user$project$Bets_Types_HasQualified$encode(_p6._2)
 							},
 							_1: {ctor: '[]'}
 						}
@@ -31804,42 +31872,42 @@ var _user$project$Bets_Types_Bracket$encode = function (bracket) {
 					_0: {
 						ctor: '_Tuple2',
 						_0: 'slot',
-						_1: _elm_lang$core$Json_Encode$string(_p8._0)
+						_1: _elm_lang$core$Json_Encode$string(_p6._0)
 					},
 					_1: {
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
 							_0: 'winner',
-							_1: _user$project$Bets_Types_Bracket$encodeWinner(_p8._1)
+							_1: _user$project$Bets_Types_Bracket$encodeWinner(_p6._1)
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
 								_0: 'home',
-								_1: _user$project$Bets_Types_Bracket$encode(_p8._2)
+								_1: _user$project$Bets_Types_Bracket$encode(_p6._2)
 							},
 							_1: {
 								ctor: '::',
 								_0: {
 									ctor: '_Tuple2',
 									_0: 'away',
-									_1: _user$project$Bets_Types_Bracket$encode(_p8._3)
+									_1: _user$project$Bets_Types_Bracket$encode(_p6._3)
 								},
 								_1: {
 									ctor: '::',
 									_0: {
 										ctor: '_Tuple2',
 										_0: 'round',
-										_1: _user$project$Bets_Types_Round$encode(_p8._4)
+										_1: _user$project$Bets_Types_Round$encode(_p6._4)
 									},
 									_1: {
 										ctor: '::',
 										_0: {
 											ctor: '_Tuple2',
 											_0: 'hasQualified',
-											_1: _user$project$Bets_Types_Bracket$encodeHasQualified(_p8._5)
+											_1: _user$project$Bets_Types_HasQualified$encode(_p6._5)
 										},
 										_1: {ctor: '[]'}
 									}
@@ -31852,64 +31920,64 @@ var _user$project$Bets_Types_Bracket$encode = function (bracket) {
 	}
 };
 var _user$project$Bets_Types_Bracket$isComplete = function (brkt) {
-	var _p9 = brkt;
-	if (_p9.ctor === 'TeamNode') {
-		return _elm_community$maybe_extra$Maybe_Extra$isJust(_p9._1);
+	var _p7 = brkt;
+	if (_p7.ctor === 'TeamNode') {
+		return _elm_community$maybe_extra$Maybe_Extra$isJust(_p7._1);
 	} else {
-		var _p10 = _p9._1;
-		if (_p10.ctor === 'None') {
+		var _p8 = _p7._1;
+		if (_p8.ctor === 'None') {
 			return false;
 		} else {
-			return _user$project$Bets_Types_Bracket$isComplete(_p9._2) && _user$project$Bets_Types_Bracket$isComplete(_p9._3);
+			return _user$project$Bets_Types_Bracket$isComplete(_p7._2) && _user$project$Bets_Types_Bracket$isComplete(_p7._3);
 		}
 	}
 };
 var _user$project$Bets_Types_Bracket$get = F2(
 	function (brkt, slot) {
-		var _p11 = brkt;
-		if (_p11.ctor === 'MatchNode') {
-			if (_elm_lang$core$Native_Utils.eq(_p11._0, slot)) {
+		var _p9 = brkt;
+		if (_p9.ctor === 'MatchNode') {
+			if (_elm_lang$core$Native_Utils.eq(_p9._0, slot)) {
 				return _elm_lang$core$Maybe$Just(brkt);
 			} else {
-				var oneOf = function (_p12) {
+				var oneOf = function (_p10) {
 					return _elm_lang$core$List$head(
-						_elm_community$maybe_extra$Maybe_Extra$values(_p12));
+						_elm_community$maybe_extra$Maybe_Extra$values(_p10));
 				};
 				return oneOf(
 					{
 						ctor: '::',
-						_0: A2(_user$project$Bets_Types_Bracket$get, _p11._3, slot),
+						_0: A2(_user$project$Bets_Types_Bracket$get, _p9._3, slot),
 						_1: {
 							ctor: '::',
-							_0: A2(_user$project$Bets_Types_Bracket$get, _p11._2, slot),
+							_0: A2(_user$project$Bets_Types_Bracket$get, _p9._2, slot),
 							_1: {ctor: '[]'}
 						}
 					});
 			}
 		} else {
-			return _elm_lang$core$Native_Utils.eq(_p11._0, slot) ? _elm_lang$core$Maybe$Just(brkt) : _elm_lang$core$Maybe$Nothing;
+			return _elm_lang$core$Native_Utils.eq(_p9._0, slot) ? _elm_lang$core$Maybe$Just(brkt) : _elm_lang$core$Maybe$Nothing;
 		}
 	});
 var _user$project$Bets_Types_Bracket$qualifier = function (bracket) {
 	qualifier:
 	while (true) {
-		var _p13 = bracket;
-		if (_p13.ctor === 'MatchNode') {
-			var _p14 = _p13._1;
-			switch (_p14.ctor) {
+		var _p11 = bracket;
+		if (_p11.ctor === 'MatchNode') {
+			var _p12 = _p11._1;
+			switch (_p12.ctor) {
 				case 'HomeTeam':
-					var _v12 = _p13._2;
-					bracket = _v12;
+					var _v10 = _p11._2;
+					bracket = _v10;
 					continue qualifier;
 				case 'AwayTeam':
-					var _v13 = _p13._3;
-					bracket = _v13;
+					var _v11 = _p11._3;
+					bracket = _v11;
 					continue qualifier;
 				default:
 					return _elm_lang$core$Maybe$Nothing;
 			}
 		} else {
-			return _p13._1;
+			return _p11._1;
 		}
 	}
 };
@@ -31920,53 +31988,53 @@ var _user$project$Bets_Types_Bracket$display = function (bracket) {
 var _user$project$Bets_Types_Bracket$winner = function (bracket) {
 	winner:
 	while (true) {
-		var _p15 = bracket;
-		if (_p15.ctor === 'MatchNode') {
-			var _p16 = _p15._1;
-			switch (_p16.ctor) {
+		var _p13 = bracket;
+		if (_p13.ctor === 'MatchNode') {
+			var _p14 = _p13._1;
+			switch (_p14.ctor) {
 				case 'HomeTeam':
-					var _v16 = _p15._2;
-					bracket = _v16;
+					var _v14 = _p13._2;
+					bracket = _v14;
 					continue winner;
 				case 'AwayTeam':
-					var _v17 = _p15._3;
-					bracket = _v17;
+					var _v15 = _p13._3;
+					bracket = _v15;
 					continue winner;
 				default:
 					return _elm_lang$core$Maybe$Nothing;
 			}
 		} else {
-			return _p15._1;
+			return _p13._1;
 		}
 	}
 };
 var _user$project$Bets_Types_Bracket$reset = F2(
 	function (newBracket, prevWinner) {
-		var _p17 = newBracket;
-		if (_p17.ctor === 'MatchNode') {
+		var _p15 = newBracket;
+		if (_p15.ctor === 'MatchNode') {
 			var currentWinner = _user$project$Bets_Types_Bracket$winner(newBracket);
-			var newWinner = _elm_lang$core$Native_Utils.eq(currentWinner, prevWinner) ? _p17._1 : _user$project$Bets_Types$None;
-			return A6(_user$project$Bets_Types$MatchNode, _p17._0, newWinner, _p17._2, _p17._3, _p17._4, _p17._5);
+			var newWinner = _elm_lang$core$Native_Utils.eq(currentWinner, prevWinner) ? _p15._1 : _user$project$Bets_Types$None;
+			return A6(_user$project$Bets_Types$MatchNode, _p15._0, newWinner, _p15._2, _p15._3, _p15._4, _p15._5);
 		} else {
-			return A3(_user$project$Bets_Types$TeamNode, _p17._0, _p17._1, _p17._2);
+			return A3(_user$project$Bets_Types$TeamNode, _p15._0, _p15._1, _p15._2);
 		}
 	});
 var _user$project$Bets_Types_Bracket$proceed = F3(
 	function (bracket, slot, wnnr) {
-		var _p18 = bracket;
-		if (_p18.ctor === 'MatchNode') {
-			var _p23 = _p18._0;
-			var _p22 = _p18._4;
-			var _p21 = _p18._2;
-			var _p20 = _p18._5;
-			var _p19 = _p18._3;
-			if (_elm_lang$core$Native_Utils.eq(_p23, slot)) {
-				return A6(_user$project$Bets_Types$MatchNode, slot, wnnr, _p21, _p19, _p22, _p20);
+		var _p16 = bracket;
+		if (_p16.ctor === 'MatchNode') {
+			var _p21 = _p16._0;
+			var _p20 = _p16._4;
+			var _p19 = _p16._2;
+			var _p18 = _p16._5;
+			var _p17 = _p16._3;
+			if (_elm_lang$core$Native_Utils.eq(_p21, slot)) {
+				return A6(_user$project$Bets_Types$MatchNode, slot, wnnr, _p19, _p17, _p20, _p18);
 			} else {
 				var currentWinner = _user$project$Bets_Types_Bracket$winner(bracket);
-				var newRight = A3(_user$project$Bets_Types_Bracket$proceed, _p19, slot, wnnr);
-				var newLeft = A3(_user$project$Bets_Types_Bracket$proceed, _p21, slot, wnnr);
-				var newBracket = A6(_user$project$Bets_Types$MatchNode, _p23, _p18._1, newLeft, newRight, _p22, _p20);
+				var newRight = A3(_user$project$Bets_Types_Bracket$proceed, _p17, slot, wnnr);
+				var newLeft = A3(_user$project$Bets_Types_Bracket$proceed, _p19, slot, wnnr);
+				var newBracket = A6(_user$project$Bets_Types$MatchNode, _p21, _p16._1, newLeft, newRight, _p20, _p18);
 				return A2(_user$project$Bets_Types_Bracket$reset, newBracket, currentWinner);
 			}
 		} else {
@@ -31983,37 +32051,37 @@ var _user$project$Bets_Types_Bracket$proceedAway = F2(
 	});
 var _user$project$Bets_Types_Bracket$set = F3(
 	function (bracket, slot, qualifier) {
-		var _p24 = bracket;
-		if (_p24.ctor === 'MatchNode') {
+		var _p22 = bracket;
+		if (_p22.ctor === 'MatchNode') {
 			var currentWinner = _user$project$Bets_Types_Bracket$winner(bracket);
-			var newAway = A3(_user$project$Bets_Types_Bracket$set, _p24._3, slot, qualifier);
-			var newHome = A3(_user$project$Bets_Types_Bracket$set, _p24._2, slot, qualifier);
-			var newBracket = A6(_user$project$Bets_Types$MatchNode, _p24._0, _p24._1, newHome, newAway, _p24._4, _p24._5);
+			var newAway = A3(_user$project$Bets_Types_Bracket$set, _p22._3, slot, qualifier);
+			var newHome = A3(_user$project$Bets_Types_Bracket$set, _p22._2, slot, qualifier);
+			var newBracket = A6(_user$project$Bets_Types$MatchNode, _p22._0, _p22._1, newHome, newAway, _p22._4, _p22._5);
 			return A2(_user$project$Bets_Types_Bracket$reset, newBracket, currentWinner);
 		} else {
-			return _elm_lang$core$Native_Utils.eq(_p24._0, slot) ? A3(_user$project$Bets_Types$TeamNode, slot, qualifier, _p24._2) : bracket;
+			return _elm_lang$core$Native_Utils.eq(_p22._0, slot) ? A3(_user$project$Bets_Types$TeamNode, slot, qualifier, _p22._2) : bracket;
 		}
 	});
 var _user$project$Bets_Types_Bracket$setBulk = F2(
 	function (bracket, slots) {
 		var newSet = F2(
-			function (_p25, brkt) {
-				var _p26 = _p25;
-				return A3(_user$project$Bets_Types_Bracket$set, brkt, _p26._0, _p26._1);
+			function (_p23, brkt) {
+				var _p24 = _p23;
+				return A3(_user$project$Bets_Types_Bracket$set, brkt, _p24._0, _p24._1);
 			});
 		return A3(_elm_lang$core$List$foldl, newSet, bracket, slots);
 	});
 var _user$project$Bets_Types_Bracket$unsetQualifier = F2(
 	function (bracket, qualifier) {
-		var _p27 = bracket;
-		if (_p27.ctor === 'MatchNode') {
+		var _p25 = bracket;
+		if (_p25.ctor === 'MatchNode') {
 			var currentWinner = _user$project$Bets_Types_Bracket$winner(bracket);
-			var newAway = A2(_user$project$Bets_Types_Bracket$unsetQualifier, _p27._3, qualifier);
-			var newHome = A2(_user$project$Bets_Types_Bracket$unsetQualifier, _p27._2, qualifier);
-			var newBracket = A6(_user$project$Bets_Types$MatchNode, _p27._0, _p27._1, newHome, newAway, _p27._4, _p27._5);
+			var newAway = A2(_user$project$Bets_Types_Bracket$unsetQualifier, _p25._3, qualifier);
+			var newHome = A2(_user$project$Bets_Types_Bracket$unsetQualifier, _p25._2, qualifier);
+			var newBracket = A6(_user$project$Bets_Types$MatchNode, _p25._0, _p25._1, newHome, newAway, _p25._4, _p25._5);
 			return A2(_user$project$Bets_Types_Bracket$reset, newBracket, currentWinner);
 		} else {
-			return _elm_lang$core$Native_Utils.eq(_p27._1, qualifier) ? A3(_user$project$Bets_Types$TeamNode, _p27._0, _elm_lang$core$Maybe$Nothing, _p27._2) : bracket;
+			return _elm_lang$core$Native_Utils.eq(_p25._1, qualifier) ? A3(_user$project$Bets_Types$TeamNode, _p25._0, _elm_lang$core$Maybe$Nothing, _p25._2) : bracket;
 		}
 	});
 
@@ -35112,7 +35180,7 @@ var _user$project$Knockouts$mkRoundsQualified = function (list) {
 var _user$project$Knockouts$decodeRoundsQualified = A2(
 	_elm_lang$core$Json_Decode$map,
 	_user$project$Knockouts$mkRoundsQualified,
-	_elm_lang$core$Json_Decode$keyValuePairs(_user$project$Bets_Types_Bracket$decodeHasQualified));
+	_elm_lang$core$Json_Decode$keyValuePairs(_user$project$Bets_Types_HasQualified$decode));
 var _user$project$Knockouts$decodeTeamRounds = A3(
 	_elm_lang$core$Json_Decode$map2,
 	_user$project$Types$TeamRounds,
@@ -36618,6 +36686,281 @@ var _user$project$Results$updateMatchResults = F2(
 	});
 var _user$project$Results$fetchMatchResults = A3(_ohanhi$remotedata_http$RemoteData_Http$get, '/bets/results/matches/', _user$project$Types$FetchedMatchResults, _user$project$Results$decode);
 
+var _user$project$Topscorer$decodeTopscorer = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_user$project$Types$Topscorer,
+	A2(_elm_lang$core$Json_Decode$field, 'team', _user$project$Bets_Types_Team$decode),
+	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string));
+var _user$project$Topscorer$decodeTopscorerResult = A3(
+	_elm_lang$core$Json_Decode$map2,
+	F2(
+		function (v0, v1) {
+			return {ctor: '_Tuple2', _0: v0, _1: v1};
+		}),
+	A2(_elm_lang$core$Json_Decode$field, 'hasQualified', _user$project$Bets_Types_HasQualified$decode),
+	A2(_elm_lang$core$Json_Decode$field, 'topscorer', _user$project$Topscorer$decodeTopscorer));
+var _user$project$Topscorer$decode = A2(
+	_elm_lang$core$Json_Decode$map,
+	_user$project$Types$TopscorerResults,
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'topscorers',
+		_elm_lang$core$Json_Decode$list(_user$project$Topscorer$decodeTopscorerResult)));
+var _user$project$Topscorer$encodeTopscorer = function (_p0) {
+	var _p1 = _p0;
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'team',
+				_1: _user$project$Bets_Types_Team$encode(_p1.team)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'name',
+					_1: _elm_lang$core$Json_Encode$string(_p1.topscorer)
+				},
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Topscorer$encodeTopscorerResult = function (_p2) {
+	var _p3 = _p2;
+	var hq = _user$project$Bets_Types_HasQualified$encode(_p3._0);
+	var ts = _user$project$Topscorer$encodeTopscorer(_p3._1);
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'topscorer', _1: ts},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'hasQualified', _1: hq},
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Topscorer$encode = function (results) {
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'topscorers',
+				_1: _elm_lang$core$Json_Encode$list(
+					A2(_elm_lang$core$List$map, _user$project$Topscorer$encodeTopscorerResult, results.topscorers))
+			},
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Topscorer$viewTopscorer = function (_p4) {
+	var _p5 = _p4;
+	var _p8 = _p5._1;
+	var _p7 = _p5._0;
+	var action = function () {
+		var _p6 = _p7;
+		switch (_p6.ctor) {
+			case 'In':
+				return A2(_user$project$Types$ChangeTopscorerResults, _user$project$Bets_Types$TBD, _p8);
+			case 'Out':
+				return A2(_user$project$Types$ChangeTopscorerResults, _user$project$Bets_Types$In, _p8);
+			default:
+				return A2(_user$project$Types$ChangeTopscorerResults, _user$project$Bets_Types$Out, _p8);
+		}
+	}();
+	return A3(_user$project$UI_Button$topscorerBadge, _p7, _p8, action);
+};
+var _user$project$Topscorer$viewTopscorerResults = F2(
+	function (auth, results) {
+		return A3(
+			_mdgriffith$style_elements$Element$wrappedRow,
+			_user$project$UI_Style$None,
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$spacing(20),
+				_1: {ctor: '[]'}
+			},
+			A2(_elm_lang$core$List$map, _user$project$Topscorer$viewTopscorer, results.topscorers));
+	});
+var _user$project$Topscorer$view = function (model) {
+	var auth = function () {
+		var _p9 = model.token;
+		if (_p9.ctor === 'Success') {
+			return _user$project$Types$Authorised;
+		} else {
+			return _user$project$Types$Unauthorised;
+		}
+	}();
+	var items = function () {
+		var _p10 = {ctor: '_Tuple2', _0: auth, _1: model.topscorerResults};
+		_v5_5:
+		do {
+			_v5_2:
+			do {
+				if (_p10._0.ctor === 'Authorised') {
+					switch (_p10._1.ctor) {
+						case 'Dirty':
+							if (_p10._1._0.ctor === 'Success') {
+								return {
+									ctor: '::',
+									_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Active, _user$project$Types$UpdateTopscorerResults, 'Update'),
+									_1: {
+										ctor: '::',
+										_0: A2(_user$project$Topscorer$viewTopscorerResults, auth, _p10._1._0._0),
+										_1: {
+											ctor: '::',
+											_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Potential, _user$project$Types$InitialiseTopscorerResults, 'Initialiseer'),
+											_1: {ctor: '[]'}
+										}
+									}
+								};
+							} else {
+								break _v5_2;
+							}
+						case 'Fresh':
+							switch (_p10._1._0.ctor) {
+								case 'Success':
+									return {
+										ctor: '::',
+										_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Inactive, _user$project$Types$UpdateTopscorerResults, 'Update'),
+										_1: {
+											ctor: '::',
+											_0: A2(_user$project$Topscorer$viewTopscorerResults, auth, _p10._1._0._0),
+											_1: {
+												ctor: '::',
+												_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Potential, _user$project$Types$InitialiseTopscorerResults, 'Initialiseer'),
+												_1: {ctor: '[]'}
+											}
+										}
+									};
+								case 'Failure':
+									break _v5_2;
+								default:
+									break _v5_2;
+							}
+						default:
+							break _v5_2;
+					}
+				} else {
+					if (_p10._1.ctor === 'Fresh') {
+						switch (_p10._1._0.ctor) {
+							case 'Success':
+								return {
+									ctor: '::',
+									_0: A2(_user$project$Topscorer$viewTopscorerResults, auth, _p10._1._0._0),
+									_1: {ctor: '[]'}
+								};
+							case 'Failure':
+								return {
+									ctor: '::',
+									_0: _mdgriffith$style_elements$Element$text(
+										_elm_lang$core$Basics$toString(_p10._1._0._0)),
+									_1: {ctor: '[]'}
+								};
+							default:
+								break _v5_5;
+						}
+					} else {
+						break _v5_5;
+					}
+				}
+			} while(false);
+			return {
+				ctor: '::',
+				_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Inactive, _user$project$Types$UpdateTopscorerResults, 'Update'),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element$text('Nog niet bekend'),
+					_1: {
+						ctor: '::',
+						_0: A3(_user$project$UI_Button$pill, _user$project$UI_Style$Potential, _user$project$Types$InitialiseTopscorerResults, 'Initialiseer'),
+						_1: {ctor: '[]'}
+					}
+				}
+			};
+		} while(false);
+		return {
+			ctor: '::',
+			_0: _mdgriffith$style_elements$Element$text('...'),
+			_1: {ctor: '[]'}
+		};
+	}();
+	return A3(
+		_mdgriffith$style_elements$Element$column,
+		_user$project$UI_Style$None,
+		{
+			ctor: '::',
+			_0: A2(_mdgriffith$style_elements$Element_Attributes$spacingXY, 0, 14),
+			_1: {ctor: '[]'}
+		},
+		items);
+};
+var _user$project$Topscorer$updateTopscorer = F3(
+	function (qualified, ts, _p11) {
+		var _p12 = _p11;
+		var _p13 = _p12._1;
+		return (_elm_lang$core$Native_Utils.eq(_p13.team.teamID, ts.team.teamID) && _elm_lang$core$Native_Utils.eq(_p13.topscorer, ts.topscorer)) ? {ctor: '_Tuple2', _0: qualified, _1: _p13} : {ctor: '_Tuple2', _0: _p12._0, _1: _p13};
+	});
+var _user$project$Topscorer$updateTopscorerResults = F3(
+	function (qualified, topscorer, results) {
+		var topscorerResults = A2(
+			_elm_lang$core$List$map,
+			A2(_user$project$Topscorer$updateTopscorer, qualified, topscorer),
+			results.topscorers);
+		return _elm_lang$core$Native_Utils.update(
+			results,
+			{topscorers: topscorerResults});
+	});
+var _user$project$Topscorer$update = F3(
+	function (qualified, topscorer, results) {
+		var _p14 = results;
+		if (_p14.ctor === 'Success') {
+			return _krisajenkins$remotedata$RemoteData$succeed(
+				A3(_user$project$Topscorer$updateTopscorerResults, qualified, topscorer, _p14._0));
+		} else {
+			return results;
+		}
+	});
+var _user$project$Topscorer$storeTopscorerResults = F2(
+	function (_p15, results) {
+		var _p16 = _p15;
+		var json = _user$project$Topscorer$encode(results);
+		var url = '/bets/results/topscorer/';
+		var bearer = A2(_elm_lang$core$Basics_ops['++'], 'Bearer ', _p16._0);
+		var header = A2(_elm_lang$http$Http$header, 'Authorization', bearer);
+		var config = {
+			headers: {
+				ctor: '::',
+				_0: header,
+				_1: {ctor: '[]'}
+			},
+			withCredentials: true,
+			timeout: _elm_lang$core$Maybe$Nothing
+		};
+		return A5(_ohanhi$remotedata_http$RemoteData_Http$postWithConfig, config, url, _user$project$Types$StoredTopscorerResults, _user$project$Topscorer$decode, json);
+	});
+var _user$project$Topscorer$inititaliseTopscorerResults = function (_p17) {
+	var _p18 = _p17;
+	var json = _elm_lang$core$Json_Encode$object(
+		{ctor: '[]'});
+	var url = '/bets/results/topscorer/initial/';
+	var bearer = A2(_elm_lang$core$Basics_ops['++'], 'Bearer ', _p18._0);
+	var header = A2(_elm_lang$http$Http$header, 'Authorization', bearer);
+	var config = {
+		headers: {
+			ctor: '::',
+			_0: header,
+			_1: {ctor: '[]'}
+		},
+		withCredentials: true,
+		timeout: _elm_lang$core$Maybe$Nothing
+	};
+	return A5(_ohanhi$remotedata_http$RemoteData_Http$postWithConfig, config, url, _user$project$Types$FetchedTopscorerResults, _user$project$Topscorer$decode, json);
+};
+var _user$project$Topscorer$fetchTopscorerResults = A3(_ohanhi$remotedata_http$RemoteData_Http$get, '/bets/results/topscorer/', _user$project$Types$FetchedTopscorerResults, _user$project$Topscorer$decode);
+
 var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$batch(
 		{
@@ -36770,8 +37113,12 @@ var _user$project$Main$authenticatedOptions = F2(
 						_0: A3(pageLink, _user$project$Types$KOResults, '/voetbalpool/#knockouts', 'knockouts'),
 						_1: {
 							ctor: '::',
-							_0: A3(pageLink, _user$project$Types$Blog, '/voetbalpool/#blog', 'blog'),
-							_1: {ctor: '[]'}
+							_0: A3(pageLink, _user$project$Types$TSResults, '/voetbalpool/#topscorer', 'topscorers'),
+							_1: {
+								ctor: '::',
+								_0: A3(pageLink, _user$project$Types$Blog, '/voetbalpool/#blog', 'blog'),
+								_1: {ctor: '[]'}
+							}
 						}
 					}
 				}
@@ -36893,6 +37240,8 @@ var _user$project$Main$view = function (model) {
 				return _user$project$Results$edit(model);
 			case 'KOResults':
 				return _user$project$Knockouts$view(model);
+			case 'TSResults':
+				return _user$project$Topscorer$view(model);
 			case 'Bets':
 				return A2(_user$project$Main$viewBet, model, _p3._0);
 			case 'Form':
@@ -36947,7 +37296,7 @@ var _user$project$Main$getPage = function (hash) {
 	};
 	var locs = A2(_elm_lang$core$String$split, '/', hash);
 	var _p5 = locs;
-	_v4_11:
+	_v4_12:
 	do {
 		if (_p5.ctor === '::') {
 			switch (_p5._0) {
@@ -36984,7 +37333,7 @@ var _user$project$Main$getPage = function (hash) {
 						if (_p5._1._0 === 'wedstrijd') {
 							return {ctor: '_Tuple2', _0: _user$project$Types$EditMatchResult, _1: _user$project$Types$None};
 						} else {
-							break _v4_11;
+							break _v4_12;
 						}
 					} else {
 						return {ctor: '_Tuple2', _0: _user$project$Types$Results, _1: _user$project$Types$RefreshResults};
@@ -36993,15 +37342,21 @@ var _user$project$Main$getPage = function (hash) {
 					if (_p5._1.ctor === '[]') {
 						return {ctor: '_Tuple2', _0: _user$project$Types$KOResults, _1: _user$project$Types$RefreshKnockoutsResults};
 					} else {
-						break _v4_11;
+						break _v4_12;
+					}
+				case '#topscorer':
+					if (_p5._1.ctor === '[]') {
+						return {ctor: '_Tuple2', _0: _user$project$Types$TSResults, _1: _user$project$Types$RefreshTopscorerResults};
+					} else {
+						break _v4_12;
 					}
 				case '#login':
 					return {ctor: '_Tuple2', _0: _user$project$Types$Login, _1: _user$project$Types$None};
 				default:
-					break _v4_11;
+					break _v4_12;
 			}
 		} else {
-			break _v4_11;
+			break _v4_12;
 		}
 	} while(false);
 	var page = A2(_elm_lang$core$Debug$log, 'page', locs);
@@ -37032,6 +37387,7 @@ var _user$project$Main$newModel = {
 	matchResults: _krisajenkins$remotedata$RemoteData$NotAsked,
 	matchResult: _krisajenkins$remotedata$RemoteData$NotAsked,
 	knockoutsResults: _user$project$Types$Fresh(_krisajenkins$remotedata$RemoteData$NotAsked),
+	topscorerResults: _user$project$Types$Fresh(_krisajenkins$remotedata$RemoteData$NotAsked),
 	screenSize: _user$project$Types$Small
 };
 var _user$project$Main$update = F2(
@@ -37474,7 +37830,7 @@ var _user$project$Main$update = F2(
 				case 'RefreshKnockoutsResults':
 					var cmd = _user$project$Knockouts$fetchKnockoutsResults;
 					return {ctor: '_Tuple2', _0: model, _1: cmd};
-				default:
+				case 'ChangeQualify':
 					var _p33 = _p8._2;
 					var _p32 = _p8._0;
 					var _p31 = _p8._1;
@@ -37498,6 +37854,72 @@ var _user$project$Main$update = F2(
 							{knockoutsResults: newKnockoutsResults}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
+				case 'RefreshTopscorerResults':
+					var cmd = _user$project$Topscorer$fetchTopscorerResults;
+					return {ctor: '_Tuple2', _0: model, _1: cmd};
+				case 'ChangeTopscorerResults':
+					var _p36 = _p8._1;
+					var _p35 = _p8._0;
+					var newTopscorerResults = function () {
+						var _p34 = model.topscorerResults;
+						switch (_p34.ctor) {
+							case 'Fresh':
+								return _user$project$Types$Dirty(
+									A3(_user$project$Topscorer$update, _p35, _p36, _p34._0));
+							case 'Dirty':
+								return _user$project$Types$Dirty(
+									A3(_user$project$Topscorer$update, _p35, _p36, _p34._0));
+							default:
+								return model.topscorerResults;
+						}
+					}();
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{topscorerResults: newTopscorerResults}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				case 'UpdateTopscorerResults':
+					var cmd = function () {
+						var _p37 = {ctor: '_Tuple2', _0: model.topscorerResults, _1: model.token};
+						if ((((_p37.ctor === '_Tuple2') && (_p37._0.ctor === 'Dirty')) && (_p37._0._0.ctor === 'Success')) && (_p37._1.ctor === 'Success')) {
+							return A2(_user$project$Topscorer$storeTopscorerResults, _p37._1._0, _p37._0._0._0);
+						} else {
+							return _elm_lang$core$Platform_Cmd$none;
+						}
+					}();
+					return {ctor: '_Tuple2', _0: model, _1: cmd};
+				case 'InitialiseTopscorerResults':
+					var cmd = function () {
+						var _p38 = model.token;
+						if (_p38.ctor === 'Success') {
+							return _user$project$Topscorer$inititaliseTopscorerResults(_p38._0);
+						} else {
+							return _elm_lang$core$Platform_Cmd$none;
+						}
+					}();
+					return {ctor: '_Tuple2', _0: model, _1: cmd};
+				case 'FetchedTopscorerResults':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								topscorerResults: _user$project$Types$Fresh(_p8._0)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				default:
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								topscorerResults: _user$project$Types$Fresh(_p8._0)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
 			}
 		}
 	});
@@ -37505,9 +37927,9 @@ var _user$project$Main$init = F2(
 	function (flags, loc) {
 		var screenSize = _user$project$UI_Size$classifyDevice(
 			{width: flags.width, height: 0});
-		var _p34 = _user$project$Main$getPage(loc.hash);
-		var page = _p34._0;
-		var msg = _p34._1;
+		var _p39 = _user$project$Main$getPage(loc.hash);
+		var page = _p39._0;
+		var msg = _p39._1;
 		var model = _elm_lang$core$Native_Utils.update(
 			_user$project$Main$newModel,
 			{page: page, screenSize: screenSize});

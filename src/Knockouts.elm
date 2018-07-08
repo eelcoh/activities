@@ -15,6 +15,7 @@ import Bets.Types exposing (Team, Round(..), HasQualified(..))
 import Bets.Types.Team
 import Bets.Types.Bracket
 import Bets.Types.Round exposing (isSameOrANextRound)
+import Bets.Types.HasQualified
 import Http
 import RemoteData exposing (WebData)
 
@@ -329,7 +330,7 @@ decodeTeamRounds =
 
 decodeRoundsQualified : Decoder (List ( Round, HasQualified ))
 decodeRoundsQualified =
-    Json.Decode.keyValuePairs Bets.Types.Bracket.decodeHasQualified
+    Json.Decode.keyValuePairs Bets.Types.HasQualified.decode
         |> Json.Decode.map mkRoundsQualified
 
 

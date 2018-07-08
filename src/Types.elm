@@ -39,6 +39,7 @@ type Page
     | Results
     | EditMatchResult
     | KOResults
+    | TSResults
 
 
 type alias ActivityMeta =
@@ -101,6 +102,12 @@ type Msg
     | InitialiseKnockoutsResults
     | RefreshKnockoutsResults
     | ChangeQualify Bets.Types.Round Bets.Types.HasQualified Bets.Types.Team
+    | RefreshTopscorerResults
+    | ChangeTopscorerResults Bets.Types.HasQualified Topscorer
+    | UpdateTopscorerResults
+    | InitialiseTopscorerResults
+    | FetchedTopscorerResults (WebData TopscorerResults)
+    | StoredTopscorerResults (WebData TopscorerResults)
 
 
 type Qualified
@@ -125,6 +132,7 @@ type alias Model =
     , matchResults : WebData MatchResults
     , matchResult : WebData MatchResult
     , knockoutsResults : DataStatus (WebData KnockoutsResults)
+    , topscorerResults : DataStatus (WebData TopscorerResults)
     , screenSize : ScreenSize
     }
 
@@ -240,6 +248,17 @@ type alias KnockoutsResults =
 type alias TeamRounds =
     { team : Bets.Types.Team
     , roundsQualified : List ( Bets.Types.Round, Bets.Types.HasQualified )
+    }
+
+
+type alias TopscorerResults =
+    { topscorers : List ( Bets.Types.HasQualified, Topscorer )
+    }
+
+
+type alias Topscorer =
+    { team : Bets.Types.Team
+    , topscorer : String
     }
 
 

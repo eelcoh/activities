@@ -13,7 +13,6 @@ module Bets.Types.Bracket
         , isComplete
         , encode
         , decode
-        , decodeHasQualified
         , decodeWinner
         )
 
@@ -22,6 +21,7 @@ import Json.Decode exposing (Decoder, maybe, fail, field, lazy)
 import Bets.Types exposing (Team, Bracket(..), Qualifier, Winner(..), Slot, HasQualified(..), Group)
 import Bets.Types.Team as T
 import Bets.Types.Round as R
+import Bets.Types.HasQualified as HasQualified
 import Maybe.Extra as M
 
 
@@ -242,7 +242,7 @@ encode bracket =
                 [ ( "node", Json.Encode.string "team" )
                 , ( "slot", Json.Encode.string slot )
                 , ( "qualifier", T.encodeMaybe qualifier )
-                , ( "hasQualified", encodeHasQualified hasQ )
+                , ( "hasQualified", HasQualified.encode hasQ )
                 ]
 
         MatchNode slot winner home away round hasQ ->
@@ -253,7 +253,7 @@ encode bracket =
                 , ( "home", encode home )
                 , ( "away", encode away )
                 , ( "round", R.encode round )
-                , ( "hasQualified", encodeHasQualified hasQ )
+                , ( "hasQualified", HasQualified.encode hasQ )
                 ]
 
 
@@ -267,7 +267,7 @@ decode =
                         Json.Decode.map3 TeamNode
                             (field "slot" Json.Decode.string)
                             (field "qualifier" (maybe T.decode))
-                            (field "hasQualified" decodeHasQualified)
+                            (field "hasQualified" HasQualified.decode)
 
                     "match" ->
                         Json.Decode.map6 MatchNode
@@ -276,7 +276,7 @@ decode =
                             (field "home" (lazy (\_ -> decode)))
                             (field "away" (lazy (\_ -> decode)))
                             (field "round" R.decode)
-                            (field "hasQualified" decodeHasQualified)
+                            (field "hasQualified" HasQualified.decode)
 
                     _ ->
                         fail (node ++ " is not a recognized node for brackets")
@@ -303,43 +303,3 @@ decodeWinner w =
 
             Just wnr ->
                 Json.Decode.succeed (stringToWinner wnr)
-
-
-toStringHasQualified : HasQualified -> String
-toStringHasQualified hasQ =
-    case hasQ of
-        TBD ->
-            "TBD"
-
-        In ->
-            "In"
-
-        Out ->
-            "Out"
-
-
-toHasQualified : String -> HasQualified
-toHasQualified hasQStr =
-    case hasQStr of
-        "TBD" ->
-            TBD
-
-        "In" ->
-            In
-
-        "Out" ->
-            Out
-
-        _ ->
-            TBD
-
-
-encodeHasQualified : HasQualified -> Json.Encode.Value
-encodeHasQualified hasQ =
-    Json.Encode.string (toString hasQ)
-
-
-decodeHasQualified : Decoder HasQualified
-decodeHasQualified =
-    Json.Decode.string
-        |> Json.Decode.map toHasQualified
