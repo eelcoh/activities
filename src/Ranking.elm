@@ -118,7 +118,7 @@ viewRankingGroup grp =
         [ paddingXY 0 5, spread ]
         [ Element.el UI.Style.RankingPos [ width (px 40), paddingRight 10 ] (Element.text (Basics.toString grp.pos))
         , viewRankingLines grp.bets
-        , Element.el UI.Style.RankingPoints [ width (px 55), paddingLeft 10, paddingRight 20 ] (Element.text (Basics.toString grp.total))
+        , Element.el UI.Style.RankingPoints [ width (px 55), paddingLeft 5, paddingRight 20 ] (Element.text (Basics.toString grp.total))
         ]
 
 

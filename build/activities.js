@@ -34522,47 +34522,56 @@ var _user$project$Bets_View$error = function (text) {
 		});
 };
 var _user$project$Bets_View$displayTopscorer = function (bet) {
-	var tsName = function (mTs) {
-		return A2(
-			_elm_lang$core$Maybe$withDefault,
-			_user$project$Bets_View$error('no topscorer'),
-			A2(
+	var mkTopscorer = F2(
+		function (ts, points) {
+			var t = function () {
+				var _p2 = ts;
+				if (((_p2.ctor === '_Tuple2') && (_p2._0.ctor === 'Just')) && (_p2._1.ctor === 'Just')) {
+					return _elm_lang$core$Maybe$Just(
+						A2(_user$project$Types$Topscorer, _p2._1._0, _p2._0._0));
+				} else {
+					return _elm_lang$core$Maybe$Nothing;
+				}
+			}();
+			var hq = function () {
+				var _p3 = points;
+				_v2_2:
+				do {
+					if (_p3.ctor === 'Just') {
+						switch (_p3._0) {
+							case 0:
+								return _user$project$Bets_Types$Out;
+							case 9:
+								return _user$project$Bets_Types$In;
+							default:
+								break _v2_2;
+						}
+					} else {
+						break _v2_2;
+					}
+				} while(false);
+				return _user$project$Bets_Types$TBD;
+			}();
+			return A2(
 				_elm_lang$core$Maybe$map,
-				A2(_user$project$UI_Button$pill, _user$project$UI_Style$Irrelevant, _user$project$Types$None),
-				mTs));
+				function (tops) {
+					return A3(_user$project$UI_Button$topscorerBadge, hq, tops, _user$project$Types$None);
+				},
+				t);
+		});
+	var makeTopscorerBadge = function (answer) {
+		var _p4 = answer;
+		if ((_p4.ctor === '_Tuple2') && (_p4._1.ctor === 'AnswerTopscorer')) {
+			return A2(mkTopscorer, _p4._1._0, _p4._1._1);
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
+		}
 	};
-	var mAnswer = A2(_user$project$Bets_Bet$getAnswer, bet, 'ts');
-	var _p2 = mAnswer;
-	if (((_p2.ctor === 'Just') && (_p2._0.ctor === '_Tuple2')) && (_p2._0._1.ctor === 'AnswerTopscorer')) {
-		var _p3 = _p2._0._1._0;
-		return A3(
-			_mdgriffith$style_elements$Element$row,
-			_user$project$UI_Style$None,
-			{
-				ctor: '::',
-				_0: _mdgriffith$style_elements$Element_Attributes$spacing(20),
-				_1: {
-					ctor: '::',
-					_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_user$project$UI_Button$maybeTeamBadge,
-					_user$project$Types$NotYet,
-					_elm_lang$core$Tuple$second(_p3)),
-				_1: {
-					ctor: '::',
-					_0: tsName(
-						_elm_lang$core$Tuple$first(_p3)),
-					_1: {ctor: '[]'}
-				}
-			});
-	} else {
-		return _mdgriffith$style_elements$Element$empty;
-	}
+	var mTopscorerBadge = A2(
+		_elm_lang$core$Maybe$andThen,
+		makeTopscorerBadge,
+		A2(_user$project$Bets_Bet$getAnswer, bet, 'ts'));
+	return A2(_elm_lang$core$Maybe$withDefault, _mdgriffith$style_elements$Element$empty, mTopscorerBadge);
 };
 var _user$project$Bets_View$mkButton = F5(
 	function (answer, wnnr, slot, hasQualified, bracket) {
@@ -34570,8 +34579,8 @@ var _user$project$Bets_View$mkButton = F5(
 		var attrs = {ctor: '[]'};
 		var answerId = _elm_lang$core$Tuple$first(answer);
 		var s = function () {
-			var _p4 = hasQualified;
-			switch (_p4.ctor) {
+			var _p5 = hasQualified;
+			switch (_p5.ctor) {
 				case 'In':
 					return _user$project$Types$Did;
 				case 'Out':
@@ -34583,18 +34592,18 @@ var _user$project$Bets_View$mkButton = F5(
 		return A2(_user$project$UI_Button$maybeTeamBadge, s, team);
 	});
 var _user$project$Bets_View$didQualify = function (b) {
-	var _p5 = b;
-	if (_p5.ctor === 'MatchNode') {
-		return _p5._5;
+	var _p6 = b;
+	if (_p6.ctor === 'MatchNode') {
+		return _p6._5;
 	} else {
-		return _p5._2;
+		return _p6._2;
 	}
 };
 var _user$project$Bets_View$mkButtonChamp = function (mBracket) {
 	var attrs = {ctor: '[]'};
 	var toQualified = function (h) {
-		var _p6 = h;
-		switch (_p6.ctor) {
+		var _p7 = h;
+		switch (_p7.ctor) {
 			case 'In':
 				return _user$project$Types$Did;
 			case 'Out':
@@ -34615,16 +34624,16 @@ var _user$project$Bets_View$mkButtonChamp = function (mBracket) {
 };
 var _user$project$Bets_View$viewMatchWinner = F3(
 	function (bet, answer, mBracket) {
-		var _p7 = mBracket;
-		if ((_p7.ctor === 'Just') && (_p7._0.ctor === 'MatchNode')) {
-			var _p10 = _p7._0._0;
-			var _p9 = _p7._0._2;
-			var _p8 = _p7._0._3;
+		var _p8 = mBracket;
+		if ((_p8.ctor === 'Just') && (_p8._0.ctor === 'MatchNode')) {
+			var _p11 = _p8._0._0;
+			var _p10 = _p8._0._2;
+			var _p9 = _p8._0._3;
 			var dash = _elm_lang$html$Html$text(' - ');
-			var awayHasQ = _user$project$Bets_View$didQualify(_p8);
-			var awayButton = A5(_user$project$Bets_View$mkButton, answer, _user$project$Bets_Types$AwayTeam, _p10, awayHasQ, _p8);
-			var homeHasQ = _user$project$Bets_View$didQualify(_p9);
-			var homeButton = A5(_user$project$Bets_View$mkButton, answer, _user$project$Bets_Types$HomeTeam, _p10, homeHasQ, _p9);
+			var awayHasQ = _user$project$Bets_View$didQualify(_p9);
+			var awayButton = A5(_user$project$Bets_View$mkButton, answer, _user$project$Bets_Types$AwayTeam, _p11, awayHasQ, _p9);
+			var homeHasQ = _user$project$Bets_View$didQualify(_p10);
+			var homeButton = A5(_user$project$Bets_View$mkButton, answer, _user$project$Bets_Types$HomeTeam, _p11, homeHasQ, _p10);
 			return A3(
 				_mdgriffith$style_elements$Element$row,
 				_user$project$UI_Style$None,
@@ -34870,8 +34879,8 @@ var _user$project$Bets_View$displayBracket = function (bet) {
 			_1: {ctor: '[]'}
 		});
 	var mAnswer = A2(_user$project$Bets_Bet$getAnswer, bet, 'br');
-	var _p11 = mAnswer;
-	if (((_p11.ctor === 'Just') && (_p11._0.ctor === '_Tuple2')) && (_p11._0._1.ctor === 'AnswerBracket')) {
+	var _p12 = mAnswer;
+	if (((_p12.ctor === 'Just') && (_p12._0.ctor === '_Tuple2')) && (_p12._0._1.ctor === 'AnswerBracket')) {
 		return A3(
 			_mdgriffith$style_elements$Element$column,
 			_user$project$UI_Style$None,
@@ -34885,7 +34894,7 @@ var _user$project$Bets_View$displayBracket = function (bet) {
 				_0: introduction,
 				_1: {
 					ctor: '::',
-					_0: A3(_user$project$Bets_View$viewBracket, bet, _p11._0, _p11._0._1._0),
+					_0: A3(_user$project$Bets_View$viewBracket, bet, _p12._0, _p12._0._1._0),
 					_1: {ctor: '[]'}
 				}
 			});
@@ -34895,9 +34904,9 @@ var _user$project$Bets_View$displayBracket = function (bet) {
 };
 var _user$project$Bets_View$displayScore = function (mScore) {
 	var txt = function () {
-		var _p12 = mScore;
-		if (_p12.ctor === 'Just') {
-			return _user$project$Bets_Types_Score$asString(_p12._0);
+		var _p13 = mScore;
+		if (_p13.ctor === 'Just') {
+			return _user$project$Bets_Types_Score$asString(_p13._0);
 		} else {
 			return ' _-_ ';
 		}
@@ -34943,8 +34952,8 @@ var _user$project$Bets_View$scoreString = F2(
 				}
 			});
 	});
-var _user$project$Bets_View$displayMatch = function (_p13) {
-	var _p14 = _p13;
+var _user$project$Bets_View$displayMatch = function (_p14) {
+	var _p15 = _p14;
 	var disp = F3(
 		function (match, mScore, pts) {
 			var sc = _user$project$Bets_View$displayScore(mScore);
@@ -34996,10 +35005,10 @@ var _user$project$Bets_View$displayMatch = function (_p13) {
 					}
 				});
 		});
-	var _p15 = _p14._1;
-	if (_p15.ctor === 'AnswerGroupMatch') {
+	var _p16 = _p15._1;
+	if (_p16.ctor === 'AnswerGroupMatch') {
 		return _elm_lang$core$Maybe$Just(
-			A3(disp, _p15._1, _p15._2, _p15._3));
+			A3(disp, _p16._1, _p16._2, _p16._3));
 	} else {
 		return _elm_lang$core$Maybe$Nothing;
 	}
@@ -35117,8 +35126,8 @@ var _user$project$Bets_View$No = {ctor: 'No'};
 var _user$project$Bets_View$Yes = {ctor: 'Yes'};
 var _user$project$Bets_View$isWinner = F2(
 	function (bracketWinner, homeOrAway) {
-		var _p16 = bracketWinner;
-		if (_p16.ctor === 'None') {
+		var _p17 = bracketWinner;
+		if (_p17.ctor === 'None') {
 			return _user$project$Bets_View$Undecided;
 		} else {
 			return _elm_lang$core$Native_Utils.eq(homeOrAway, bracketWinner) ? _user$project$Bets_View$Yes : _user$project$Bets_View$No;
@@ -35715,7 +35724,7 @@ var _user$project$Ranking$viewRankingGroup = function (grp) {
 								_mdgriffith$style_elements$Element_Attributes$px(55)),
 							_1: {
 								ctor: '::',
-								_0: _mdgriffith$style_elements$Element_Attributes$paddingLeft(10),
+								_0: _mdgriffith$style_elements$Element_Attributes$paddingLeft(5),
 								_1: {
 									ctor: '::',
 									_0: _mdgriffith$style_elements$Element_Attributes$paddingRight(20),

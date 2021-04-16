@@ -394,23 +394,43 @@ mkButtonChamp mBracket =
 displayTopscorer : Bet -> Element.Element UI.Style.Style variation Msg
 displayTopscorer bet =
     let
-        mAnswer =
+        mkTopscorer ts points =
+            let
+                hq =
+                    case points of
+                        Just 0 ->
+                            Out
+
+                        Just 9 ->
+                            In
+
+                        _ ->
+                            TBD
+
+                t =
+                    case ts of
+                        ( Just topscorer, Just team ) ->
+                            Types.Topscorer team topscorer
+                                |> Just
+
+                        _ ->
+                            Nothing
+            in
+                Maybe.map (\tops -> UI.Button.topscorerBadge hq tops Types.None) t
+
+        makeTopscorerBadge answer =
+            case answer of
+                ( _, AnswerTopscorer topscorer points ) ->
+                    mkTopscorer topscorer points
+
+                _ ->
+                    Nothing
+
+        mTopscorerBadge =
             Bets.Bet.getAnswer bet "ts"
-
-        tsName mTs =
-            Maybe.map (UI.Button.pill UI.Style.Irrelevant Types.None) mTs
-                |> Maybe.withDefault (error "no topscorer")
+                |> Maybe.andThen makeTopscorerBadge
     in
-        case mAnswer of
-            Just (( answerId, AnswerTopscorer ts pts ) as answer) ->
-                Element.row UI.Style.None
-                    [ spacing 20, verticalCenter ]
-                    [ UI.Button.maybeTeamBadge NotYet (Tuple.second ts)
-                    , tsName (Tuple.first ts)
-                    ]
-
-            _ ->
-                Element.empty
+        Maybe.withDefault Element.empty mTopscorerBadge
 
 
 error : String -> Element.Element UI.Style.Style variation msg
