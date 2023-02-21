@@ -1,14 +1,15 @@
 module UI.Size exposing (..)
 
-import Window
+import Element exposing (maxWidth, percent, px)
 import Types exposing (ScreenSize(..))
-import Element.Attributes exposing (px, percent, maxWidth)
+import Window
 
 
 classifyDevice : Window.Size -> ScreenSize
 classifyDevice { width } =
     if width <= 600 then
         Small
+
     else
         Big
 

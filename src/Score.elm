@@ -1,11 +1,9 @@
-module Score exposing (scores, mkScore, viewKeyboard)
+module Score exposing (mkScore, scores, viewKeyboard)
 
-import Element exposing (column, row)
-import Element.Attributes exposing (spread, px, padding, paddingLeft, paddingTop, paddingBottom, paddingXY, spacing, alignLeft, verticalSpread, center, verticalCenter, alignRight, width, height)
-import Element.Events as Events
-import UI.Style
-import UI.Button
+import Element
 import Types exposing (MatchResult, Msg)
+import UI.Button
+import UI.Style
 
 
 viewKeyboard : MatchResult -> Element.Element UI.Style.Style variation Msg
@@ -19,14 +17,14 @@ viewKeyboard match =
                 [ center, spacing 2, verticalCenter ]
                 (List.map toButton scoreList)
     in
-        Element.column UI.Style.ScoreColumn
-            [ spacing 2 ]
-            (List.map toRow scores)
+    Element.column UI.Style.ScoreColumn
+        [ spacing 2 ]
+        (List.map toRow scores)
 
 
 scoreString : a -> b -> String
 scoreString h a =
-    List.foldr (++) "" [ " ", (toString h), "-", (toString a), " " ]
+    List.foldr (++) "" [ " ", toString h, "-", toString a, " " ]
 
 
 scoreButton : UI.Style.ScoreButtonSemantics -> MatchResult -> Int -> Int -> String -> Element.Element UI.Style.Style variation Msg
@@ -38,11 +36,11 @@ scoreButton c match home away t =
         msg =
             Types.UpdateMatchResult { match | score = score }
     in
-        UI.Button.scoreButton c msg t
+    UI.Button.scoreButton c msg t
 
 
 mkScore h a =
-    Just ( (Just h), (Just a) )
+    Just ( Just h, Just a )
 
 
 row0 : List ( Int, Int )
@@ -186,5 +184,5 @@ scores =
 indexedScores : List ( Int, Int ) -> List ( Int, ( Int, Int, String ) )
 indexedScores scoreList =
     scoreList
-        |> List.map (\( h, a ) -> ( h, a, (scoreString h a) ))
+        |> List.map (\( h, a ) -> ( h, a, scoreString h a ))
         |> List.indexedMap (,)

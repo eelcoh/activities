@@ -1,13 +1,13 @@
 module UI.Style exposing (..)
 
 import Color exposing (..)
-import Style exposing (..)
-import Style.Border as Border
-import Style.Color as Color
-import Style.Font as Font
-import Style.Scale as Scale
+import Element exposing (..)
+import Element.Border as Border
+import Element.Color as Color
+import Element.Font as Font
+import Element.Scale as Scale
+import Types exposing (Qualified(..), ScreenSize(..))
 import UI.Color exposing (..)
-import Types exposing (ScreenSize(..), Qualified(..))
 
 
 type Style
@@ -225,7 +225,8 @@ stylesheet =
             , Border.all 2
             , Color.border primary
             , fontMono
-              -- , hover [ cursor "pointer" ]
+
+            -- , hover [ cursor "pointer" ]
             ]
         , style (Button Potential)
             [ Color.background secondaryLight

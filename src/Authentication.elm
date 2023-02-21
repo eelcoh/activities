@@ -1,16 +1,16 @@
 module Authentication exposing (..)
 
-import Types exposing (Model, Msg(..), Credentials(..), Token(..))
-import RemoteData.Http as Web
-import RemoteData exposing (RemoteData(..), WebData)
-import Json.Encode
-import Json.Decode exposing (Decoder, andThen, maybe, field)
-import Element exposing (column, row)
-import Element.Input as Input
+-- import RemoteData.Http as Web
+
+import Element exposing (alignLeft, alignRight, center, column, height, padding, paddingBottom, paddingLeft, paddingTop, paddingXY, px, row, spacing, verticalSpread, width)
 import Element.Events as Events
-import Element.Attributes exposing (px, padding, paddingLeft, paddingTop, paddingBottom, paddingXY, spacing, alignLeft, verticalSpread, center, alignRight, width, height)
-import UI.Style
+import Element.Input as Input
+import Json.Decode exposing (Decoder, andThen, field, maybe)
+import Json.Encode
+import RemoteData exposing (RemoteData(..), WebData)
+import Types exposing (Credentials(..), Model, Msg(..), Token(..))
 import UI.Button
+import UI.Style
 
 
 authenticate : String -> String -> Cmd Msg
@@ -19,7 +19,7 @@ authenticate uid pw =
         credentials =
             encodeCredentials uid pw
     in
-        Web.post "/authentications/" FetchedToken decode credentials
+    Web.post "/authentications/" FetchedToken decode credentials
 
 
 viewLoginForm : Model -> Element.Element UI.Style.Style variation Msg
@@ -31,28 +31,29 @@ viewLoginForm model =
         username v =
             let
                 area =
-                    { onChange = (\val -> SetUsername val)
+                    { onChange = \val -> SetUsername val
                     , value = v
                     , label = placeholder "Username"
                     , options = []
                     }
             in
-                Input.multiline UI.Style.TextInput [ Events.onFocus ShowCommentInput, height (px 36) ] area
+            Input.multiline UI.Style.TextInput [ Events.onFocus ShowCommentInput, height (px 36) ] area
 
         password v =
             let
                 area =
-                    { onChange = (\val -> SetPassword val)
+                    { onChange = \val -> SetPassword val
                     , value = v
                     , label = placeholder "Password"
                     , options = []
                     }
             in
-                Input.text UI.Style.TextInput [ height (px 36) ] area
+            Input.text UI.Style.TextInput [ height (px 36) ] area
 
         loginButton isSubmittable =
             if isSubmittable then
                 UI.Button.pill UI.Style.Active Authenticate "login!"
+
             else
                 UI.Button.pill UI.Style.Inactive None "je moet beide velden invullen"
 
@@ -70,12 +71,12 @@ viewLoginForm model =
                 Submittable uid pw ->
                     ( username uid, password pw, True )
     in
-        Element.column UI.Style.CommentInputBox
-            [ padding 10, spacing 20 ]
-            [ inpUsername
-            , inpPassword
-            , loginButton isSubmittable
-            ]
+    Element.column UI.Style.CommentInputBox
+        [ padding 10, spacing 20 ]
+        [ inpUsername
+        , inpPassword
+        , loginButton isSubmittable
+        ]
 
 
 isAuthorised : Model -> Bool
@@ -102,6 +103,6 @@ encodeCredentials uid pw =
 
 decode : Decoder Token
 decode =
-    (field "token" Json.Decode.string)
+    field "token" Json.Decode.string
         |> Json.Decode.map
             Token

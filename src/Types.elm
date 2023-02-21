@@ -1,9 +1,9 @@
 module Types exposing (..)
 
-import Html exposing (Html)
-import Date exposing (Month(..), Day(..))
-import Navigation
 import Bets.Types exposing (Bet)
+import Browser.Navigation as Navigation
+import Date exposing (Day(..), Month(..))
+import Html exposing (Html)
 import RemoteData exposing (WebData)
 import Window
 

@@ -1,20 +1,18 @@
 module Bets.View exposing (..)
 
-import Html exposing (Html)
-import Html exposing (Html, div, button, text, textarea, input, section)
-import Element exposing (column, row)
-import Element.Attributes exposing (px, padding, paddingLeft, paddingTop, paddingBottom, paddingXY, spread, verticalCenter, spacing, alignLeft, verticalSpread, center, alignRight, width, height)
-import UI.Style
-import UI.Button
-import UI.Text
-import UI.Team exposing (viewTeamHome, viewTeamAway)
+import Bets.Bet
 import Bets.Types exposing (..)
+import Bets.Types.Bracket as B
 import Bets.Types.Match as M
 import Bets.Types.Score as S
-import Bets.Types.Bracket as B
-import Bets.Bet
-import Types exposing (Msg, ScreenSize, Qualified(..))
+import Element exposing (alignLeft, alignRight, center, column, height, padding, paddingBottom, paddingLeft, paddingTop, paddingXY, row, spacing, spread, verticalCenter, verticalSpread, width, x)
+import Html exposing (Html, button, div, input, section, text, textarea)
+import Types exposing (Msg, Qualified(..), ScreenSize)
+import UI.Button
 import UI.Size exposing (bodyWidth)
+import UI.Style
+import UI.Team exposing (viewTeamAway, viewTeamHome)
+import UI.Text
 
 
 viewBet : Bet -> ScreenSize -> Element.Element UI.Style.Style variation Msg
@@ -23,19 +21,20 @@ viewBet bet screenSize =
         w =
             bodyWidth screenSize
     in
-        Element.column UI.Style.None
-            [ spacing 20, w ]
-            [ displayParticipant bet
-              --, intro
-            , UI.Text.header2 "Het Schema"
-            , displayBracket bet
-            , UI.Text.header2 "De Topscorer"
-            , topscorerIntro
-            , displayTopscorer bet
-            , UI.Text.header2 "De wedstrijden"
-            , matchesIntro
-            , displayMatches bet.answers
-            ]
+    Element.column UI.Style.None
+        [ spacing 20, w ]
+        [ displayParticipant bet
+
+        --, intro
+        , UI.Text.header2 "Het Schema"
+        , displayBracket bet
+        , UI.Text.header2 "De Topscorer"
+        , topscorerIntro
+        , displayTopscorer bet
+        , UI.Text.header2 "De wedstrijden"
+        , matchesIntro
+        , displayMatches bet.answers
+        ]
 
 
 
@@ -56,10 +55,10 @@ intro =
             """Dank voor je inzending!
             """
     in
-        Element.paragraph UI.Style.None
-            []
-            [ UI.Text.simpleText introtext
-            ]
+    Element.paragraph UI.Style.None
+        []
+        [ UI.Text.simpleText introtext
+        ]
 
 
 matchesIntro : Element.Element UI.Style.Style variation Msg
@@ -70,7 +69,7 @@ matchesIntro =
             Heb je enkel de toto goed, krijg je 1 punt. En anders niets.
             """
     in
-        Element.paragraph UI.Style.None [] [ UI.Text.simpleText introtext ]
+    Element.paragraph UI.Style.None [] [ UI.Text.simpleText introtext ]
 
 
 topscorerIntro : Element.Element UI.Style.Style variation Msg
@@ -80,7 +79,7 @@ topscorerIntro =
             """De topscorer levert 9 punten op, mits goed voorspeld natuurlijk.
             """
     in
-        Element.paragraph UI.Style.None [] [ UI.Text.simpleText introtext ]
+    Element.paragraph UI.Style.None [] [ UI.Text.simpleText introtext ]
 
 
 displayMatches :
@@ -106,21 +105,21 @@ displayMatch ( answerId, answer ) =
                 sc =
                     displayScore mScore
             in
-                Element.row (UI.Style.MatchRow pts)
-                    [ spread, verticalCenter, paddingXY 10 5, spacing 7, width (px 150), height (px 70) ]
-                    [ home, sc, away ]
+            Element.row (UI.Style.MatchRow pts)
+                [ spread, verticalCenter, paddingXY 10 5, spacing 7, width (px 150), height (px 70) ]
+                [ home, sc, away ]
     in
-        case answer of
-            AnswerGroupMatch g match mScore pts ->
-                Just <| disp match mScore pts
+    case answer of
+        AnswerGroupMatch g match mScore pts ->
+            Just <| disp match mScore pts
 
-            _ ->
-                Nothing
+        _ ->
+            Nothing
 
 
 scoreString : a -> b -> String
 scoreString h a =
-    List.foldr (++) "" [ " ", (toString h), "-", (toString a), " " ]
+    List.foldr (++) "" [ " ", toString h, "-", toString a, " " ]
 
 
 displayScore : Maybe Score -> Element.Element UI.Style.Style variation msg
@@ -129,12 +128,12 @@ displayScore mScore =
         txt =
             case mScore of
                 Just score ->
-                    (S.asString score)
+                    S.asString score
 
                 Nothing ->
                     " _-_ "
     in
-        Element.el UI.Style.Score [ verticalCenter ] (Element.text (txt))
+    Element.el UI.Style.Score [ verticalCenter ] (Element.text txt)
 
 
 
@@ -169,6 +168,7 @@ isWinner bracketWinner homeOrAway =
         _ ->
             if homeOrAway == bracketWinner then
                 Yes
+
             else
                 No
 
@@ -188,16 +188,16 @@ displayBracket bet =
         introduction =
             Element.paragraph UI.Style.None [] [ UI.Text.simpleText introtext ]
     in
-        case mAnswer of
-            Just (( answerId, AnswerBracket bracket _ ) as answer) ->
-                Element.column UI.Style.None
-                    [ spacing 20 ]
-                    [ introduction
-                    , (viewBracket bet answer bracket)
-                    ]
+    case mAnswer of
+        Just (( answerId, AnswerBracket bracket _ ) as answer) ->
+            Element.column UI.Style.None
+                [ spacing 20 ]
+                [ introduction
+                , viewBracket bet answer bracket
+                ]
 
-            _ ->
-                Element.empty
+        _ ->
+            Element.empty
 
 
 viewBracket : Bet -> Answer -> Bracket -> Element.Element UI.Style.Style variation Msg
@@ -277,16 +277,16 @@ viewBracket bet answer bracket =
         champion =
             mkButtonChamp final
     in
-        Element.column UI.Style.None
-            [ spacing 10, width (px 600) ]
-            [ Element.row UI.Style.None [ spread ] [ m49, m50, m53, m54 ]
-            , Element.row UI.Style.None [ spread, paddingXY 76 0 ] [ m57, m58 ]
-            , Element.row UI.Style.None [ center ] [ m61 ]
-            , Element.row UI.Style.None [ alignRight, spacing 44 ] [ m64, champion ]
-            , Element.row UI.Style.None [ center ] [ m62 ]
-            , Element.row UI.Style.None [ spread, paddingXY 76 0 ] [ m59, m60 ]
-            , Element.row UI.Style.None [ spread ] [ m51, m52, m55, m56 ]
-            ]
+    Element.column UI.Style.None
+        [ spacing 10, width (px 600) ]
+        [ Element.row UI.Style.None [ spread ] [ m49, m50, m53, m54 ]
+        , Element.row UI.Style.None [ spread, paddingXY 76 0 ] [ m57, m58 ]
+        , Element.row UI.Style.None [ center ] [ m61 ]
+        , Element.row UI.Style.None [ alignRight, spacing 44 ] [ m64, champion ]
+        , Element.row UI.Style.None [ center ] [ m62 ]
+        , Element.row UI.Style.None [ spread, paddingXY 76 0 ] [ m59, m60 ]
+        , Element.row UI.Style.None [ spread ] [ m51, m52, m55, m56 ]
+        ]
 
 
 viewMatchWinner :
@@ -313,7 +313,7 @@ viewMatchWinner bet answer mBracket =
                 dash =
                     text " - "
             in
-                Element.row UI.Style.None [ spacing 7 ] [ homeButton, awayButton ]
+            Element.row UI.Style.None [ spacing 7 ] [ homeButton, awayButton ]
 
         _ ->
             Element.empty
@@ -358,7 +358,7 @@ mkButton answer wnnr slot hasQualified bracket =
         team =
             B.qualifier bracket
     in
-        UI.Button.maybeTeamBadge s team
+    UI.Button.maybeTeamBadge s team
 
 
 mkButtonChamp : Maybe Bracket -> Element.Element UI.Style.Style variation msg
@@ -388,7 +388,7 @@ mkButtonChamp mBracket =
         attrs =
             []
     in
-        UI.Button.maybeTeamBadge qualified mTeam
+    UI.Button.maybeTeamBadge qualified mTeam
 
 
 displayTopscorer : Bet -> Element.Element UI.Style.Style variation Msg
@@ -416,7 +416,7 @@ displayTopscorer bet =
                         _ ->
                             Nothing
             in
-                Maybe.map (\tops -> UI.Button.topscorerBadge hq tops Types.None) t
+            Maybe.map (\tops -> UI.Button.topscorerBadge hq tops Types.None) t
 
         makeTopscorerBadge answer =
             case answer of
@@ -430,12 +430,12 @@ displayTopscorer bet =
             Bets.Bet.getAnswer bet "ts"
                 |> Maybe.andThen makeTopscorerBadge
     in
-        Maybe.withDefault Element.empty mTopscorerBadge
+    Maybe.withDefault Element.empty mTopscorerBadge
 
 
 error : String -> Element.Element UI.Style.Style variation msg
 error text =
-    Element.row UI.Style.Error [] [ (Element.text text) ]
+    Element.row UI.Style.Error [] [ Element.text text ]
 
 
 displayParticipant : Bet -> Element.Element UI.Style.Style variation msg
@@ -457,18 +457,18 @@ displayParticipant bet =
                 |> Maybe.map UI.Text.simpleText
                 |> Maybe.withDefault (UI.Text.simpleText "onbekend")
     in
-        case mAnswer of
-            Just (( answerId, AnswerParticipant part ) as answer) ->
-                Element.column UI.Style.None
-                    [ spacing 20, verticalCenter ]
-                    [ h part
-                    , p part
-                    ]
+    case mAnswer of
+        Just (( answerId, AnswerParticipant part ) as answer) ->
+            Element.column UI.Style.None
+                [ spacing 20, verticalCenter ]
+                [ h part
+                , p part
+                ]
 
-            _ ->
-                Element.empty
+        _ ->
+            Element.empty
 
 
 errorBox : String -> Element.Element UI.Style.Style variation msg
 errorBox text =
-    Element.row UI.Style.Error [] [ (Element.text text) ]
+    Element.row UI.Style.Error [] [ Element.text text ]

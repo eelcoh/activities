@@ -1,13 +1,12 @@
-module UI.Team exposing (viewTeam, viewTeamEl, viewTeamHome, viewMaybeTeamEl, viewTeamAway, button, badge)
+module UI.Team exposing (badge, button, viewMaybeTeamEl, viewTeam, viewTeamAway, viewTeamEl, viewTeamHome)
 
 import Bets.Types exposing (Team)
 import Bets.Types.Team as T
-import Element exposing (Element, column, el, image, layout, row)
+import Element exposing (Element, center, column, el, fill, height, image, layout, padding, px, row, spread, verticalCenter, verticalSpread, width)
 import Element.Events exposing (onClick)
-import Element.Attributes exposing (center, height, width, fill, padding, px, verticalCenter, verticalSpread, spread)
 import Html exposing (Html, div, span, text)
-import UI.Style exposing (..)
 import Types exposing (Msg)
+import UI.Style exposing (..)
 
 
 viewTeam : Maybe Team -> Html msg
@@ -33,16 +32,16 @@ viewMaybeTeamEl team =
                 teamName
             }
     in
-        column TeamBox
-            [ verticalSpread, height (px 45), width (px 34) ]
-            [ row Flag
-                []
-                [ image FlagImage [] img
-                ]
-            , row TeamName
-                [ center ]
-                [ Element.el UI.Style.TeamName [ center ] (Element.text (teamName)) ]
+    column TeamBox
+        [ verticalSpread, height (px 45), width (px 34) ]
+        [ row Flag
+            []
+            [ image FlagImage [] img
             ]
+        , row TeamName
+            [ center ]
+            [ Element.el UI.Style.TeamName [ center ] (Element.text teamName) ]
+        ]
 
 
 viewTeamHome : Maybe Team -> Element Style variation msg
@@ -51,7 +50,7 @@ viewTeamHome mTeam =
         ( flag, team ) =
             viewTeamRows mTeam
     in
-        viewTeamBox team flag
+    viewTeamBox team flag
 
 
 viewTeamAway : Maybe Team -> Element Style variation msg
@@ -60,7 +59,7 @@ viewTeamAway mTeam =
         ( flag, team ) =
             viewTeamRows mTeam
     in
-        viewTeamBox flag team
+    viewTeamBox flag team
 
 
 viewTeamBox : Element Style variation msg -> Element Style variation msg -> Element Style variation msg
@@ -85,14 +84,14 @@ viewTeamRows team =
                 teamName
             }
     in
-        ( row Flag
-            [ center ]
-            [ image FlagImage [] img
-            ]
-        , row TeamName
-            [ center ]
-            [ Element.el UI.Style.TeamName [ center ] (Element.text (teamName)) ]
-        )
+    ( row Flag
+        [ center ]
+        [ image FlagImage [] img
+        ]
+    , row TeamName
+        [ center ]
+        [ Element.el UI.Style.TeamName [ center ] (Element.text teamName) ]
+    )
 
 
 button :
@@ -114,7 +113,7 @@ button semantics team msg =
         textElement =
             Element.el UI.Style.TeamName [ onClick msg ] (viewTeamEl team)
     in
-        Element.column (UI.Style.TeamButton semantics) buttonLayout [ textElement ]
+    Element.column (UI.Style.TeamButton semantics) buttonLayout [ textElement ]
 
 
 badge :
@@ -133,9 +132,9 @@ badge semantics team =
             [ w, h, center, verticalCenter ]
 
         textElement =
-            Element.el UI.Style.TeamName [] (viewTeamEl (team))
+            Element.el UI.Style.TeamName [] (viewTeamEl team)
     in
-        Element.column (UI.Style.TeamButton semantics) buttonLayout [ textElement ]
+    Element.column (UI.Style.TeamButton semantics) buttonLayout [ textElement ]
 
 
 

@@ -1,9 +1,8 @@
 module UI.Text exposing (..)
 
-import Element
-import Element.Attributes exposing (center, alignLeft, px, spacing, paddingLeft, paddingTop, verticalCenter, maxWidth, width)
+import Date exposing (Day(..), Month(..))
+import Element exposing (alignLeft, center, maxWidth, paddingLeft, paddingTop, px, spacing, verticalCenter, width)
 import UI.Style
-import Date exposing (Month(..), Day(..))
 
 
 header1 : String -> Element.Element UI.Style.Style variation msg
@@ -22,7 +21,7 @@ header2 txt =
         (Element.paragraph
             UI.Style.Header2
             [ width Element.Attributes.fill ]
-            [ (Element.text txt) ]
+            [ Element.text txt ]
         )
 
 
@@ -33,7 +32,7 @@ header3 txt =
         (Element.paragraph
             UI.Style.Header3
             [ width Element.Attributes.fill ]
-            [ (Element.text txt) ]
+            [ Element.text txt ]
         )
 
 
@@ -51,9 +50,9 @@ bulletText txt =
                 [ Element.circle 3 UI.Style.Bullet [ alignLeft ] Element.empty ]
 
         contents =
-            Element.paragraph UI.Style.Introduction [ width Element.Attributes.fill ] [ (Element.text txt) ]
+            Element.paragraph UI.Style.Introduction [ width Element.Attributes.fill ] [ Element.text txt ]
     in
-        Element.row UI.Style.None [ paddingLeft 5, spacing 7 ] [ bullet, contents ]
+    Element.row UI.Style.None [ paddingLeft 5, spacing 7 ] [ bullet, contents ]
 
 
 boldText : String -> Element.Element UI.Style.Style variation msg
@@ -153,10 +152,11 @@ dateText dt =
         twoDigitString n =
             if n < 10 then
                 "0" ++ toString n
+
             else
                 toString n
 
         dateString =
-            dd ++ " " ++ (toString d) ++ " " ++ m ++ ", " ++ (toString h) ++ ":" ++ (twoDigitString mn)
+            dd ++ " " ++ toString d ++ " " ++ m ++ ", " ++ toString h ++ ":" ++ twoDigitString mn
     in
-        dateString
+    dateString

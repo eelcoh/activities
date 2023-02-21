@@ -1,20 +1,19 @@
-module Ranking exposing (viewRanking, viewRankingDetails, recreate, fetchRanking, fetchRankingDetails)
+module Ranking exposing (fetchRanking, fetchRankingDetails, recreate, viewRanking, viewRankingDetails)
 
-import Types exposing (Model, Activity(..), Msg(..), RankingSummary, RankingSummaryLine, RoundScore, Token(..), RankingGroup, RankingDetails)
-import RemoteData exposing (RemoteData(..))
-import RemoteData.Http as Web
-import Http
-import Json.Encode
-import Json.Decode exposing (Decoder, andThen, maybe, field)
-import Element exposing (column, row)
-import Element.Attributes exposing (spread, px, fill, padding, paddingLeft, paddingRight, paddingTop, paddingBottom, paddingXY, spacing, alignLeft, verticalSpread, center, alignRight, width, height)
-import Element.Events as Events
-import UI.Style
-import UI.Button
-import UI.Text
-import Date
 import Bets.Bet
 import Bets.View
+import Date
+import Element exposing (alignLeft, alignRight, center, column, fill, height, padding, paddingBottom, paddingLeft, paddingRight, paddingTop, paddingXY, px, row, spacing, spread, verticalSpread, width)
+import Element.Events as Events
+import Http
+import Json.Decode exposing (Decoder, andThen, field, maybe)
+import Json.Encode
+import RemoteData exposing (RemoteData(..))
+import RemoteData.Http as Web
+import Types exposing (Activity(..), Model, Msg(..), RankingDetails, RankingGroup, RankingSummary, RankingSummaryLine, RoundScore, Token(..))
+import UI.Button
+import UI.Style
+import UI.Text
 
 
 fetchRanking : Cmd Msg
@@ -43,7 +42,7 @@ recreate (Token token) =
             , timeout = Nothing
             }
     in
-        Web.postWithConfig config "/bets/ranking/initial/" FetchedRanking decode Json.Encode.null
+    Web.postWithConfig config "/bets/ranking/initial/" FetchedRanking decode Json.Encode.null
 
 
 viewRanking : Model -> Element.Element UI.Style.Style variation Msg
@@ -59,9 +58,9 @@ viewRanking model =
                 _ ->
                     [ viewRankingGroups model ]
     in
-        Element.column UI.Style.None
-            []
-            items
+    Element.column UI.Style.None
+        []
+        items
 
 
 adminBox : Model -> Element.Element UI.Style.Style variation Msg
@@ -78,19 +77,19 @@ viewRankingGroups model =
                     viewRankingHeader
 
                 rank =
-                    (List.map viewRankingGroup ranking.summary)
+                    List.map viewRankingGroup ranking.summary
 
                 datetxt =
                     Element.el UI.Style.AuthorText
                         [ alignRight, paddingXY 0 10 ]
-                        (Element.text ("bijgewerkt op " ++ (UI.Text.dateText ranking.time)))
+                        (Element.text ("bijgewerkt op " ++ UI.Text.dateText ranking.time))
 
                 column =
                     (header :: rank) ++ [ datetxt ]
             in
-                Element.column UI.Style.None
-                    [ paddingBottom 50 ]
-                    column
+            Element.column UI.Style.None
+                [ paddingBottom 50 ]
+                column
 
         NotAsked ->
             Element.text "nog niet opgevraagd"
@@ -107,7 +106,7 @@ viewRankingHeader =
     Element.row UI.Style.RankingHeader
         [ paddingXY 0 5, spread ]
         [ Element.el UI.Style.RankingPosH [ width (px 40), paddingRight 10 ] (Element.text "#")
-        , Element.el UI.Style.RankingNameH [ width (fill), paddingLeft 10, paddingRight 10 ] (Element.text "Naam")
+        , Element.el UI.Style.RankingNameH [ width fill, paddingLeft 10, paddingRight 10 ] (Element.text "Naam")
         , Element.el UI.Style.RankingPointsH [ width (px 100), paddingLeft 10, paddingRight 20 ] (Element.text "Punten")
         ]
 
@@ -125,7 +124,7 @@ viewRankingGroup grp =
 viewRankingLines : List RankingSummaryLine -> Element.Element UI.Style.Style variation Msg
 viewRankingLines lines =
     Element.column UI.Style.None
-        [ width (fill), paddingBottom 4, paddingLeft 10, paddingRight 10 ]
+        [ width fill, paddingBottom 4, paddingLeft 10, paddingRight 10 ]
         (List.map viewRankingLine lines)
 
 
@@ -135,7 +134,7 @@ viewRankingLine line =
         click =
             Events.onClick (ViewRankingDetails line.uuid)
     in
-        Element.el UI.Style.RankingName [ click ] (Element.text line.name)
+    Element.el UI.Style.RankingName [ click ] (Element.text line.name)
 
 
 viewRankingDetails : Model -> Element.Element UI.Style.Style variation Msg
